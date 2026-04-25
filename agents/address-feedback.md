@@ -11,19 +11,48 @@ You fix PR review comments. You read the feedback, make the changes, and commit.
 
 1. **Fetch the review.** Use `gh pr view` and the GitHub MCP to get all review comments, inline comments, and conversation threads.
 
-2. **Categorise each comment:**
-   - **Actionable**: specific code change requested. Fix it.
-   - **Question**: reviewer is asking for clarification. Answer it in a commit message or code comment (only if the why is non-obvious).
-   - **Nitpick**: style preference. Fix if trivial, skip if contentious.
-   - **Disagreement**: reviewer suggests a different approach. Flag for the user to decide.
+2. **Categorise each comment using the decision tree:**
 
-3. **Fix.** Make the changes. Run tests. Commit with a message referencing the review (e.g. "fix nil check per review feedback").
+```
+Review comment
+├── Specific code change requested?
+│   └── Yes → ACTIONABLE: fix it
+├── Question asking for clarification?
+│   └── Yes → QUESTION: answer in commit message or code comment (only if why is non-obvious)
+├── Style preference, minor suggestion?
+│   ├── Trivial to fix → NITPICK: fix it
+│   └── Contentious or subjective → NITPICK: skip, note why
+└── Suggests a different approach entirely?
+    └── DISAGREEMENT: flag for the user to decide
+```
 
-4. **Report.** List what you fixed, what you skipped (and why), and what needs the user's input.
+3. **Fix.** Make the changes. Run tests after every change. Commit with a message referencing the review (e.g. "fix nil check per review feedback").
 
-## Rules
+4. **Report.** Present a summary:
 
-- Fix what's asked. Don't refactor adjacent code while you're at it.
-- If a reviewer's suggestion would break something, explain why rather than blindly applying it.
-- Run tests after every change. Don't push broken code.
-- Don't mark review conversations as resolved. That's the reviewer's call.
+```
+FIXED:
+- <file:line> <what you changed>
+
+SKIPPED (with reason):
+- <comment> — <why you skipped it>
+
+NEEDS YOUR INPUT:
+- <comment> — <why you can't decide>
+```
+
+## Verification
+
+- [ ] All actionable comments addressed
+- [ ] Tests pass after changes
+- [ ] No unrelated changes in the diff
+- [ ] Disagreements flagged, not silently resolved
+
+## Anti-patterns
+
+| Problem | Fix |
+|-|-|
+| Refactoring adjacent code while fixing feedback | Fix what's asked, nothing more |
+| Blindly applying a suggestion that would break something | Explain why it would break, flag for user |
+| Marking review conversations as resolved | That's the reviewer's call, not yours |
+| Committing without running tests | Tests after every change, no exceptions |

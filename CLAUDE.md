@@ -26,7 +26,7 @@ docs/            architecture, contributing, project context
 
 ## Conventions
 
-- Agents: terse system prompts, under 50 lines. No waffle.
+- Agents: as short as possible. Decision trees, anti-pattern tables, verification checklists where they earn their place.
 - Skills: progressive disclosure. Lead with the rule, details below.
 - Hooks: deterministic, fast, fail silently if tools missing.
 - British English in all user-facing text.

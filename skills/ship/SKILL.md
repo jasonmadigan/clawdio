@@ -6,14 +6,54 @@ description: Full lifecycle skill for shipping an issue. Implements, pushes, cre
 
 End-to-end lifecycle for shipping an issue to a merged PR.
 
-## Steps
+## Process
 
-1. **Implement.** Dispatch the implement agent on the issue. Wait for completion.
-2. **Push and PR.** Push the branch via `git push -u origin HEAD`. Create the PR via `gh pr create` following the pr-description skill format. Link the issue.
-3. **Self-review.** Dispatch the review agent on the PR you just created. Read the findings.
-4. **Fix.** If the review found real issues, fix them. Commit and push.
-5. **Report.** Tell the user: PR is ready for team review. Link to the PR.
+### Phase 1: Implement
+1. Dispatch the implement agent on the issue. Wait for completion.
 
-Do NOT merge automatically on team repos. The user decides when to merge after team review.
+- [ ] All tests pass
+- [ ] Implementation matches acceptance criteria
+- [ ] No scope creep
 
-For personal repos (if the user explicitly says "ship and merge"), add a final merge step via `gh pr merge --squash`.
+### Phase 2: Push and PR
+2. Create a branch if not already on one:
+   ```bash
+   git checkout -b <issue-number>-<short-description>
+   ```
+3. Push: `git push -u origin HEAD`
+4. Create the PR via `gh pr create` following the pr-description skill format. Link the issue.
+
+- [ ] PR description follows template (summary, linked issue, test evidence)
+- [ ] Branch name is descriptive
+
+### Phase 3: Self-review
+5. Dispatch the review agent on the PR you just created. Read the findings.
+6. If the review found real issues (Critical or Important), fix them. Commit and push.
+
+- [ ] All Critical findings addressed
+- [ ] All Important findings addressed
+- [ ] Nits addressed if trivial, skipped if contentious
+
+### Phase 4: Report
+7. Tell the user: PR is ready for team review. Link to the PR.
+
+## Decision tree: merge or wait?
+
+```
+PR ready
+├── Personal repo + user said "ship and merge"?
+│   └── Merge via gh pr merge --squash
+├── Personal repo + user didn't say to merge?
+│   └── Report PR link, let user decide
+└── Team repo?
+    └── Never merge automatically. Report PR link.
+```
+
+## Anti-patterns
+
+| Problem | Fix |
+|-|-|
+| Merging on a team repo without asking | Never. The user decides after team review. |
+| Skipping self-review | Always self-review. Catches obvious issues before team sees them. |
+| Pushing without running tests | Tests must pass before push. |
+| Creating a PR with a one-line description | Follow the pr-description skill format. |

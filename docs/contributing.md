@@ -7,7 +7,9 @@ How to add agents, skills, and hooks to workbench.
 1. Edit files in the workbench repo
 2. Test locally: `claude --plugin-dir /path/to/workbench --agent workbench:router`
 3. Reload without restarting: `/reload-plugins` inside an active session
-4. Commit, push, then update the installed plugin: `claude plugin update workbench@jasonmadigan-workbench`
+4. Commit, push, **bump version in plugin.json**, then: `claude plugin update workbench@jasonmadigan-workbench`
+
+Version bumps are required for updates to be picked up. Use patch bumps (0.1.x) for iteration.
 
 ## Writing agents
 
@@ -27,25 +29,85 @@ One sentence role statement.
 
 ## Process
 
-Numbered steps. What the agent does, in order.
+Numbered steps or gated phases. Use decision trees for classification logic.
+
+## Anti-patterns
+
+Table of common mistakes and their fixes.
 
 ## Rules
 
-Bullet list. Hard constraints the agent must follow.
+Hard constraints the agent must follow.
+```
+
+### Patterns to use
+
+**Gated phases** for multi-step workflows. Group steps into phases with verification checklists between them:
+
+```markdown
+### Phase 1: Understand
+1. Read the issue...
+
+### Phase 2: Plan
+2. State your approach...
+
+- [ ] Approach covers all acceptance criteria
+- [ ] No scope beyond what the issue asks
+```
+
+**Decision trees** for classification and triage logic. Use ASCII trees:
+
+```
+Input
+├── Condition A?
+│   └── Action A
+├── Condition B?
+│   └── Action B
+└── Neither?
+    └── Ask the user
+```
+
+**Anti-pattern tables** for common mistakes. Two columns: Problem and Fix:
+
+```markdown
+| Problem | Fix |
+|-|-|
+| Doing X without checking Y | Always check Y first |
+```
+
+**Severity labels** for review agents. Use consistent labels across all reviewers:
+
+| Label | Meaning | Action |
+|-|-|-|
+| Critical | Blocks merge | Must fix |
+| Important | Should be addressed | Should fix |
+| Nit | Minor, optional | Author's call |
+
+**Verification checklists** mid-process, not just at the end. Use markdown checkboxes:
+
+```markdown
+- [ ] All tests pass
+- [ ] No unrelated changes
+```
+
+**Cross-skill references** to agent-skills where relevant:
+
+```markdown
+Invoke the `agent-skills:test` skill for TDD.
 ```
 
 ### Conventions
 
-- Under 50 lines. If you need more, the agent is doing too much.
-- Process steps should be concrete actions, not vague guidance. "Use `gh issue view` to get the full body" not "understand the issue".
-- Rules should be things the agent would otherwise get wrong. Don't restate obvious behaviour.
+- As short as possible, ideally. Every line should earn its place.
+- Process steps should be concrete actions, not vague guidance.
+- Rules should be things the agent would otherwise get wrong.
 - The description field is what Claude uses to decide when to dispatch this agent. Make it precise.
 - British English. No emojis. No AI-sounding prose.
 
 ### When to use an agent vs a skill
 
-- **Agent**: isolated task with its own context. Needs to read code, make decisions, produce output. Gets its own context window.
-- **Skill**: cross-cutting knowledge that any agent or session can invoke. Templates, checklists, conventions. Loaded into the current context window.
+- **Agent**: isolated task with its own context. Needs to read code, make decisions, produce output.
+- **Skill**: cross-cutting knowledge that any agent or session can invoke. Templates, checklists, conventions.
 
 Rule of thumb: if it _does work_, it's an agent. If it _knows things_, it's a skill.
 
@@ -66,83 +128,57 @@ What this skill provides.
 
 ## Process / Content
 
-The actual knowledge or steps.
+Steps, checklists, or reference material.
+
+## Output format
+
+Exact format specification with examples.
+
+## Anti-patterns
+
+Common mistakes table.
 ```
 
 ### Conventions
 
-- The description field drives automatic invocation. Claude reads it and decides whether to load the skill. Be specific about trigger phrases.
+- The description field drives automatic invocation. Be specific about trigger phrases.
 - Lead with the rule or action. Details and rationale below.
-- Skills can include shell commands, templates, checklists -- anything an agent or session needs.
-- Skills are loaded into the caller's context window, so keep them focused. A 500-line skill wastes context on every invocation.
+- Skills are loaded into the caller's context window, so keep them focused.
 - Reference via `/workbench:skill-name` in conversations.
-
-### Supporting files
-
-Skills can include additional files alongside SKILL.md (templates, reference docs). The SKILL.md can reference them with relative paths. Keep supporting files small.
+- Include output format examples that are exact, not suggestive. Agents interpret loose formats liberally.
 
 ## Writing hooks
 
-Hooks are defined in `hooks/hooks.json`. They're deterministic shell commands that run at lifecycle events.
-
-### Format
-
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "your shell command here"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "your shell command here"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
+Hooks are defined in `hooks/hooks.json`. Deterministic shell commands at lifecycle events.
 
 ### Lifecycle events
 
-- **PreToolUse**: runs before a tool executes. Exit code 2 blocks the tool. Use for guardrails (block sensitive file writes).
-- **PostToolUse**: runs after a tool executes. Use for side effects (lint, format).
+- **PreToolUse**: runs before a tool executes. Exit code 2 blocks the tool.
+- **PostToolUse**: runs after a tool executes.
 
 ### Available environment variables
 
 - `CLAUDE_FILE_PATH`: the file being written/edited (for Write/Edit matchers)
-- Standard shell environment (PATH, HOME, etc.)
 
 ### Conventions
 
-- Hooks must be fast. They run on every matching tool use. A slow hook degrades the entire session.
-- Hooks must be deterministic. No LLM calls, no network requests, no prompts.
-- Use `2>/dev/null` liberally. Missing tools (prettier not installed, golangci-lint not present) should fail silently, not error noisily.
-- Test hooks by deliberately triggering them: try writing to a `.env` file and verify it's blocked.
+- Hooks must be fast. They run on every matching tool use.
+- Hooks must be deterministic. No LLM calls, no network requests.
+- Use `2>/dev/null` for optional tools. Missing prettier should fail silently.
+- Test by deliberately triggering: try writing to `.env` and verify it's blocked.
 
 ## Personal agent overrides
 
 Plugin agents can be overridden by placing a file with the same name in `~/.claude/agents/`. Personal agents take precedence.
 
-Use this for domain-specific reviewers that contain proprietary knowledge or team-specific conventions you don't want in a public repo.
-
-Example: the plugin ships a generic `go-k8s-reviewer.md`. You override it with a version in `~/.claude/agents/go-k8s-reviewer.md` that knows your specific controller patterns, CRD conventions, and team style preferences.
+Use this for domain-specific reviewers that contain proprietary knowledge or team-specific conventions.
 
 ## Naming
 
-- Agent names: lowercase, hyphenated. Match the filename to the `name` field in frontmatter.
+- Agent names: lowercase, hyphenated. Match filename to `name` field.
 - Skill names: lowercase, hyphenated directory name.
-- Keep names short and descriptive. `review` not `pull-request-review-coordinator`.
+- Keep names short. `review` not `pull-request-review-coordinator`.
+
+## Companion plugin
+
+[agent-skills](https://github.com/addyosmani/agent-skills) provides cross-cutting development skills (TDD, debugging, security hardening, code review, spec-driven development). Workbench agents reference these skills where relevant. Install it alongside workbench.

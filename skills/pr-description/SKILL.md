@@ -13,7 +13,19 @@ Every PR needs:
 
 Keep it short. The diff tells the story; the description gives context the diff can't.
 
-Don't include:
-- Implementation details the reviewer can see in the code
-- Boilerplate sections with no content ("N/A", "None")
-- AI-generated summaries of every file changed
+## Checklist before submitting
+
+- [ ] Summary explains the why, not just the what
+- [ ] Issue linked (Closes or Relates to)
+- [ ] Tests mentioned with pass/fail status
+- [ ] Breaking changes called out (if any)
+- [ ] No boilerplate sections with "N/A" or "None"
+
+## Anti-patterns
+
+| Problem | Fix |
+|-|-|
+| AI-generated summary of every file changed | The reviewer can read the diff |
+| "N/A" sections | Delete empty sections, don't fill them |
+| Implementation details the reviewer can see | The code shows the what; the PR explains the why |
+| No linked issue | Always link. If no issue exists, the PR description IS the spec. |
