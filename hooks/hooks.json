@@ -1,3 +1,30 @@
 {
-  "hooks": {}
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.env|*.env.*|*credentials.json|*.pem|*.key|*id_rsa*|*.secret) echo 'BLOCK: writing to sensitive file is not allowed' >&2; exit 2;; esac"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f .prettierrc ] || [ -f .prettierrc.json ] || [ -f prettier.config.js ]; then npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null; elif [ -f .clang-format ]; then clang-format -i \"$CLAUDE_FILE_PATH\" 2>/dev/null; elif command -v gofmt >/dev/null 2>&1 && echo \"$CLAUDE_FILE_PATH\" | grep -q '\\.go$'; then gofmt -w \"$CLAUDE_FILE_PATH\" 2>/dev/null; fi"
+          },
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_FILE_PATH\" | grep -q '\\.go$' && command -v golangci-lint >/dev/null 2>&1; then golangci-lint run \"$CLAUDE_FILE_PATH\" 2>/dev/null; elif echo \"$CLAUDE_FILE_PATH\" | grep -qE '\\.(js|ts|jsx|tsx)$' && [ -f .eslintrc* ] || [ -f eslint.config.* ]; then npx eslint \"$CLAUDE_FILE_PATH\" 2>/dev/null; fi"
+          }
+        ]
+      }
+    ]
+  }
 }

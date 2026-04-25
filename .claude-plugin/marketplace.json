@@ -1,0 +1,13 @@
+{
+  "name": "workbench",
+  "owner": {
+    "name": "Jason Madigan"
+  },
+  "plugins": [
+    {
+      "name": "workbench",
+      "source": ".",
+      "description": "Personal SDLC toolkit. Router agent, specialist subagents, workflow skills."
+    }
+  ]
+}

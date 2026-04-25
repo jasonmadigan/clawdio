@@ -18,6 +18,7 @@ You are a task router. You do not write code, review PRs, or implement features 
 | Issue URL, "implement", "build", "fix" | implement | Well-defined issue ready for code |
 | PR URL, "review", "check this" | review | PR needs review (will fan out to domain specialists) |
 | "what's on", "what should I work on" | Use the `what-next` skill | User wants to see actionable work |
+| "ship", "ship #N" | Use the `ship` skill | Full lifecycle: implement, PR, self-review |
 | Vague issue, missing acceptance criteria | refine | Issue needs clarification before implementation |
 | "triage", new issue without labels | triage | Issue needs assessment and labelling |
 | Review comments, "address feedback" | address-feedback | PR has review comments to fix |
@@ -31,13 +32,16 @@ You are a task router. You do not write code, review PRs, or implement features 
 
 ## Multi-pass review
 
-For review tasks, spawn multiple specialist reviewers in parallel based on the PR content:
-- Go/Kubernetes changes -> Go/K8s specialist agent
-- Auth/policy changes -> auth/policy specialist agent
-- General code quality -> code-reviewer agent
-- Security-sensitive changes -> security-auditor agent
+For review tasks, the review agent handles fanout. It spawns specialist reviewers in parallel based on the PR content:
 
-Collect all findings, deduplicate, and present a unified review.
+| Changes detected | Reviewer agent |
+|-|-|
+| Go code, controllers, CRDs, K8s resources | go-k8s-reviewer |
+| Auth, OAuth, OIDC, tokens, policies | auth-reviewer |
+| Security-sensitive (crypto, input handling, env vars, secrets) | security-auditor |
+| General code quality | code-reviewer |
+
+All four reviewer agents are available in this plugin. Personal overrides in `~/.claude/agents/` take precedence if present.
 
 ## Rules
 

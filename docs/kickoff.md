@@ -16,20 +16,18 @@ Read `docs/architecture.md` for full context and `docs/grill-findings.md` for th
 
 ## What exists
 
-- 9 agent definitions in `agents/` (router, implement, review, triage, refine, address-feedback, release-notes, test-writer, docs)
+- 13 agent definitions in `agents/` (router, implement, review, code-reviewer, security-auditor, go-k8s-reviewer, auth-reviewer, triage, refine, address-feedback, release-notes, test-writer, docs)
 - 3 skills in `skills/` (what-next, ship, pr-description)
-- Empty hooks skeleton
-- Plugin manifest
+- 3 hooks (block-env-writes, format-on-save, lint-on-edit)
+- Plugin manifest + marketplace.json
 
 ## What's next
 
-1. **Test the router.** Install the plugin (`claude plugin install .` or `claude --plugin-dir .`), invoke the router, see if the dispatch pattern works.
+1. **Test the router.** Install the plugin (`claude marketplace add jasonmadigan/workbench`), invoke the router, see if the dispatch pattern works.
 2. **Hone the agents.** The current definitions are first drafts. Run them on real tasks and iterate based on actual output quality.
-3. **Add domain specialists.** Go/K8s reviewer and auth/policy reviewer live in `~/.claude/agents/` (not public). Wire the review agent to dispatch them.
-4. **Borrow from agent-skills.** Review [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) for skills worth adopting (TDD, debugging, incremental implementation, spec-driven development).
-5. **Add hooks.** Lint-on-edit, block .env writes, format-on-save.
-6. **Wire MCP.** GitHub MCP server config for issue/PR operations.
-7. **Build missing skills.** Commit conventions, security checklist, review rubric.
+3. **Override domain specialists.** The plugin ships generic go-k8s-reviewer and auth-reviewer. Override with domain-specific versions in `~/.claude/agents/`.
+4. **Install agent-skills.** `claude marketplace add addyosmani/agent-skills` for companion skills (TDD, debugging, security, code review, git workflow).
+5. **Wire MCP.** GitHub MCP server config for issue/PR operations.
 
 ## Constraints
 

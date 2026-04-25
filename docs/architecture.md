@@ -67,11 +67,13 @@ Start with Claude Code (interactive). When the ceiling is hit (need scheduling, 
 
 | Agent | Purpose | Scope |
 |-|-|-|
-| router | Task intake, classification, delegation | Plugin (cross-cutting) |
+| router | Task intake, classification, delegation | Plugin |
 | implement | Takes a well-defined issue, writes code, runs tests, commits | Plugin |
 | review | Multi-pass PR review, fans out to domain specialists | Plugin |
-| go-k8s-reviewer | Go/Kubernetes specialist reviewer | Personal (not public) |
-| auth-reviewer | Auth/policy specialist reviewer (OAuth, OIDC, policies) | Personal (not public) |
+| code-reviewer | General code quality review | Plugin |
+| security-auditor | Security-focused review (OWASP, injection, secrets) | Plugin |
+| go-k8s-reviewer | Go/Kubernetes specialist reviewer (generic; override in ~/.claude/agents/) | Plugin |
+| auth-reviewer | Auth/policy specialist reviewer (generic; override in ~/.claude/agents/) | Plugin |
 | triage | Assesses new issues, labels, prioritises, checks readiness | Plugin |
 | refine | Takes vague issues, asks clarifying questions, produces acceptance criteria | Plugin |
 | address-feedback | Takes review comments on a PR, fixes them | Plugin |
@@ -86,9 +88,8 @@ Start with Claude Code (interactive). When the ceiling is hit (need scheduling, 
 | what-next | Scans GitHub for actionable work, suggests priorities |
 | ship | Full lifecycle: implement > push > PR > review > merge |
 | pr-description | PR body template and conventions |
-| commit-conventions | Commit message format and rules |
-| security-checklist | Security review checklist (OWASP, secrets, input validation) |
-| review-rubric | Standards for what constitutes a good review |
+
+Skills for commit conventions, security checklists, and review rubrics are provided by the companion plugin [agent-skills](https://github.com/addyosmani/agent-skills) (`git-workflow-and-versioning`, `security-and-hardening`, `code-review-and-quality`).
 
 ## Hook catalogue
 
@@ -104,8 +105,16 @@ Start with Claude Code (interactive). When the ceiling is hit (need scheduling, 
 |-|-|
 | GitHub MCP | Issues, PRs, Actions, releases, code search |
 
+## Dependencies
+
+| Dependency | Type | Purpose |
+|-|-|-|
+| [agent-skills](https://github.com/addyosmani/agent-skills) | Claude Code plugin | Companion skills (security, code review, TDD, debugging, git workflow) |
+| `gh` CLI | CLI tool | GitHub issue/PR operations (must be authenticated) |
+| GitHub MCP server | MCP server | Issue/PR comments, review threads |
+
 ## References
 
-- [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) -- reference plugin structure, good skills to borrow from
+- [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) -- companion plugin, installed alongside workbench
 - Claude Code plugin format: `.claude-plugin/plugin.json` manifest, `agents/`, `skills/`, `hooks/` directories
 - Clawdio v2 vision doc: `~/Work/clawdio/docs/v2-vision.md` (historical context)
