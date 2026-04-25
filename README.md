@@ -135,6 +135,14 @@ The go-k8s-reviewer and auth-reviewer ship with generic definitions suitable for
 
 Personal agent overrides stay out of this repo. They're your competitive advantage, not a shared concern.
 
+## Development
+
+See [docs/contributing.md](docs/contributing.md) for how to write agents, skills, and hooks.
+
+Edit, test locally with `claude --plugin-dir .`, push, then `claude plugin update workbench@jasonmadigan-workbench`.
+
 ## Design
 
 See [docs/architecture.md](docs/architecture.md) for the full design rationale, including why this is a plugin and not an orchestrator, the three-tier primitive location model, and future Agent SDK migration path.
+
+See [docs/grill-findings.md](docs/grill-findings.md) for the structured interview that informed these decisions.

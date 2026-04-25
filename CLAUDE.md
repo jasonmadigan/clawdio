@@ -9,9 +9,8 @@ Router agent dispatches to specialist subagents based on the task. Skills provid
 ```
 you -> router -> specialist subagent(s) -> result
                     |
-                    +-- skills (PR template, commit conventions, review rubric)
-                    +-- hooks (lint, block .env, format)
-                    +-- MCP (github)
+                    +-- skills (what-next, ship, pr-description)
+                    +-- hooks (block secrets, lint, format)
 ```
 
 ## Structure
@@ -21,11 +20,26 @@ agents/          subagent definitions (.md)
 skills/          on-demand skills (SKILL.md per directory)
 hooks/           lifecycle hooks (hooks.json)
 references/      supporting docs agents can read
+docs/            architecture, contributing, project context
+.claude-plugin/  plugin manifest and marketplace config
 ```
 
 ## Conventions
 
-- Agents: terse system prompts, under 300 lines. No waffle.
+- Agents: terse system prompts, under 50 lines. No waffle.
 - Skills: progressive disclosure. Lead with the rule, details below.
+- Hooks: deterministic, fast, fail silently if tools missing.
 - British English in all user-facing text.
 - No emojis. No AI-sounding prose.
+
+## Dependencies
+
+- [agent-skills](https://github.com/addyosmani/agent-skills) plugin for security, code review, TDD, debugging, git workflow
+- `gh` CLI (authenticated) for GitHub operations
+- GitHub MCP server for issue/PR comment threads
+
+## Docs
+
+- [docs/architecture.md](docs/architecture.md) -- design rationale and decisions
+- [docs/contributing.md](docs/contributing.md) -- how to write agents, skills, hooks
+- [docs/references.md](docs/references.md) -- Claude Code primitives and execution surfaces

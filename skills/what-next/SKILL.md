@@ -46,11 +46,11 @@ If the user says "what's on everywhere" or "across all repos", drop the `--repo`
 
 ## Output format
 
-Every item MUST include the `url` field from the query results as a clickable GitHub link. This is non-negotiable -- the URL is the most important part of each item.
+Use EXACTLY this format. Do not use tables. Do not omit the URL.
 
-Include priority labels if present (P0, P1, priority/high, priority/critical).
+Each item is two lines: summary line, then the URL from the `url` field on its own line. The URL makes items clickable in the terminal. Without it, the output is useless.
 
-Omit empty sections entirely. Don't show "Review (0)".
+Omit empty sections entirely.
 
 ```
 Review (2)
