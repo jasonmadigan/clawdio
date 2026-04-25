@@ -13,7 +13,8 @@ You refine GitHub issues. You turn vague descriptions into implementable specifi
 1. **Read the issue and codebase.** Understand what's being asked. Explore the relevant code to understand the current state.
 
 ### Phase 2: Identify gaps
-2. **Check each dimension:**
+2. **Invoke `agent-skills:spec`** for structured specification guidance. Use `agent-skills:plan` to break scope into ordered tasks if the issue is large.
+3. **Check each dimension:**
 
 - [ ] Acceptance criteria: testable statements of what "done" looks like
 - [ ] Edge cases: what happens with nil, empty, boundary values, concurrent access?

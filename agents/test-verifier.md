@@ -20,7 +20,7 @@ Test plan item
 ├── Can verify analytically? (check math against constants in source)
 │   └── Do the calculation. Show working. Report match/mismatch.
 ├── Can verify in the browser? (UI state, form values, visual check)
-│   └── Use Playwright MCP to:
+│   └── Use Playwright MCP (or `agent-skills:browser-testing-with-devtools`) to:
 │       1. Start/navigate to the app
 │       2. Interact with the UI (set values, click, toggle)
 │       3. Assert the expected state (element text, attribute values, visibility)

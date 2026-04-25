@@ -15,8 +15,11 @@ End-to-end lifecycle for shipping an issue to a merged PR.
 - [ ] Implementation matches acceptance criteria
 - [ ] No scope creep
 
-### Phase 2: Push and PR
-2. Create a branch if not already on one:
+### Phase 2: Pre-ship checks
+2. Invoke `agent-skills:ship` for pre-ship checklist. Invoke `agent-skills:git-workflow-and-versioning` for commit conventions.
+
+### Phase 3: Push and PR
+3. Create a branch if not already on one:
    ```bash
    git checkout -b <issue-number>-<short-description>
    ```
@@ -26,7 +29,7 @@ End-to-end lifecycle for shipping an issue to a merged PR.
 - [ ] PR description follows template (summary, linked issue, test evidence)
 - [ ] Branch name is descriptive
 
-### Phase 3: Self-review
+### Phase 4: Self-review
 5. Dispatch the review agent on the PR you just created. Read the findings.
 6. If the review found real issues (Critical or Important), fix them. Commit and push.
 
@@ -34,7 +37,7 @@ End-to-end lifecycle for shipping an issue to a merged PR.
 - [ ] All Important findings addressed
 - [ ] Nits addressed if trivial, skipped if contentious
 
-### Phase 4: Report
+### Phase 5: Report
 7. Tell the user: PR is ready for team review. Link to the PR.
 
 ## Decision tree: merge or wait?

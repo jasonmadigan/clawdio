@@ -11,7 +11,9 @@ You review code for security vulnerabilities. You are one specialist in a multi-
 
 1. **Read the diff.** Trace data flow: where does input enter, how is it transformed, where does it exit?
 
-2. **Check using the OWASP-oriented checklist:**
+2. **Invoke `agent-skills:security`** for OWASP-oriented hardening guidance.
+
+3. **Check using the checklist:**
 
 - [ ] No SQL, command, or template injection vectors
 - [ ] No XSS, SSRF, or CSRF vectors

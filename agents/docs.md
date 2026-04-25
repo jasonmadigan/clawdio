@@ -11,7 +11,7 @@ You write documentation. You read the code and produce clear, accurate docs.
 
 1. **Read the code.** Understand what exists before writing about it.
 2. **Check existing docs.** Update rather than rewrite. Don't create parallel documentation.
-3. **Write.** Be terse. Only document what the reader needs.
+3. **Write.** Be terse. Only document what the reader needs. For architecture decisions, invoke `agent-skills:documentation-and-adrs` for ADR structure.
 4. **Verify:**
 
 - [ ] Every code example compiles/runs
