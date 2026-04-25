@@ -20,16 +20,16 @@ gh repo view --json nameWithOwner --jq '.nameWithOwner'
 REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
 # issues assigned to me, open
-gh search issues --assignee=@me --state=open --repo="$REPO" --json repository,number,title,labels,updatedAt --limit 20
+gh search issues --assignee=@me --state=open --repo="$REPO" --json repository,number,title,labels,updatedAt,url --limit 20
 
 # PRs needing my review
-gh search prs --review-requested=@me --state=open --repo="$REPO" --json repository,number,title,author,updatedAt --limit 20
+gh search prs --review-requested=@me --state=open --repo="$REPO" --json repository,number,title,author,updatedAt,url --limit 20
 
 # my PRs with review feedback
-gh search prs --author=@me --state=open --review=changes_requested --repo="$REPO" --json repository,number,title,updatedAt --limit 20
+gh search prs --author=@me --state=open --review=changes_requested --repo="$REPO" --json repository,number,title,updatedAt,url --limit 20
 
 # my PRs that are approved (ready to merge)
-gh search prs --author=@me --state=open --review=approved --repo="$REPO" --json repository,number,title,updatedAt --limit 20
+gh search prs --author=@me --state=open --review=approved --repo="$REPO" --json repository,number,title,updatedAt,url --limit 20
 ```
 
 If the user says "what's on everywhere" or "across all repos", drop the `--repo` filter and search globally.
@@ -46,7 +46,7 @@ If the user says "what's on everywhere" or "across all repos", drop the `--repo`
 
 ## Output format
 
-Every item MUST include a clickable GitHub URL. Build URLs from the repo and number: `https://github.com/{owner}/{repo}/issues/{number}` for issues, `https://github.com/{owner}/{repo}/pull/{number}` for PRs.
+Every item MUST include the `url` field from the query results as a clickable GitHub link. This is non-negotiable -- the URL is the most important part of each item.
 
 Include priority labels if present (P0, P1, priority/high, priority/critical).
 
