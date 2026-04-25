@@ -8,7 +8,7 @@ The premise: the bottleneck is never orchestration infrastructure -- it's agent 
 
 ```bash
 # add the marketplace
-claude marketplace add jasonmadigan/workbench
+claude plugin marketplace add jasonmadigan/workbench
 
 # install the plugin (user scope, available in all repos)
 claude plugin install workbench
@@ -34,7 +34,7 @@ Install these separately -- workbench agents and skills reference them.
 
 | Plugin | Install | What it provides |
 |-|-|-|
-| [agent-skills](https://github.com/addyosmani/agent-skills) | `claude marketplace add addyosmani/agent-skills` | Security hardening, code review, TDD, debugging, git workflow, spec-driven development |
+| [agent-skills](https://github.com/addyosmani/agent-skills) | `claude plugin marketplace add addyosmani/agent-skills && claude plugin install agent-skills` | Security hardening, code review, TDD, debugging, git workflow, spec-driven development |
 
 Workbench handles SDLC orchestration (router, specialists, shipping). agent-skills handles cross-cutting development practices. They complement each other.
 

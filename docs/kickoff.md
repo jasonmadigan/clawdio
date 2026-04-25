@@ -23,10 +23,10 @@ Read `docs/architecture.md` for full context and `docs/grill-findings.md` for th
 
 ## What's next
 
-1. **Test the router.** Install the plugin (`claude marketplace add jasonmadigan/workbench`), invoke the router, see if the dispatch pattern works.
+1. **Test the router.** Install the plugin (`claude plugin marketplace add jasonmadigan/workbench && claude plugin install workbench`), invoke the router, see if the dispatch pattern works.
 2. **Hone the agents.** The current definitions are first drafts. Run them on real tasks and iterate based on actual output quality.
 3. **Override domain specialists.** The plugin ships generic go-k8s-reviewer and auth-reviewer. Override with domain-specific versions in `~/.claude/agents/`.
-4. **Install agent-skills.** `claude marketplace add addyosmani/agent-skills` for companion skills (TDD, debugging, security, code review, git workflow).
+4. **Install agent-skills.** `claude plugin marketplace add addyosmani/agent-skills && claude plugin install agent-skills` for companion skills (TDD, debugging, security, code review, git workflow).
 5. **Wire MCP.** GitHub MCP server config for issue/PR operations.
 
 ## Constraints
