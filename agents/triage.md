@@ -20,7 +20,7 @@ Issue assessment
 │   │   ├── Bounded (one PR)? → check dependencies
 │   │   │   ├── No blockers → READY
 │   │   │   └── Blocked → BLOCKED (say what on)
-│   │   └── Unbounded → TOO LARGE (use `agent-skills:plan` to suggest how to split)
+│   │   └── Unbounded → TOO LARGE (use `agent-skills:planning-and-task-breakdown` to suggest how to split)
 │   └── No → NEEDS REFINEMENT (say specifically what's missing)
 └── Can an agent implement this with the info given?
     ├── Yes → READY

@@ -26,7 +26,7 @@ Review comment
     └── DISAGREEMENT: flag for the user to decide
 ```
 
-3. **Fix.** Make the changes. For complex fixes, invoke `agent-skills:debug` for systematic root-cause analysis. Run tests after every change. Commit with a message referencing the review (e.g. "fix nil check per review feedback").
+3. **Fix.** Make the changes. For complex fixes, invoke `agent-skills:debugging-and-error-recovery` for systematic root-cause analysis. Run tests after every change. Commit with a message referencing the review (e.g. "fix nil check per review feedback").
 
 4. **Report.** Present a summary:
 

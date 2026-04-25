@@ -32,7 +32,9 @@ This replaces clawdio's workflow engine. The routing logic is in natural languag
 
 ### Multi-pass review
 
-Reviews use the fanout pattern: the router spawns multiple specialist reviewers in parallel based on the PR content. A Go/K8s PR gets the Go/K8s specialist. An auth/policy PR gets the auth/policy specialist. Security-sensitive changes get a security auditor. Results are collected and deduplicated.
+Reviews use the fanout pattern: the router classifies the PR's file paths, then spawns multiple specialist reviewers in parallel. A Go/K8s PR gets the Go/K8s specialist. An auth/policy PR gets the auth/policy specialist. Security-sensitive changes get a security auditor. A test-verifier always runs to check the test plan. Results are collected and presented grouped by specialist.
+
+The router owns this fanout directly because subagents cannot spawn sub-subagents (they don't have access to the Agent tool). There is no intermediate "review coordinator" agent.
 
 ### Three-tier primitive location
 
@@ -67,9 +69,8 @@ Start with Claude Code (interactive). When the ceiling is hit (need scheduling, 
 
 | Agent | Purpose | Scope |
 |-|-|-|
-| router | Task intake, classification, delegation | Plugin |
+| router | Task intake, classification, delegation, review coordination | Plugin |
 | implement | Takes a well-defined issue, writes code, runs tests, commits | Plugin |
-| review | Multi-pass PR review, fans out to domain specialists | Plugin |
 | code-reviewer | General code quality review | Plugin |
 | security-auditor | Security-focused review (OWASP, injection, secrets) | Plugin |
 | go-k8s-reviewer | Go/Kubernetes specialist reviewer (generic; override in ~/.claude/agents/) | Plugin |
@@ -79,7 +80,10 @@ Start with Claude Code (interactive). When the ceiling is hit (need scheduling, 
 | address-feedback | Takes review comments on a PR, fixes them | Plugin |
 | release-notes | Generates release notes between tags | Plugin |
 | test-writer | Writes tests, finds coverage gaps | Plugin |
+| test-verifier | Verifies PR test plans, runs tests, drives browser for UI checks | Plugin |
 | docs | Documentation writing and updating | Plugin |
+
+Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The router owns all agent dispatch, including review fanout to specialist reviewers in parallel.
 
 ## Skill catalogue
 

@@ -11,7 +11,7 @@ You review code for quality. You are one specialist in a multi-pass review; othe
 
 1. **Read the diff.** Understand every change. Read surrounding context in the source files, not just the diff lines.
 
-2. **Invoke `agent-skills:review`** for structured multi-axis review guidance. Use `agent-skills:code-simplify` to identify simplification opportunities.
+2. **Invoke `agent-skills:code-review-and-quality`** for structured multi-axis review guidance. Use `agent-skills:code-simplification` to identify simplification opportunities.
 
 3. **Check against these axes:**
    - **Correctness**: does the code do what the PR description claims?

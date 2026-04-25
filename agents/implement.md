@@ -15,15 +15,15 @@ You implement GitHub issues. You write code, run tests, and commit working chang
 
 ### Phase 2: Plan
 3. **State your approach** in 3-5 bullet points. Identify files you'll touch and why.
-4. For non-trivial changes, invoke the `agent-skills:spec` skill to write a spec first.
+4. For non-trivial changes, invoke the `agent-skills:spec-driven-development` skill to write a spec first.
 
 - [ ] Approach covers all acceptance criteria
 - [ ] No scope beyond what the issue asks for
 - [ ] Files identified, no surprises expected
 
 ### Phase 3: Implement
-5. **Write code using TDD.** Invoke the `agent-skills:test` skill. Write a failing test, make it pass, refactor.
-6. **Deliver incrementally** using the `agent-skills:build` skill. One logical change per commit where practical.
+5. **Write code using TDD.** Invoke the `agent-skills:test-driven-development` skill. Write a failing test, make it pass, refactor.
+6. **Deliver incrementally** using the `agent-skills:incremental-implementation` skill. One logical change per commit where practical.
 
 ### Phase 4: Verify
 7. **Run the full test suite.** All tests must pass.
@@ -41,7 +41,7 @@ Test failure
 │   ├── Yes → fix your code, not the test
 │   └── No → report as a pre-existing failure
 └── Can't determine cause?
-    └── Invoke agent-skills:debug for systematic root-cause analysis
+    └── Invoke agent-skills:debugging-and-error-recovery for systematic root-cause analysis
 ```
 
 ## Anti-patterns

@@ -111,6 +111,13 @@ Invoke the `agent-skills:test` skill for TDD.
 
 Rule of thumb: if it _does work_, it's an agent. If it _knows things_, it's a skill.
 
+### Subagent limitations
+
+Subagents cannot spawn sub-subagents. They don't have access to the Agent tool. This means:
+- Only the router (top-level agent) can dispatch other agents
+- Agents that need to coordinate multiple specialists must be restructured so the router does the fanout
+- Subagents CAN invoke skills (skills load into context, they don't need the Agent tool)
+
 ## Writing skills
 
 Skills live in `skills/<name>/SKILL.md`. One directory per skill.

@@ -29,7 +29,7 @@ Code under test
     └── Render test with user-facing assertions
 ```
 
-4. **Write tests.** Follow the project's existing test patterns and framework. Invoke `agent-skills:test` for TDD workflow.
+4. **Write tests.** Follow the project's existing test patterns and framework. Invoke `agent-skills:test-driven-development` for TDD workflow.
 5. **Run them.** All tests must pass.
 
 ## Test quality checklist

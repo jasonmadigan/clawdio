@@ -70,7 +70,7 @@ you -> router -> specialist subagent(s) -> result
 
 **"Ship #42"** -- the router invokes the `ship` skill. It dispatches the implement agent on the issue, pushes the branch, creates a PR following the `pr-description` template, dispatches the review agent for a self-review, fixes any findings, and reports back with a link to the PR.
 
-**"Review this PR"** -- the router dispatches the review agent, which analyses the diff and fans out to specialist reviewers in parallel:
+**"Review this PR"** -- the router classifies the PR's files and dispatches specialist reviewers in parallel:
 
 | Changes detected | Reviewer |
 |-|-|
@@ -79,7 +79,7 @@ you -> router -> specialist subagent(s) -> result
 | Crypto, input handling, secrets | security-auditor |
 | General quality | code-reviewer |
 
-Findings are collected, deduplicated, and presented by severity (must fix > should fix > consider).
+Findings are collected and presented grouped by specialist. The router drafts a PR comment and asks before posting.
 
 **"Triage this issue"** -- the router dispatches the triage agent, which assesses readiness (requirements clarity, scope, dependencies, implementability) and recommends a workflow: implement directly, refine first, split into sub-issues, or flag for human review.
 
@@ -89,9 +89,8 @@ Findings are collected, deduplicated, and presented by severity (must fix > shou
 
 | Agent | Purpose |
 |-|-|
-| router | Task intake, classification, delegation. Never writes code. |
+| router | Task intake, classification, delegation. Coordinates review fanout. Never writes code. |
 | implement | Takes a well-defined issue, writes code, runs tests, commits |
-| review | Coordinates multi-pass PR review, fans out to domain specialists |
 | code-reviewer | General code quality: correctness, readability, architecture, naming |
 | security-auditor | Security review: injection, auth bypasses, secrets, crypto, OWASP |
 | go-k8s-reviewer | Go idioms, concurrency, controller patterns, CRD conventions, RBAC |
