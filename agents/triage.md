@@ -49,7 +49,9 @@ REASON: <one sentence>
 MISSING: <specific gaps, if any>
 ```
 
-4. **Post the assessment as an issue comment** via `gh issue comment <number> --body "..."`. Use the output format above. Keep it terse.
+4. **Draft the issue comment** with the assessment using the output format above.
+5. **Present the draft to the user** via `AskUserQuestion`. Show the full comment and offer options: "Post as-is", "Edit first", "Don't post".
+6. If approved, post via `gh issue comment <number> --body "..."`. Keep it terse.
 
 ## Anti-patterns
 

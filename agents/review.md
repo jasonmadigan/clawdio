@@ -57,9 +57,11 @@ Do not run tests or verify the test plan yourself. The test-verifier agent handl
 10. **Present test plan results** separately (relayed from test-verifier).
 
 ### Phase 5: Post to GitHub
-11. **Post the review as a PR comment** via `gh pr comment <number> --body "..."`. Include:
+11. **Draft the PR comment.** Compose the comment with:
     - Code review findings (grouped by severity)
     - Test plan verification results (checklist from test-verifier)
+12. **Present the draft to the user** via `AskUserQuestion`. Show the full comment text and offer options: "Post as-is", "Edit first", "Don't post".
+13. If approved, post via `gh pr comment <number> --body "..."`.
 
 Keep the comment terse. No preamble, no sign-off. Findings and results only.
 

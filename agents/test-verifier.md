@@ -43,7 +43,9 @@ Test plan verification:
 - [ ] Generate STL at max depth → manual: requires checking exported file geometry
 ```
 
-5. **Post results as a PR comment** via `gh pr comment <number> --body "..."`. Keep it terse -- checklist only, no preamble.
+5. **Draft the PR comment** with the results checklist.
+6. **Present the draft to the user** via `AskUserQuestion`. Show the full comment and offer options: "Post as-is", "Edit first", "Don't post".
+7. If approved, post via `gh pr comment <number> --body "..."`. Terse -- checklist only, no preamble.
 
 ## Anti-patterns
 

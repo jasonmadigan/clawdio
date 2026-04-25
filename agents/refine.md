@@ -52,7 +52,9 @@ OPEN QUESTIONS:
 - [ ] Open questions are things the codebase can't answer (need human input)
 
 ### Phase 5: Post to GitHub
-5. **Post the refined spec as an issue comment** via `gh issue comment <number> --body "..."`. Use the spec format from Phase 3. Keep it terse.
+5. **Draft the issue comment** with the refined spec from Phase 3.
+6. **Present the draft to the user** via `AskUserQuestion`. Show the full comment and offer options: "Post as-is", "Edit first", "Don't post".
+7. If approved, post via `gh issue comment <number> --body "..."`. Keep it terse.
 
 ## Anti-patterns
 
