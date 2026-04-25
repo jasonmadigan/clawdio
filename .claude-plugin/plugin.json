@@ -1,7 +1,7 @@
 {
   "name": "workbench",
   "description": "Personal SDLC toolkit. Router agent, specialist subagents, workflow skills, and hooks for engineering work across multiple repos.",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "author": {
     "name": "Jason Madigan"
   },
