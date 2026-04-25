@@ -46,19 +46,34 @@ If the user says "what's on everywhere" or "across all repos", drop the `--repo`
 
 ## Output format
 
+Every item MUST include a clickable GitHub URL. Build URLs from the repo and number: `https://github.com/{owner}/{repo}/issues/{number}` for issues, `https://github.com/{owner}/{repo}/pull/{number}` for PRs.
+
+Include priority labels if present (P0, P1, priority/high, priority/critical).
+
+Omit empty sections entirely. Don't show "Review (0)".
+
 ```
 Review (2)
-  org/repo#456  Add rate limit header support  (alice, 2h ago)
-  org/repo#89   Fix webhook retry logic        (bob, 1d ago)
+  #456  Add rate limit header support        alice, 2h ago
+        https://github.com/org/repo/pull/456
+  #89   Fix webhook retry logic              bob, 1d ago
+        https://github.com/org/repo/pull/89
 
 Address feedback (1)
-  org/repo#450  Policy attachment refactor      (2 comments, 3h ago)
+  #450  Policy attachment refactor            2 comments, 3h ago
+        https://github.com/org/repo/pull/450
 
 Merge (1)
-  org/repo#87   Update SDK dependency           (approved, CI passing)
+  #87   Update SDK dependency                 approved, CI passing
+        https://github.com/org/repo/pull/87
 
 Implement (3)
-  org/repo#460  Support wildcard hostnames      (ready, P1)
-  org/repo#30   Max depth calculation           (ready)
-  org/repo#43   Post-complete hooks             (ready)
+  #460  Support wildcard hostnames            priority/high
+        https://github.com/org/repo/issues/460
+  #30   Max depth calculation
+        https://github.com/org/repo/issues/30
+  #43   Post-complete hooks
+        https://github.com/org/repo/issues/43
 ```
+
+After the list, suggest what to do first with a one-line recommendation. Offer to pull up the top priority item.
