@@ -22,19 +22,44 @@ What clawdio added on top was multi-agent spawning, monitoring, and workflow cha
 
 ### Router + specialist pattern
 
-A single router agent (router.md) serves as the entry point for all tasks. It:
-1. Assesses what the user needs
-2. Picks the right specialist subagent(s)
-3. Dispatches them (possibly in parallel for multi-pass review)
-4. Collects results and reports back
+A single router agent (router.md) serves as the entry point for all tasks. It classifies the request, dispatches specialists, collects results, and reports back. This replaces clawdio's workflow engine.
 
-This replaces clawdio's workflow engine. The routing logic is in natural language, making it flexible for edge cases that YAML transitions couldn't handle.
+```mermaid
+graph TD
+    User -->|request| Router
+    Router -->|classify| Decision{request type}
+    Decision -->|issue| Implement[implement agent]
+    Decision -->|PR| Review[review coordination]
+    Decision -->|vague issue| Refine[refine agent]
+    Decision -->|what's on| WhatNext[workbench:what-next skill]
+    Decision -->|ship| Ship[workbench:ship skill]
+    Review -->|parallel| CR[code-reviewer]
+    Review -->|parallel| TV[test-verifier]
+    Review -->|if Go| GK[go-k8s-reviewer]
+    Review -->|if auth| AR[auth-reviewer]
+    Review -->|if security| SA[security-auditor]
+    CR & TV & GK & AR & SA -->|findings| Router
+    Router -->|present| User
+```
 
 ### Multi-pass review
 
-Reviews use the fanout pattern: the router classifies the PR's file paths, then spawns multiple specialist reviewers in parallel. A Go/K8s PR gets the Go/K8s specialist. An auth/policy PR gets the auth/policy specialist. Security-sensitive changes get a security auditor. A test-verifier always runs to check the test plan. Results are collected and presented grouped by specialist.
+Reviews use the fanout pattern: the router classifies the PR's file paths, then spawns multiple specialist reviewers in parallel. Results are collected and presented grouped by specialist.
 
 The router owns this fanout directly because subagents cannot spawn sub-subagents (they don't have access to the Agent tool). There is no intermediate "review coordinator" agent.
+
+### SDLC loop
+
+The review flow feeds into address-feedback, which feeds back into review. The router manages this loop.
+
+```mermaid
+graph LR
+    WN[what's on] --> Review
+    Review --> AF[address feedback]
+    AF --> Review
+    Review --> Merge
+    Merge --> WN
+```
 
 ### Three-tier primitive location
 

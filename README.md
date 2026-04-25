@@ -57,33 +57,87 @@ Must be authenticated (`gh auth login`).
 
 Talk to the **router** agent. It classifies your request and dispatches the right specialist.
 
+```mermaid
+graph LR
+    You -->|request| Router
+    Router -->|classify & dispatch| Agents
+    Router -->|invoke| Skills
+    Agents -->|findings| Router
+    Router -->|present & confirm| You
+    Hooks -.->|guardrails| Agents
 ```
-you -> router -> specialist subagent(s) -> result
-                    |
-                    +-- skills (what-next, ship, pr-description)
-                    +-- hooks (block secrets, lint, format)
+
+### Review flow
+
+The router owns the review fanout. Subagents can't spawn sub-subagents, so the router dispatches all specialists in parallel.
+
+```mermaid
+graph TD
+    A[User: review PR] --> B[Router: classify files]
+    B --> C{File types?}
+    C -->|always| D[code-reviewer]
+    C -->|always| E[test-verifier]
+    C -->|*.go| F[go-k8s-reviewer]
+    C -->|*auth*| G[auth-reviewer]
+    C -->|*crypto*| H[security-auditor]
+    D & E & F & G & H -->|findings| I[Router: present grouped by specialist]
+    I --> J{User decision}
+    J -->|post| K[gh pr comment]
+    K --> L{Actionable findings?}
+    L -->|yes| M[address-feedback agent]
+    M --> N{Next?}
+    N -->|re-review| B
+    N -->|merge| O[merge gate]
+    N -->|done| P[what's on]
 ```
 
-### Typical workflows
+### Ship flow
 
-**"What's on?"** -- the router invokes the `what-next` skill. It queries GitHub for issues assigned to you, PRs needing your review, PRs with feedback to address, and approved PRs ready to merge. Returns a prioritised list.
+Full lifecycle from issue to merged PR.
 
-**"Ship #42"** -- the router invokes the `ship` skill. It dispatches the implement agent on the issue, pushes the branch, creates a PR following the `pr-description` template, dispatches the review agent for a self-review, fixes any findings, and reports back with a link to the PR.
+```mermaid
+graph TD
+    A[User: ship #N] --> B[implement agent]
+    B --> C[pre-ship checks]
+    C --> D[git push + gh pr create]
+    D --> E[review coordination]
+    E --> F{findings?}
+    F -->|critical/important| G[address-feedback agent]
+    G --> E
+    F -->|clean| H{repo type?}
+    H -->|personal + user says merge| I[gh pr merge --squash]
+    H -->|team| J[report PR link, wait for team review]
+```
 
-**"Review this PR"** -- the router classifies the PR's files and dispatches specialist reviewers in parallel:
+### What's on flow
 
-| Changes detected | Reviewer |
-|-|-|
-| Go code, controllers, CRDs | go-k8s-reviewer |
-| Auth, OAuth, OIDC, tokens, policies | auth-reviewer |
-| Crypto, input handling, secrets | security-auditor |
-| General quality | code-reviewer |
+Scoped to the current repo by default.
 
-Findings are collected and presented grouped by specialist. The router drafts a PR comment and asks before posting.
+```mermaid
+graph TD
+    A[User: what's on] --> B[detect repo]
+    B --> C[query issues + PRs]
+    C --> D{group by action}
+    D --> E[address feedback]
+    D --> F[review requested]
+    D --> G[merge ready]
+    D --> H[my PRs awaiting review]
+    D --> I[implement]
+    E & F & G & H & I --> J[present prioritised table]
+    J --> K[suggest top action]
+```
 
-**"Triage this issue"** -- the router dispatches the triage agent, which assesses readiness (requirements clarity, scope, dependencies, implementability) and recommends a workflow: implement directly, refine first, split into sub-issues, or flag for human review.
+### Typical commands
 
-**"This issue is vague"** -- the router dispatches the refine agent, which explores the codebase, identifies gaps (missing acceptance criteria, edge cases, scope), and produces a structured specification with testable acceptance criteria.
+**"What's on?"** -- invokes the `what-next` skill. Queries GitHub for issues, PRs, and feedback in the current repo. Returns a prioritised table.
+
+**"Ship #42"** -- invokes the `ship` skill. Implements, pushes, creates PR, self-reviews, fixes findings, reports back.
+
+**"Review this PR"** -- classifies files, dispatches specialist reviewers in parallel, collects findings, drafts PR comment.
+
+**"Triage this issue"** -- dispatches the triage agent. Assesses readiness, recommends workflow (implement, refine, split, or human review).
+
+**"This issue is vague"** -- dispatches the refine agent. Produces a structured spec with testable acceptance criteria.
 
 ## Agents
 
