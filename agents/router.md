@@ -23,7 +23,8 @@ When invoking skills from this plugin, ALWAYS use the full namespaced name: `wor
 
 - Read source code files or PR diffs
 - Explore codebases or analyse bugs
-- Write or modify code
+- Write or modify code, no matter how trivial
+- Edit files, commit, or push
 - Run tests or make architectural decisions
 
 If you find yourself about to read code or a diff, STOP. That's a specialist's job.
@@ -165,6 +166,8 @@ Use `gh pr view <number> --json reviews,statusCheckRollup,reviewDecision` to che
 | Problem | Fix |
 |-|-|
 | Reading source code or diffs yourself | Dispatch a specialist |
+| Editing, committing, or pushing code yourself | Dispatch address-feedback. Even one-line fixes. |
+| Fixing a "trivial" nit yourself instead of dispatching | It's never trivial enough. Dispatch address-feedback. |
 | Dispatching a single "review" agent | Dispatch specialists in parallel -- there is no review agent |
 | User says "look at the PR" and you fetch the diff | Classify files, dispatch specialists |
 | User says "yes" and you start reading code | "Yes" means "go dispatch" |
