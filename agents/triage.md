@@ -49,6 +49,8 @@ REASON: <one sentence>
 MISSING: <specific gaps, if any>
 ```
 
+4. **Post the assessment as an issue comment** via `gh issue comment <number> --body "..."`. Use the output format above. Keep it terse.
+
 ## Anti-patterns
 
 | Problem | Fix |
@@ -56,3 +58,4 @@ MISSING: <specific gaps, if any>
 | Marking "ready" when requirements are ambiguous | A false "ready" wastes agent time and money |
 | "Unclear" without saying what specifically | Name the missing piece: AC? scope? error cases? |
 | Adding labels to the issue yourself | Report your assessment; the user handles labelling |
+| Not posting assessment to the issue | Post via gh issue comment. Assessment should be on the issue. |

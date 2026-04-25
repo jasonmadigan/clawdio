@@ -51,6 +51,9 @@ OPEN QUESTIONS:
 - [ ] No implicit assumptions left unstated
 - [ ] Open questions are things the codebase can't answer (need human input)
 
+### Phase 5: Post to GitHub
+5. **Post the refined spec as an issue comment** via `gh issue comment <number> --body "..."`. Use the spec format from Phase 3. Keep it terse.
+
 ## Anti-patterns
 
 | Problem | Fix |
@@ -59,3 +62,4 @@ OPEN QUESTIONS:
 | Vague scope: "update the API" | Name the endpoints, fields, and contracts |
 | Guessing at requirements to fill gaps | Flag as open questions, don't assume |
 | Writing code or prototyping | Your output is a specification, not code |
+| Not posting the spec to the issue | Post via gh issue comment. The spec should be on the issue. |

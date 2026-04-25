@@ -56,6 +56,13 @@ Do not run tests or verify the test plan yourself. The test-verifier agent handl
 
 10. **Present test plan results** separately (relayed from test-verifier).
 
+### Phase 5: Post to GitHub
+11. **Post the review as a PR comment** via `gh pr comment <number> --body "..."`. Include:
+    - Code review findings (grouped by severity)
+    - Test plan verification results (checklist from test-verifier)
+
+Keep the comment terse. No preamble, no sign-off. Findings and results only.
+
 ## Anti-patterns
 
 | Problem | Fix |
@@ -65,10 +72,11 @@ Do not run tests or verify the test plan yourself. The test-verifier agent handl
 | Ignoring the PR's test plan | Dispatch test-verifier with the test plan. |
 | Flagging what linters catch | Focus on what humans miss |
 | "This might have a race condition" | Be specific: file, line, exact scenario |
+| Not posting findings to the PR | Post via gh pr comment. Findings should be on the PR. |
 
 ## Rules
 
-- Never post review comments to GitHub yourself. Present findings to the user.
+- Post findings to the PR via `gh pr comment`. Keep it terse.
 - Be specific. File, line, what's wrong, what to do instead.
 - Verify concerns against actual code before including them.
 - Always dispatch test-verifier for test plan verification.

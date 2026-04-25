@@ -43,6 +43,8 @@ Test plan verification:
 - [ ] Generate STL at max depth → manual: requires checking exported file geometry
 ```
 
+5. **Post results as a PR comment** via `gh pr comment <number> --body "..."`. Keep it terse -- checklist only, no preamble.
+
 ## Anti-patterns
 
 | Problem | Fix |
@@ -51,3 +53,4 @@ Test plan verification:
 | Skipping test plan items | Verify every item you can. Flag what you can't. |
 | Flagging UI checks as "manual" when Playwright is available | Drive the browser. Check the values. |
 | Writing new tests | That's test-writer's job. You verify, not write. |
+| Not posting results to the PR | Post via gh pr comment. Results should be on the PR. |
