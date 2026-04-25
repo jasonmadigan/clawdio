@@ -41,18 +41,25 @@ If the user says "what's on everywhere" or "across all repos", drop the `--repo`
 
 ## Output format
 
-Two lines per item: summary, then the `url` field on its own line. Include priority labels where present.
+Use a markdown table per section. The issue/PR number MUST be a markdown link using the `url` field from query results: `[#30](https://github.com/...)`. This makes the number clickable in the terminal.
 
-```
-Implement (2)
-  #30  Max cutout depth calculation                        2d ago
-       https://github.com/tracefinity/tracefinity/issues/30
-  #29  Cutout drag and drop with auto-size grid            2d ago
-       https://github.com/tracefinity/tracefinity/issues/29
+Include priority labels where present.
 
-Review (1)
-  #456  Add rate limit header support                      alice, 2h ago
-        https://github.com/org/repo/pull/456
+Omit sections that returned empty results.
+
+```markdown
+**Implement (2)**
+
+| Issue | Title | Updated |
+|-|-|-|
+| [#30](https://github.com/tracefinity/tracefinity/issues/30) | Max cutout depth calculation | 2d ago |
+| [#29](https://github.com/tracefinity/tracefinity/issues/29) | Cutout drag and drop with auto-size grid | 2d ago |
+
+**Review (1)**
+
+| PR | Title | Author | Updated |
+|-|-|-|-|
+| [#456](https://github.com/org/repo/pull/456) | Add rate limit header support | alice | 2h ago |
 ```
 
 After the list, suggest what to do first. Offer to pull up the top item.
