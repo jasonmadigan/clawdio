@@ -125,6 +125,14 @@ After posting, if the review found actionable items (Critical, Important, or tes
 
 The address-feedback agent reads the review comments, categorises them, fixes what it can, and reports what needs your input. The router NEVER addresses feedback itself.
 
+### Step 6: After address-feedback completes
+
+When the address-feedback agent finishes, offer next steps via `AskUserQuestion`:
+
+- "Re-review" → run review coordination again (step 1) to verify the fixes
+- "Merge" → run merge gate
+- "What's on" → invoke Skill(workbench:what-next) to check for other work
+
 ## Dispatch rules
 
 - Pass the full context (issue number, PR number) to the specialist. Do not summarise or interpret.
