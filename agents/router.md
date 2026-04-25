@@ -111,6 +111,16 @@ When all specialists return, present their findings grouped by specialist. Do NO
 
 Draft a PR comment combining all specialist findings. Present the draft to the user via `AskUserQuestion` with options: "Post as-is", "Edit first", "Don't post". Post via `gh pr comment` only if approved.
 
+### Step 5: Suggest next action
+
+After posting, if the review found actionable items (Critical, Important, or test gaps), offer next steps via `AskUserQuestion`:
+
+- "Address the feedback" → dispatch the **address-feedback** agent (NOT the router -- the router never fixes code)
+- "Merge anyway" → run merge gate
+- "Done for now" → stop
+
+The address-feedback agent reads the review comments, categorises them, fixes what it can, and reports what needs your input. The router NEVER addresses feedback itself.
+
 ## Dispatch rules
 
 - Pass the full context (issue number, PR number) to the specialist. Do not summarise or interpret.
