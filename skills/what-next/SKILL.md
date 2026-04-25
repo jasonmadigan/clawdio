@@ -6,27 +6,48 @@ description: Scans GitHub for actionable work in the current repo. Shows issues 
 
 Find actionable work for the current repo.
 
-## Step 1: Run this script
+## Process
 
-Run this EXACTLY as written. Do not modify the commands or remove fields.
+1. Detect the current repo:
 
 ```bash
-REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner') && echo "=== ISSUES ===" && gh search issues --assignee=@me --state=open --repo="$REPO" --json number,title,labels,updatedAt,url --limit 20 && echo "=== REVIEW REQUESTED ===" && gh search prs --review-requested=@me --state=open --repo="$REPO" --json number,title,author,updatedAt,url --limit 20 && echo "=== CHANGES REQUESTED ===" && gh search prs --author=@me --state=open --review=changes_requested --repo="$REPO" --json number,title,updatedAt,url --limit 20 && echo "=== APPROVED ===" && gh search prs --author=@me --state=open --review=approved --repo="$REPO" --json number,title,updatedAt,url --limit 20
+gh repo view --json nameWithOwner --jq '.nameWithOwner'
 ```
 
-If the user says "what's on everywhere" or "across all repos", remove `--repo="$REPO"` from each command.
+2. Run these queries scoped to that repo:
 
-## Step 2: Format the output
+```bash
+REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
-Group results by section. Use EXACTLY this format -- two lines per item, URL on the second line. The `url` field from the JSON results is the link. Do not use tables. Do not omit URLs.
+# issues assigned to me
+gh search issues --assignee=@me --state=open --repo="$REPO" --json number,title,labels,updatedAt,url --limit 20
 
-Omit sections that returned empty results.
+# PRs needing my review
+gh search prs --review-requested=@me --state=open --repo="$REPO" --json number,title,author,updatedAt,url --limit 20
+
+# my PRs with review feedback
+gh search prs --author=@me --state=open --review=changes_requested --repo="$REPO" --json number,title,updatedAt,url --limit 20
+
+# my PRs that are approved
+gh search prs --author=@me --state=open --review=approved --repo="$REPO" --json number,title,updatedAt,url --limit 20
+```
+
+If the user says "what's on everywhere" or "across all repos", drop the `--repo` filter and search globally.
+
+3. Group by action type and present as a prioritised list:
+   - Address feedback (unblock others) > Reviews requested (unblock others) > Approved PRs (merge and close) > Implementation (new work)
+
+4. Omit empty sections.
+
+## Output format
+
+Two lines per item: summary, then the `url` field on its own line. Include priority labels where present.
 
 ```
 Implement (2)
   #30  Max cutout depth calculation                        2d ago
        https://github.com/tracefinity/tracefinity/issues/30
-  #29  Cutout drag and drop behaviour with auto-size grid  2d ago
+  #29  Cutout drag and drop with auto-size grid            2d ago
        https://github.com/tracefinity/tracefinity/issues/29
 
 Review (1)
@@ -34,14 +55,4 @@ Review (1)
         https://github.com/org/repo/pull/456
 ```
 
-Include priority labels if present (P0, P1, priority/high, priority/critical).
-
-## Step 3: Recommend
-
-After the list, suggest what to do first. Priority order:
-1. Address feedback (unblock others)
-2. Reviews requested (unblock others)
-3. Approved PRs (merge and close)
-4. Implementation (new work)
-
-Offer to pull up the top item.
+After the list, suggest what to do first. Offer to pull up the top item.
