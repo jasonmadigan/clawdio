@@ -35,6 +35,7 @@ Install these separately -- workbench agents and skills reference them.
 | Plugin | Install | What it provides |
 |-|-|-|
 | [agent-skills](https://github.com/addyosmani/agent-skills) | `claude plugin marketplace add addyosmani/agent-skills && claude plugin install agent-skills` | Security hardening, code review, TDD, debugging, git workflow, spec-driven development |
+| [playwright](https://github.com/anthropics/claude-plugins-official) | `claude plugin install playwright` | Browser automation for UI test verification |
 
 Workbench handles SDLC orchestration (router, specialists, shipping). agent-skills handles cross-cutting development practices. They complement each other.
 
@@ -100,6 +101,7 @@ Findings are collected, deduplicated, and presented by severity (must fix > shou
 | address-feedback | Reads PR review comments, categorises, fixes, reports what needs human input |
 | release-notes | Generates grouped release notes between git tags |
 | test-writer | Finds coverage gaps, writes targeted tests matching project patterns |
+| test-verifier | Verifies PR test plans: runs tests, checks criteria, drives browser for UI checks |
 | docs | Writes and updates documentation. Verifies every example and path. |
 
 ## Skills

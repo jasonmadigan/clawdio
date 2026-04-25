@@ -5,7 +5,7 @@ description: Multi-pass PR reviewer that fans out to domain specialists based on
 
 # Review
 
-You coordinate PR reviews by dispatching specialist reviewers and synthesising their findings.
+You coordinate PR reviews by dispatching specialist reviewers and synthesising their findings. You do not review code yourself -- you dispatch specialists and collect their results.
 
 ## Process
 
@@ -28,35 +28,25 @@ File paths in diff
 
 Multiple specialists can run in parallel on the same PR.
 
-### Phase 2: Dispatch
+### Phase 2: Dispatch code reviewers
 4. **Spawn relevant specialists in parallel.** Pass each the full PR diff and context. Do not summarise.
 5. Invoke the `agent-skills:review` skill for structured multi-axis quality review.
 6. For PRs touching input handling, auth, or external data, invoke `agent-skills:security`.
 
-### Phase 3: Verify
-7. **Run the project's test suite.** All tests must pass on the PR branch.
-8. **If the PR has a test plan**, verify each item:
+### Phase 3: Dispatch test verification
+7. **Dispatch test-verifier agent** in verification mode. Pass the PR number and the test plan from the PR description. The test-verifier will:
+   - Run the project's test suite
+   - Verify each test plan item (programmatically, analytically, or flag for manual check)
+   - Report results as a checklist
 
-```
-Test plan item
-├── Can you verify it programmatically? (run a command, check output)
-│   └── Yes → run it, report pass/fail
-├── Can you verify it analytically? (check math against constants in code)
-│   └── Yes → do the calculation, report whether expected values match
-├── Requires manual testing? (UI interaction, visual check)
-│   └── Yes → flag it as "manual verification needed" with clear steps
-└── Can't verify at all?
-    └── Flag it as unverified
-```
-
-Do not skip the test plan. If a PR includes verification steps, those are acceptance criteria. A review without test plan verification is incomplete.
+Do not run tests or verify the test plan yourself. The test-verifier agent handles all verification.
 
 ### Phase 4: Synthesise
-9. **Collect and deduplicate.** Merge findings from all specialists:
+8. **Collect and deduplicate.** Merge findings from all specialists and test-verifier:
    - Remove duplicates (same file, same line, same concern)
    - Resolve conflicts (note both positions if specialists disagree)
 
-10. **Present by severity** with clear labels:
+9. **Present code review findings by severity:**
 
 | Label | Meaning | Action required |
 |-|-|-|
@@ -64,29 +54,21 @@ Do not skip the test plan. If a PR includes verification steps, those are accept
 | **Important** | Architecture concern, significant readability issue | Should fix |
 | **Nit** | Style suggestion, minor improvement | Optional, author's call |
 
-11. **Report test plan results** separately from code review findings:
-
-```
-Test plan:
-- [x] Set 2u height, lip on: max should be 5.0mm → verified: calcMaxCutoutDepth(2, true) = 5.05
-- [x] Toggle lip off: max should be 7.3mm → verified: calcMaxCutoutDepth(2, false) = 7.25
-- [ ] Generate STL at max depth with lip on → manual verification needed
-```
+10. **Present test plan results** separately (relayed from test-verifier).
 
 ## Anti-patterns
 
 | Problem | Fix |
 |-|-|
-| Saying "looks good" without running tests | Run the test suite. Always. |
-| Ignoring the PR's test plan | The test plan is acceptance criteria. Verify it. |
+| Reviewing code yourself instead of dispatching | You coordinate. Specialists review. |
+| Saying "looks good" without test verification | Dispatch test-verifier. Always. |
+| Ignoring the PR's test plan | Dispatch test-verifier with the test plan. |
 | Flagging what linters catch | Focus on what humans miss |
 | "This might have a race condition" | Be specific: file, line, exact scenario |
-| Reviewing only the diff, not surrounding context | Read the full function/file |
-| Finding something in every PR | If it's correct and clean, say so |
 
 ## Rules
 
 - Never post review comments to GitHub yourself. Present findings to the user.
 - Be specific. File, line, what's wrong, what to do instead.
 - Verify concerns against actual code before including them.
-- If a test plan exists, verify every item you can. Report what you couldn't verify.
+- Always dispatch test-verifier for test plan verification.

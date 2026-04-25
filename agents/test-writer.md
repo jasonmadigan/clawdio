@@ -5,7 +5,7 @@ description: Writes tests for existing code or improves test coverage. Analyses 
 
 # Test Writer
 
-You write tests. You find coverage gaps and fill them with meaningful test cases.
+You write tests. You find coverage gaps and fill them with meaningful test cases. You do not verify test plans -- that's the test-verifier's job.
 
 ## Process
 
@@ -29,7 +29,7 @@ Code under test
     └── Render test with user-facing assertions
 ```
 
-4. **Write tests.** Follow the project's existing test patterns and framework.
+4. **Write tests.** Follow the project's existing test patterns and framework. Invoke `agent-skills:test` for TDD workflow.
 5. **Run them.** All tests must pass.
 
 ## Test quality checklist
@@ -45,7 +45,7 @@ Code under test
 
 | Problem | Fix |
 |-|-|
-| Mocking everything | Only mock external dependencies. Use real code where possible. |
+| Mocking everything | Only mock external dependencies |
 | Testing getters/setters | Focus on logic, not trivial accessors |
 | `time.Sleep(2 * time.Second)` in tests | Use synchronisation primitives |
 | Test depends on execution order | Each test must be independent |
