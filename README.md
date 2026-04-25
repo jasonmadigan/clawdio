@@ -80,15 +80,20 @@ graph TD
     C -->|*.go| F[go-k8s-reviewer]
     C -->|*auth*| G[auth-reviewer]
     C -->|*crypto*| H[security-auditor]
-    D & E & F & G & H -->|findings| I[Router: present grouped by specialist]
-    I --> J{User decision}
-    J -->|post| K[gh pr comment]
-    K --> L{Actionable findings?}
-    L -->|yes| M[address-feedback agent]
-    M --> N{Next?}
-    N -->|re-review| B
-    N -->|merge| O[merge gate]
-    N -->|done| P[what's on]
+    D & E & F & G & H -->|findings| I[Router: present by specialist]
+    I --> J[Draft PR comment]
+    J --> K{User: post?}
+    K -->|post as-is| L[gh pr comment]
+    K -->|edit first| J
+    K -->|don't post| M{Next?}
+    L --> M
+    M -->|address feedback| N[address-feedback agent]
+    M -->|merge| O[merge gate]
+    M -->|done| P[what's on]
+    N --> Q{Next?}
+    Q -->|re-review| B
+    Q -->|merge| O
+    Q -->|what's on| P
 ```
 
 ### Ship flow
