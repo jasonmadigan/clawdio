@@ -35,9 +35,11 @@ If the user says "what's on everywhere" or "across all repos", drop the `--repo`
 
 ## Output format
 
-Use a markdown table per section. The issue/PR number MUST be a markdown link using the `url` field: `[#30](https://github.com/...)`.
+Use the SAME table format for every section. All tables must have identical structure: three columns, markdown link in the first column. No exceptions. Do not vary the format between sections.
 
-Include priority labels where present. Omit sections with no results.
+The first column MUST be a markdown link using the `url` field: `[#30](https://github.com/...)`.
+
+Omit sections with no results. Include priority labels where present.
 
 **Priority order (most urgent first):**
 
@@ -47,28 +49,30 @@ Include priority labels where present. Omit sections with no results.
 4. **My PRs** -- my open PRs with `reviewDecision: REVIEW_REQUIRED` (awaiting review)
 5. **Implement** -- issues assigned to me
 
+Every section uses this exact table structure:
+
 ```markdown
 **Address feedback (1)**
 
-| PR | Title | Updated |
+| # | Title | Detail |
 |-|-|-|
-| [#50](https://github.com/org/repo/pull/50) | Policy refactor | 3h ago, changes requested |
+| [#50](https://github.com/org/repo/pull/50) | Policy refactor | changes requested, 3h ago |
 
 **Review (1)**
 
-| PR | Title | Author | Updated |
-|-|-|-|-|
-| [#456](https://github.com/org/repo/pull/456) | Add rate limit header | alice | 2h ago |
+| # | Title | Detail |
+|-|-|-|
+| [#456](https://github.com/org/repo/pull/456) | Add rate limit header | alice, 2h ago |
 
 **My PRs (1)**
 
-| PR | Title | Status | Updated |
-|-|-|-|-|
-| [#32](https://github.com/org/repo/pull/32) | Fix drag glitch | awaiting review | 1h ago |
+| # | Title | Detail |
+|-|-|-|
+| [#32](https://github.com/org/repo/pull/32) | Fix drag glitch | awaiting review, today |
 
 **Implement (2)**
 
-| Issue | Title | Updated |
+| # | Title | Detail |
 |-|-|-|
 | [#30](https://github.com/org/repo/issues/30) | Max cutout depth calculation | 2d ago |
 | [#29](https://github.com/org/repo/issues/29) | Cutout drag and drop with auto-size grid | 2d ago |
