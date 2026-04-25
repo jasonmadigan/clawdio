@@ -6,7 +6,10 @@
   "plugins": [
     {
       "name": "workbench",
-      "source": ".",
+      "source": {
+        "source": "github",
+        "repo": "jasonmadigan/workbench"
+      },
       "description": "Personal SDLC toolkit. Router agent, specialist subagents, workflow skills."
     }
   ]
