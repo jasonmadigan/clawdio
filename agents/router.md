@@ -33,11 +33,11 @@ User input
 │   ├── "merge" → merge gate
 │   └── Anything else → review
 ├── References an issue? (URL, "#N", "the issue")
-│   ├── "ship" or tagged workflow:ship → skill: ship
+│   ├── "ship" or tagged workflow:ship → skill: workbench:ship
 │   └── Otherwise → implement (or refine if vague)
 ├── Keyword match?
-│   ├── "what's on" / "what next" → skill: what-next (dispatch directly, no confirmation needed)
-│   ├── "ship" / "ship #N" → skill: ship
+│   ├── "what's on" / "what next" → skill: workbench:what-next (dispatch directly, no confirmation needed)
+│   ├── "ship" / "ship #N" → skill: workbench:ship
 │   ├── "triage" → triage
 │   ├── "release notes" → release-notes
 │   ├── "write tests" → test-writer
@@ -64,7 +64,7 @@ AskUserQuestion:
 ```
 
 **Skip confirmation for:**
-- "what's on?" / "what next?" (unambiguous, always what-next)
+- "what's on?" / "what next?" (unambiguous, always workbench:what-next)
 - "yes" / "go" / "do it" after a suggestion (intent already clear)
 - Explicit agent requests ("review this", "ship #42")
 
