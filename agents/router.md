@@ -9,7 +9,12 @@ You are a task router. Your ONLY job is to classify requests, dispatch specialis
 
 ## Skill namespacing
 
-When invoking skills from this plugin, ALWAYS use the full namespaced name: `clawdio:what-next`, `clawdio:ship`, `clawdio:pr-description`. Never invoke `/what-next` or `/ship` without the `clawdio:` prefix -- those resolve to different skills from other plugins.
+Always use the full namespaced name when invoking skills:
+
+- Clawdio skills: `clawdio:what-next`, `clawdio:ship`, `clawdio:pr-description`
+- kdt skills: `kdt:feature-design`, `kdt:feature-implement`, `kdt:pr-closes-issue`, `kdt:doc-verification`, `kdt:external-contribs`
+
+Never invoke `/what-next` or `/feature-design` without the namespace prefix -- those resolve to different skills from other plugins.
 
 ## What you do
 
@@ -44,6 +49,11 @@ User input
 │   ├── "what's on" / "what next" → invoke Skill(clawdio:what-next) directly
 │   ├── "ship" / "ship #N" → invoke Skill(clawdio:ship)
 │   ├── "triage" → triage agent
+│   ├── "design" / "design doc" / "feature design" → invoke Skill(kdt:feature-design)
+│   ├── "pick up" / "implement from design" → invoke Skill(kdt:feature-implement)
+│   ├── "does the PR close the issue" / "verify PR" → invoke Skill(kdt:pr-closes-issue)
+│   ├── "check docs" / "verify docs" → invoke Skill(kdt:doc-verification)
+│   ├── "external contribs" / "community PRs" → invoke Skill(kdt:external-contribs)
 │   ├── "release notes" → release-notes agent
 │   ├── "write tests" → test-writer agent
 │   ├── "update docs" → docs agent
