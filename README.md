@@ -18,6 +18,9 @@ For local development:
 
 ```bash
 claude --plugin-dir /path/to/clawdio
+
+# or with a specific agent and permissions
+claude --plugin-dir ~/Work/clawdio --dangerously-skip-permissions --agent clawdio:router
 ```
 
 Reload after changes without restarting Claude:
@@ -35,9 +38,10 @@ Install these separately -- clawdio agents and skills reference them.
 | Plugin | Install | What it provides |
 |-|-|-|
 | [agent-skills](https://github.com/addyosmani/agent-skills) | `claude plugin marketplace add addyosmani/agent-skills && claude plugin install agent-skills` | Security hardening, code review, TDD, debugging, git workflow, spec-driven development |
+| [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin) | `claude plugin marketplace add kuadrant/dev-team-plugin && claude plugin install kdt` | Design docs, feature lifecycle, Go PR review, doc verification, external contribs |
 | [playwright](https://github.com/anthropics/claude-plugins-official) | `claude plugin install playwright` | Browser automation for UI test verification |
 
-Clawdio handles SDLC orchestration (router, specialists, shipping). agent-skills handles cross-cutting development practices. They complement each other.
+Clawdio handles SDLC orchestration (router, specialists, shipping). agent-skills handles cross-cutting development practices. kdt provides design doc workflows and feature lifecycle management. The router dispatches to all three.
 
 ### CLI tools
 
@@ -52,6 +56,9 @@ Must be authenticated (`gh auth login`).
 | Server | Purpose | Used by |
 |-|-|-|
 | GitHub MCP | Issue/PR comments, review threads | address-feedback |
+| [Atlassian MCP](https://github.com/sooperset/mcp-atlassian) | Jira issue search, creation, updates | what-next, triage, router |
+
+Install Atlassian MCP via `claude mcp add atlassian -s user -e JIRA_URL=https://your-site.atlassian.net -e JIRA_USERNAME=you@company.com -e JIRA_API_TOKEN=your-token -- uvx mcp-atlassian --jira-url https://your-site.atlassian.net`. Requires `uv` installed.
 
 ## How it works
 
