@@ -1,13 +1,13 @@
 # Contributing
 
-How to add agents, skills, and hooks to workbench.
+How to add agents, skills, and hooks to clawdio.
 
 ## Development workflow
 
-1. Edit files in the workbench repo
-2. Test locally: `claude --plugin-dir /path/to/workbench --agent workbench:router`
+1. Edit files in the clawdio repo
+2. Test locally: `claude --plugin-dir /path/to/clawdio --agent clawdio:router`
 3. Reload without restarting: `/reload-plugins` inside an active session
-4. Commit, push, **bump version in plugin.json**, then: `claude plugin update workbench@jasonmadigan-workbench`
+4. Commit, push, **bump version in plugin.json**, then: `claude plugin update clawdio@jasonmadigan-clawdio`
 
 Version bumps are required for updates to be picked up. Use patch bumps (0.1.x) for iteration.
 
@@ -151,7 +151,7 @@ Common mistakes table.
 - The description field drives automatic invocation. Be specific about trigger phrases.
 - Lead with the rule or action. Details and rationale below.
 - Skills are loaded into the caller's context window, so keep them focused.
-- Reference via `/workbench:skill-name` in conversations.
+- Reference via `/clawdio:skill-name` in conversations.
 - Include output format examples that are exact, not suggestive. Agents interpret loose formats liberally.
 
 ## Writing hooks
@@ -188,4 +188,4 @@ Use this for domain-specific reviewers that contain proprietary knowledge or tea
 
 ## Companion plugin
 
-[agent-skills](https://github.com/addyosmani/agent-skills) provides cross-cutting development skills (TDD, debugging, security hardening, code review, spec-driven development). Workbench agents reference these skills where relevant. Install it alongside workbench.
+[agent-skills](https://github.com/addyosmani/agent-skills) provides cross-cutting development skills (TDD, debugging, security hardening, code review, spec-driven development). Clawdio agents reference these skills where relevant. Install it alongside clawdio.

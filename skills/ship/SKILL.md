@@ -24,7 +24,7 @@ End-to-end lifecycle for shipping an issue to a merged PR.
    git checkout -b <issue-number>-<short-description>
    ```
 3. Push: `git push -u origin HEAD`
-4. Create the PR via `gh pr create` following the workbench:pr-description skill format. Link the issue.
+4. Create the PR via `gh pr create` following the clawdio:pr-description skill format. Link the issue.
 
 - [ ] PR description follows template (summary, linked issue, test evidence)
 - [ ] Branch name is descriptive
@@ -59,4 +59,4 @@ PR ready
 | Merging on a team repo without asking | Never. The user decides after team review. |
 | Skipping self-review | Always self-review. Catches obvious issues before team sees them. |
 | Pushing without running tests | Tests must pass before push. |
-| Creating a PR with a one-line description | Follow the workbench:pr-description skill format. |
+| Creating a PR with a one-line description | Follow the clawdio:pr-description skill format. |

@@ -1,6 +1,6 @@
 # Kickoff
 
-This repo is a Claude Code plugin called **workbench**. It replaces a custom Go orchestrator (clawdio) with native Claude Code primitives: agents, skills, hooks, and MCP configs.
+This repo is a Claude Code plugin called **clawdio**. It replaces a custom Go orchestrator with native Claude Code primitives: agents, skills, hooks, and MCP configs.
 
 ## What we're building
 
@@ -23,7 +23,7 @@ Read `docs/architecture.md` for full context and `docs/grill-findings.md` for th
 
 ## What's next
 
-1. **Test the router.** Install the plugin (`claude plugin marketplace add jasonmadigan/workbench && claude plugin install workbench`), invoke the router, see if the dispatch pattern works.
+1. **Test the router.** Install the plugin (`claude plugin marketplace add jasonmadigan/clawdio && claude plugin install clawdio`), invoke the router, see if the dispatch pattern works.
 2. **Hone the agents.** The current definitions are first drafts. Run them on real tasks and iterate based on actual output quality.
 3. **Override domain specialists.** The plugin ships generic go-k8s-reviewer and auth-reviewer. Override with domain-specific versions in `~/.claude/agents/`.
 4. **Install agent-skills.** `claude plugin marketplace add addyosmani/agent-skills && claude plugin install agent-skills` for companion skills (TDD, debugging, security, code review, git workflow).

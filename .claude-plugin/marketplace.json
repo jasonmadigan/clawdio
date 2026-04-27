@@ -1,14 +1,14 @@
 {
-  "name": "jasonmadigan-workbench",
+  "name": "jasonmadigan-clawdio",
   "owner": {
     "name": "Jason Madigan"
   },
   "plugins": [
     {
-      "name": "workbench",
+      "name": "clawdio",
       "source": {
         "source": "github",
-        "repo": "jasonmadigan/workbench"
+        "repo": "jasonmadigan/clawdio"
       },
       "description": "Personal SDLC toolkit. Router agent, specialist subagents, workflow skills."
     }

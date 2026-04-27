@@ -1,4 +1,4 @@
-# workbench
+# clawdio
 
 Claude Code plugin for SDLC automation. A router agent dispatches to specialist subagents based on the task. Skills provide cross-cutting workflow knowledge. Hooks enforce guardrails.
 
@@ -8,16 +8,16 @@ The premise: the bottleneck is never orchestration infrastructure -- it's agent 
 
 ```bash
 # add the marketplace
-claude plugin marketplace add jasonmadigan/workbench
+claude plugin marketplace add jasonmadigan/clawdio
 
 # install the plugin (user scope, available in all repos)
-claude plugin install workbench
+claude plugin install clawdio
 ```
 
 For local development:
 
 ```bash
-claude --plugin-dir /path/to/workbench
+claude --plugin-dir /path/to/clawdio
 ```
 
 Reload after changes without restarting Claude:
@@ -28,7 +28,7 @@ Reload after changes without restarting Claude:
 
 ## Dependencies
 
-Install these separately -- workbench agents and skills reference them.
+Install these separately -- clawdio agents and skills reference them.
 
 ### Plugins
 
@@ -37,7 +37,7 @@ Install these separately -- workbench agents and skills reference them.
 | [agent-skills](https://github.com/addyosmani/agent-skills) | `claude plugin marketplace add addyosmani/agent-skills && claude plugin install agent-skills` | Security hardening, code review, TDD, debugging, git workflow, spec-driven development |
 | [playwright](https://github.com/anthropics/claude-plugins-official) | `claude plugin install playwright` | Browser automation for UI test verification |
 
-Workbench handles SDLC orchestration (router, specialists, shipping). agent-skills handles cross-cutting development practices. They complement each other.
+Clawdio handles SDLC orchestration (router, specialists, shipping). agent-skills handles cross-cutting development practices. They complement each other.
 
 ### CLI tools
 
@@ -199,7 +199,7 @@ Personal agent overrides stay out of this repo. They're your competitive advanta
 
 See [docs/contributing.md](docs/contributing.md) for how to write agents, skills, and hooks.
 
-Edit, test locally with `claude --plugin-dir .`, push, then `claude plugin update workbench@jasonmadigan-workbench`.
+Edit, test locally with `claude --plugin-dir .`, push, then `claude plugin update clawdio@jasonmadigan-clawdio`.
 
 ## Design
 

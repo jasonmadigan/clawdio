@@ -1,4 +1,4 @@
-# workbench
+# clawdio
 
 Personal Claude Code plugin for SDLC automation.
 

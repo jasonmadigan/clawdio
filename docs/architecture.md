@@ -31,8 +31,8 @@ graph TD
     Decision -->|issue| Implement[implement agent]
     Decision -->|PR| Review[review coordination]
     Decision -->|vague issue| Refine[refine agent]
-    Decision -->|what's on| WhatNext[workbench:what-next skill]
-    Decision -->|ship| Ship[workbench:ship skill]
+    Decision -->|what's on| WhatNext[clawdio:what-next skill]
+    Decision -->|ship| Ship[clawdio:ship skill]
     Review -->|parallel| CR[code-reviewer]
     Review -->|parallel| TV[test-verifier]
     Review -->|if Go| GK[go-k8s-reviewer]
@@ -144,6 +144,6 @@ Skills for commit conventions, security checklists, and review rubrics are provi
 
 ## References
 
-- [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) -- companion plugin, installed alongside workbench
+- [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) -- companion plugin, installed alongside clawdio
 - Claude Code plugin format: `.claude-plugin/plugin.json` manifest, `agents/`, `skills/`, `hooks/` directories
 - Clawdio v2 vision doc: `~/Work/clawdio/docs/v2-vision.md` (historical context)
