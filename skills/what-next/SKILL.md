@@ -34,6 +34,16 @@ Include open Jira tickets in the results under their own section. Show key, summ
 
 If the Atlassian MCP server is not available, skip this step silently.
 
+### Jira project to GitHub org mapping
+
+When scoping results to the current repo, use this mapping to show relevant Jira tickets:
+
+| Jira project | GitHub org/repos |
+|-|-|
+| CONNLINK | Kuadrant/* (kuadrant-operator, mcp-gateway, etc.) |
+
+If the current repo is in the Kuadrant org, include CONNLINK tickets. For repos not in this mapping, show all Jira tickets without filtering.
+
 ## Step 3: Format
 
 Present results in markdown tables. Group by priority (highest first):
