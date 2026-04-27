@@ -35,8 +35,10 @@ docs/            architecture, contributing, project context
 ## Dependencies
 
 - [agent-skills](https://github.com/addyosmani/agent-skills) plugin for security, code review, TDD, debugging, git workflow
+- [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin) plugin for design docs, feature lifecycle, Go PR review
 - `gh` CLI (authenticated) for GitHub operations
 - GitHub MCP server for issue/PR comment threads
+- [Atlassian MCP](https://github.com/sooperset/mcp-atlassian) for Jira integration (optional)
 
 ## Docs
 

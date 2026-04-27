@@ -16,7 +16,7 @@ Read `docs/architecture.md` for full context and `docs/grill-findings.md` for th
 
 ## What exists
 
-- 13 agent definitions in `agents/` (router, implement, review, code-reviewer, security-auditor, go-k8s-reviewer, auth-reviewer, triage, refine, address-feedback, release-notes, test-writer, docs)
+- 13 agent definitions in `agents/` (router, implement, code-reviewer, security-auditor, go-k8s-reviewer, auth-reviewer, test-verifier, triage, refine, address-feedback, release-notes, test-writer, docs)
 - 3 skills in `skills/` (what-next, ship, pr-description)
 - 3 hooks (block-env-writes, format-on-save, lint-on-edit)
 - Plugin manifest + marketplace.json

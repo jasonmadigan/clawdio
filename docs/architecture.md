@@ -133,17 +133,20 @@ Skills for commit conventions, security checklists, and review rubrics are provi
 | Server | Purpose |
 |-|-|
 | GitHub MCP | Issues, PRs, Actions, releases, code search |
+| [Atlassian MCP](https://github.com/sooperset/mcp-atlassian) | Jira issue search, creation, updates |
 
 ## Dependencies
 
 | Dependency | Type | Purpose |
 |-|-|-|
 | [agent-skills](https://github.com/addyosmani/agent-skills) | Claude Code plugin | Companion skills (security, code review, TDD, debugging, git workflow) |
+| [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin) | Claude Code plugin | Design docs, feature lifecycle, Go PR review, doc verification |
 | `gh` CLI | CLI tool | GitHub issue/PR operations (must be authenticated) |
 | GitHub MCP server | MCP server | Issue/PR comments, review threads |
+| Atlassian MCP server | MCP server | Jira issue search and management |
 
 ## References
 
 - [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) -- companion plugin, installed alongside clawdio
+- [kuadrant/dev-team-plugin](https://github.com/kuadrant/dev-team-plugin) -- design doc workflows, Go PR review, feature lifecycle
 - Claude Code plugin format: `.claude-plugin/plugin.json` manifest, `agents/`, `skills/`, `hooks/` directories
-- Clawdio v2 vision doc: `~/Work/clawdio/docs/v2-vision.md` (historical context)
