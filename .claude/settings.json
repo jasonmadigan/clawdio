@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(oc get *)",
+      "Bash(oc whoami *)",
+      "Bash(oc logs *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh search issues *)",
+      "Bash(gh search prs *)",
+      "Bash(claude plugin *)",
+      "Bash(claude --plugin-dir *)",
+      "Bash(claude mcp *)",
+      "mcp__github__get_file_contents"
+    ]
+  }
+}
