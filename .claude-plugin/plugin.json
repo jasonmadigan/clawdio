@@ -1,10 +1,14 @@
 {
   "name": "clawdio",
   "description": "Personal SDLC toolkit. Router agent, specialist subagents, workflow skills, and hooks for engineering work across multiple repos.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Jason Madigan"
   },
   "repository": "https://github.com/jasonmadigan/clawdio",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": [
+    { "name": "agent-skills", "marketplace": "addy-agent-skills" },
+    { "name": "kdt", "marketplace": "dev-team-plugin" }
+  ]
 }

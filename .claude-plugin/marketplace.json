@@ -3,6 +3,10 @@
   "owner": {
     "name": "Jason Madigan"
   },
+  "allowCrossMarketplaceDependenciesOn": [
+    "addy-agent-skills",
+    "dev-team-plugin"
+  ],
   "plugins": [
     {
       "name": "clawdio",
