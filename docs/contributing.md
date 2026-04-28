@@ -146,6 +146,39 @@ Exact format specification with examples.
 Common mistakes table.
 ```
 
+### Skill arguments
+
+Skills can accept arguments via the Skill tool's `args` parameter, passed as a single string.
+
+- Document accepted args in an **Arguments** section immediately after the skill heading, before the process.
+- Use a table: arg name, form (positional/flag/named), example.
+- Support both positional (`ship #42`) and named (`ship --issue #42`) where it makes sense.
+- The skill instructions tell Claude how to parse the args string. No framework needed.
+- Args are for common cases. Complex orchestration should use conversation context.
+
+Example:
+
+```markdown
+## Arguments
+
+| Arg | Form | Example |
+|-|-|-|
+| issue ref | positional or `--issue` | `ship #42` |
+| `--resume` | flag | Resume in-progress workflow |
+```
+
+### Workflow state
+
+Workflow skills (multi-phase, resumable) can persist state to memory between sessions.
+
+- Write state to `memory/workflow_<skill>_<branch>.md` after each phase gate.
+- Use standard memory frontmatter (`name`, `description`, `type: project`).
+- Check for existing state at skill start. Offer to resume or start fresh.
+- Clean up on completion: delete the state file and remove from `MEMORY.md` index.
+- State files are project-scoped (in the project memory directory), not global.
+
+State file body should be simple key-value pairs: phase, issue, branch, PR URL, timestamp.
+
 ### Conventions
 
 - The description field drives automatic invocation. Be specific about trigger phrases.

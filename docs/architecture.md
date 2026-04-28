@@ -61,6 +61,18 @@ graph LR
     Merge --> WN
 ```
 
+### Diff gate
+
+After the implement agent completes, ship verifies the agent actually produced code changes by checking `git rev-list` and `git status`. If both are empty, the workflow stops with `blocked` status rather than proceeding to push an empty branch.
+
+This is inline in the ship skill, not a universal hook. A PostToolUse hook can't distinguish implementation agents from other agent calls (it only sees the tool name, not the task semantics). The archived Go engine had typed skill contracts with a `phase` field to scope this; the hook system has no equivalent.
+
+### Workflow state
+
+Multi-phase skills persist their progress to memory files (`memory/workflow_<skill>_<branch>.md`) after each phase gate. If a session dies mid-flow, the next invocation detects the state file and offers to resume.
+
+This replaces the archived engine's `WorkflowRun` database table and `.clawdio-progress.md` file. The memory system is simpler (plain markdown files with frontmatter) and already survives context compression. State files are cleaned up on workflow completion.
+
 ### Three-tier primitive location
 
 1. **Per-repo** (`.claude/` in each project): CLAUDE.md, repo-specific agents and hooks
@@ -112,11 +124,11 @@ Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The ro
 
 ## Skill catalogue
 
-| Skill | Purpose |
-|-|-|
-| what-next | Scans GitHub for actionable work, suggests priorities |
-| ship | Full lifecycle: implement > push > PR > review > merge |
-| pr-description | PR body template and conventions |
+| Skill | Purpose | Args |
+|-|-|-|
+| what-next | Scans GitHub for actionable work, suggests priorities | none |
+| ship | Full lifecycle: implement > push > PR > review > merge | `<issue>`, `--resume`, `--skip-review` |
+| pr-description | PR body template and conventions | none |
 
 Skills for commit conventions, security checklists, and review rubrics are provided by the companion plugin [agent-skills](https://github.com/addyosmani/agent-skills) (`git-workflow-and-versioning`, `security-and-hardening`, `code-review-and-quality`).
 
