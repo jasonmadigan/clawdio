@@ -104,6 +104,16 @@ Invoke the `agent-skills:test` skill for TDD.
 - The description field is what Claude uses to decide when to dispatch this agent. Make it precise.
 - British English. No emojis. No AI-sounding prose.
 
+### Worktree-isolated agents
+
+Agents dispatched with `isolation: "worktree"` get their own git worktree. Conventions:
+
+- The agent must not `cd` outside its working directory or reference files in the main worktree.
+- Include a "Constraint: stay in your worktree" section at the top of the agent definition.
+- Use a structured output format (e.g. `RESULT: complete`, `PR_URL: ...`) so the router can parse results programmatically.
+- The agent cannot dispatch subagents (no Agent tool access). It can invoke skills.
+- Worktrees are preserved if the agent made changes, cleaned up if not. The agent does not manage its own worktree lifecycle.
+
 ### When to use an agent vs a skill
 
 - **Agent**: isolated task with its own context. Needs to read code, make decisions, produce output.

@@ -73,6 +73,14 @@ Multi-phase skills persist their progress to memory files (`memory/workflow_<ski
 
 This replaces the archived engine's `WorkflowRun` database table and `.clawdio-progress.md` file. The memory system is simpler (plain markdown files with frontmatter) and already survives context compression. State files are cleaned up on workflow completion.
 
+### Worktree isolation
+
+Agents that do implementation work can be dispatched with `isolation: "worktree"` on the Agent tool. Claude Code creates a separate git worktree per agent, the agent works entirely within it, and the worktree is preserved if changes were made (cleaned up if not).
+
+This enables parallel multi-issue work: the router dispatches N worktree-worker agents simultaneously, each in its own worktree, each implementing a different issue. They can't conflict because they're in separate worktrees. When they finish, the router collects structured results (PR URLs, branch names, or blocked status) and presents a summary.
+
+The worktree-worker agent is deliberately constrained: no Agent tool access (can't spawn sub-subagents), no ability to escape its worktree, and a structured output format the router can parse. This makes it a predictable, parallelisable unit of work.
+
 ### Three-tier primitive location
 
 1. **Per-repo** (`.claude/` in each project): CLAUDE.md, repo-specific agents and hooks
@@ -119,8 +127,9 @@ Start with Claude Code (interactive). When the ceiling is hit (need scheduling, 
 | test-writer | Writes tests, finds coverage gaps | Plugin |
 | test-verifier | Verifies PR test plans, runs tests, drives browser for UI checks | Plugin |
 | docs | Documentation writing and updating | Plugin |
+| worktree-worker | Self-contained implement-to-PR in an isolated worktree, for parallel dispatch | Plugin |
 
-Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The router owns all agent dispatch, including review fanout to specialist reviewers in parallel.
+Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The router owns all agent dispatch, including review fanout to specialist reviewers in parallel and worktree-worker dispatch for multi-issue shipping.
 
 ## Skill catalogue
 

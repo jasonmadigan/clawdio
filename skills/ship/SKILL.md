@@ -18,6 +18,8 @@ Passed via the Skill tool's `args` string. Parse the following:
 
 If no issue ref is provided and no `--resume`, ask the user.
 
+**Multiple issues:** if the user passes multiple issue refs ("ship #10, #11, #12"), do not handle this yourself. Tell the router to use parallel worktree dispatch instead. Ship handles one issue at a time.
+
 ## Resume
 
 Before starting a new workflow, check for existing state:

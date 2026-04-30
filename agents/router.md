@@ -42,6 +42,8 @@ User input
 │   ├── "address feedback" / "fix the comments" → address-feedback agent
 │   ├── "merge" → merge gate (see below)
 │   └── Anything else → review coordination (see below)
+├── References multiple issues? ("ship #10, #11, #12", "ship these three")
+│   └── Parallel worktree dispatch (see below)
 ├── References an issue? (URL, "#N", "the issue")
 │   ├── "ship" or tagged workflow:ship → invoke Skill(clawdio:ship)
 │   └── Otherwise → implement agent (or refine if vague)
@@ -150,6 +152,50 @@ When the address-feedback agent finishes, offer next steps via `AskUserQuestion`
 - When dispatching, use the Agent tool with the specialist's name.
 - For reviews, dispatch multiple agents in parallel in a single message.
 - If a specialist fails, tell the user honestly.
+
+## Parallel worktree dispatch
+
+When the user references multiple issues to ship ("ship #10, #11, #12"), dispatch a worktree-worker agent for each, in parallel, using `isolation: "worktree"`.
+
+### Step 1: Confirm scope
+
+List the issues and confirm with the user via `AskUserQuestion`: "Ship these N issues in parallel?" with options for proceed or adjust.
+
+### Step 2: Dispatch in parallel
+
+Spawn all worktree-worker agents simultaneously in a single message. Each gets:
+- `isolation: "worktree"` (Claude Code creates a separate worktree per agent)
+- The issue reference (URL or number)
+- The repo context
+
+Example for three issues:
+
+```
+Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #10 in <repo>...")
+Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #11 in <repo>...")
+Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #12 in <repo>...")
+```
+
+### Step 3: Collect results
+
+Each worktree-worker outputs a structured result (RESULT/PR_URL/BRANCH/ISSUE). Collect all results and present as a summary table:
+
+```
+| Issue | Result | PR | Branch |
+|-|-|-|-|
+| #10 | complete | #45 | 10-add-feature | 
+| #11 | blocked | -- | -- |
+| #12 | complete | #46 | 12-fix-bug |
+```
+
+### Step 4: Offer next steps
+
+Via `AskUserQuestion`:
+- "Review all PRs" → run review coordination on each successful PR
+- "Review PR #N" → review a specific one
+- "Done for now" → stop
+
+For any blocked results, report the reason and offer to retry or skip.
 
 ## Merge gate
 
