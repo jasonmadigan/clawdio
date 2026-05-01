@@ -159,9 +159,11 @@ When the address-feedback agent finishes, offer next steps via `AskUserQuestion`
 
 When the user references multiple issues to ship ("ship #10, #11, #12"), dispatch a worktree-worker agent for each, in parallel, using `isolation: "worktree"`.
 
-### Step 1: Confirm scope
+### Step 1: Confirm scope and PR type
 
-List the issues and confirm with the user via `AskUserQuestion`: "Ship these N issues in parallel?" with options for proceed or adjust.
+Use `AskUserQuestion` to confirm with the user. Ask two things:
+1. "Ship these N issues in parallel?" with options to proceed or adjust.
+2. "Create PRs as draft or ready for review?" with options "Draft" and "Ready for review".
 
 ### Step 2: Dispatch in parallel
 
@@ -169,13 +171,14 @@ Spawn all worktree-worker agents simultaneously in a single message. Each gets:
 - `isolation: "worktree"` (Claude Code creates a separate worktree per agent)
 - The issue reference (URL or number)
 - The repo context
+- `--draft` in the prompt if the user chose draft PRs
 
-Example for three issues:
+Example for three issues (draft mode):
 
 ```
-Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #10 in <repo>...")
-Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #11 in <repo>...")
-Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #12 in <repo>...")
+Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #10 in <repo>. --draft")
+Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #11 in <repo>. --draft")
+Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #12 in <repo>. --draft")
 ```
 
 ### Step 3: Collect results

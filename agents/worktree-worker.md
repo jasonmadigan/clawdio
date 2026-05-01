@@ -47,11 +47,12 @@ If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report `RESULT: blocked` with re
 
 ### Phase 5: Create PR
 
-6. Create the PR via `gh pr create`. Follow the clawdio:pr-description skill format. Link the issue.
+6. Create the PR via `gh pr create`. Follow the clawdio:pr-description skill format. Link the issue. If the router passed `--draft` in your prompt, add `--draft` to the `gh pr create` command.
 
 - [ ] PR description follows template
 - [ ] Issue is linked
 - [ ] Branch name is descriptive
+- [ ] Draft/ready matches what the router specified
 
 ### Phase 6: Report
 
