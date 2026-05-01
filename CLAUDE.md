@@ -9,8 +9,8 @@ Router agent dispatches to specialist subagents based on the task. Skills provid
 ```
 you -> router -> specialist subagent(s) -> result
                     |
-                    +-- skills (what-next, ship, pr-description)
-                    +-- hooks (block secrets, lint, format)
+                    +-- skills (what-next, ship, pr-description, issues)
+                    +-- hooks (block secrets, doc-sync, lint, format)
 ```
 
 ## Structure

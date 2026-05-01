@@ -47,7 +47,7 @@ Clawdio handles SDLC orchestration (router, specialists, shipping). agent-skills
 
 | Tool | Purpose | Used by |
 |-|-|-|
-| [`gh`](https://cli.github.com/) | GitHub issue/PR operations | implement, review, triage, refine, address-feedback, what-next, ship |
+| [`gh`](https://cli.github.com/) | GitHub issue/PR operations | implement, review, triage, refine, address-feedback, what-next, ship, worktree-worker, issues |
 
 Must be authenticated (`gh auth login`).
 
@@ -67,9 +67,11 @@ Talk to the **router** agent. It classifies your request and dispatches the righ
 ```mermaid
 graph LR
     You -->|request| Router
-    Router -->|classify & dispatch| Agents
-    Router -->|invoke| Skills
-    Agents -->|findings| Router
+    Router -->|classify & dispatch| Agents[agents: implement, triage, refine, address-feedback, release-notes, test-writer, docs, worktree-worker]
+    Router -->|invoke| Skills[skills: what-next, ship, issues, pr-description]
+    Router -->|review fanout| Review[code-reviewer + test-verifier + domain specialists]
+    Agents -->|result| Router
+    Review -->|findings| Router
     Router -->|present & confirm| You
     Hooks -.->|guardrails| Agents
 ```
@@ -105,38 +107,56 @@ graph TD
 
 ### Ship flow
 
-Full lifecycle from issue to merged PR.
+Full lifecycle from issue to merged PR. Supports `--resume` (pick up mid-flow), `--skip-review`, and `--draft`.
 
 ```mermaid
 graph TD
-    A[User: ship #N] --> B[implement agent]
-    B --> C[pre-ship checks]
-    C --> D[git push + gh pr create]
-    D --> E[review coordination]
-    E --> F{findings?}
-    F -->|critical/important| G[address-feedback agent]
-    G --> E
-    F -->|clean| H{repo type?}
-    H -->|personal + user says merge| I[gh pr merge --squash]
-    H -->|team| J[report PR link, wait for team review]
+    A[User: ship #N] --> AA{resume?}
+    AA -->|existing state| AB[resume from saved phase]
+    AA -->|fresh| B[assign issue + in-progress label]
+    AB --> B
+    B --> C[implement agent]
+    C --> D{diff gate}
+    D -->|no changes| E[blocked: comment on issue, remove label]
+    D -->|changes exist| F[pre-ship checks]
+    F --> G[git push + gh pr create]
+    G --> H{draft or ready?}
+    H -->|draft| I[gh pr create --draft]
+    H -->|ready| J[gh pr create]
+    I --> K[review coordination]
+    J --> K
+    K --> L{findings?}
+    L -->|critical/important| M[address-feedback agent]
+    M --> K
+    L -->|clean| N{repo type?}
+    N -->|personal + user says merge| O[gh pr merge --squash]
+    N -->|team| P[report PR link, wait for team review]
 ```
+
+For multiple issues ("ship #1, #2, #3"), the router dispatches worktree-worker agents in parallel, each in an isolated git worktree.
 
 ### What's on flow
 
-Scoped to the current repo by default.
+Scoped to the current repo by default. Checks OWNERS files for component ownership.
 
 ```mermaid
 graph TD
     A[User: what's on] --> B[detect repo]
-    B --> C[query issues + PRs]
-    C --> D{group by action}
-    D --> E[address feedback]
-    D --> F[review requested]
-    D --> G[merge ready]
-    D --> H[my PRs awaiting review]
-    D --> I[implement]
-    E & F & G & H & I --> J[present prioritised table]
-    J --> K[suggest top action]
+    B --> C[query issues + PRs assigned/requesting review]
+    B --> D[check OWNERS file]
+    D -->|user is owner| E[query unassigned issues + open PRs]
+    D -->|not owner| F[skip]
+    B --> G[query Jira if available]
+    C & E & F & G --> H{group by priority}
+    H --> I[address feedback]
+    H --> J[review requested]
+    H --> K[merge ready]
+    H --> L[my PRs awaiting review]
+    H --> M[implement]
+    H --> N[component owner]
+    H --> O[Jira]
+    I & J & K & L & M & N & O --> P[present prioritised table]
+    P --> Q[suggest top action]
 ```
 
 ### Typical commands
@@ -150,6 +170,10 @@ graph TD
 **"Triage this issue"** -- dispatches the triage agent. Assesses readiness, recommends workflow (implement, refine, split, or human review).
 
 **"This issue is vague"** -- dispatches the refine agent. Produces a structured spec with testable acceptance criteria.
+
+**"Ship #1, #2, #3"** -- dispatches worktree-worker agents in parallel, each in its own worktree. Collects results and presents a summary table.
+
+**"Create an issue"** -- invokes the `issues` skill. Creates issues with acceptance criteria, manages state, links PRs.
 
 ## Agents
 
@@ -168,6 +192,7 @@ graph TD
 | test-writer | Finds coverage gaps, writes targeted tests matching project patterns |
 | test-verifier | Verifies PR test plans: runs tests, checks criteria, drives browser for UI checks |
 | docs | Writes and updates documentation. Verifies every example and path. |
+| worktree-worker | Self-contained implement-to-PR in an isolated worktree. For parallel multi-issue dispatch. |
 
 ## Skills
 
@@ -176,12 +201,14 @@ graph TD
 | what-next | "what's on?", "what next?" | Scans GitHub for issues, PRs, and feedback across repos |
 | ship | "ship #42" | Full lifecycle: implement > push > PR > self-review > fix |
 | pr-description | Creating a PR | PR body template: summary, linked issue, test evidence |
+| issues | "create issue", "update issue" | Create, update, close issues. Manages PR-issue links and lifecycle state. |
 
 ## Hooks
 
 | Hook | Trigger | Purpose |
 |-|-|-|
 | block-env-writes | Before Write/Edit | Blocks writes to `.env`, credentials, `.pem`, `.key` files |
+| doc-sync-reminder | After Write/Edit | Reminds to update docs when agent/skill/hook files change |
 | format-on-save | After Write/Edit | Runs project formatter if configured (prettier, gofmt, clang-format) |
 | lint-on-edit | After Write/Edit | Runs project linter if configured (eslint, golangci-lint) |
 
