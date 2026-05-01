@@ -24,6 +24,17 @@ docs/            architecture, contributing, project context
 .claude-plugin/  plugin manifest and marketplace config
 ```
 
+## Key files
+
+| File | Purpose |
+|-|-|
+| `agents/router.md` | Task intake and dispatch to specialist agents |
+| `agents/worktree-worker.md` | Isolated implement-to-PR agent for parallel issue work |
+| `skills/ship/SKILL.md` | End-to-end issue-to-merged-PR lifecycle |
+| `skills/doc-sync/SKILL.md` | Cross-references docs against repo contents, fixes drift |
+| `hooks/hooks.json` | Lifecycle hooks -- secret blocking, doc-sync reminders |
+| `.claude-plugin/plugin.json` | Plugin manifest: name, version, dependencies |
+
 ## Keeping docs in sync
 
 After any change to `agents/`, `skills/`, or `hooks/`, invoke `clawdio:doc-sync` before committing. It verifies README.md, CLAUDE.md, docs/architecture.md, and docs/contributing.md against the actual repo contents and fixes discrepancies.
