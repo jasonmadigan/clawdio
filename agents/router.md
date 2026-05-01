@@ -50,6 +50,7 @@ User input
 ├── Keyword match?
 │   ├── "what's on" / "what next" → invoke Skill(clawdio:what-next) directly
 │   ├── "ship" / "ship #N" → invoke Skill(clawdio:ship)
+│   ├── "create issue" / "file issue" / "open issue" / "update issue" → invoke Skill(clawdio:issues)
 │   ├── "triage" → triage agent
 │   ├── "design" / "design doc" / "feature design" → invoke Skill(kdt:feature-design)
 │   ├── "pick up" / "implement from design" → invoke Skill(kdt:feature-implement)
