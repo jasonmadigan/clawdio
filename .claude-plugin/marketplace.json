@@ -1,5 +1,6 @@
 {
   "name": "jasonmadigan-clawdio",
+  "description": "Personal Claude Code plugin for SDLC automation",
   "owner": {
     "name": "Jason Madigan"
   },
