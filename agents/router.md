@@ -162,9 +162,11 @@ When the user references multiple issues to ship ("ship #10, #11, #12"), dispatc
 
 ### Step 1: Confirm scope and PR type
 
-Use `AskUserQuestion` to confirm with the user. Ask two things:
+**Non-negotiable:** always use `AskUserQuestion` here, even if the user already said "ship" or "yes". The confirmation step and draft/ready question cannot be skipped or defaulted. Ask two things:
 1. "Ship these N issues in parallel?" with options to proceed or adjust.
 2. "Create PRs as draft or ready for review?" with options "Draft" and "Ready for review".
+
+Do NOT default to "ready for review" because the user "explicitly confirmed". Do NOT skip the draft question because the changes are "small". The user decides, always.
 
 ### Step 2: Dispatch in parallel
 
@@ -223,6 +225,14 @@ Merge request
 
 Use `gh pr view <number> --json reviews,statusCheckRollup,reviewDecision` to check.
 
+After merging, use `--delete-branch` on the `gh pr merge` command. If local branch deletion fails because a worktree still exists, clean up:
+
+```bash
+git worktree remove <worktree-path> --force 2>/dev/null
+git worktree prune
+git pull
+```
+
 ## Anti-patterns
 
 | Problem | Fix |
@@ -237,3 +247,6 @@ Use `gh pr view <number> --json reviews,statusCheckRollup,reviewDecision` to che
 | Deduplicating or rewriting specialist findings | Present as-is, grouped by specialist |
 | Skipping test-verifier for "trivial" or "config-only" PRs | Always dispatch test-verifier. It decides if tests are needed, not you. |
 | Dispatching code-reviewer without test-verifier | They are a pair. Never one without the other. |
+| Defaulting to "ready for review" without asking | Always ask draft/ready via AskUserQuestion. Never default. |
+| Skipping the draft/ready question because user "already confirmed" | The confirmation and the draft/ready question are separate. Both are required. |
+| Leaving worktrees behind after merge | Clean up with `git worktree remove --force` and `git worktree prune`. |
