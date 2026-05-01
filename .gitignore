@@ -1,4 +1,19 @@
+# os artifacts
 .DS_Store
+Thumbs.db
+
+# editor temp files
 *.swp
 *.swo
 *~
+
+# dependencies
+node_modules/
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# temp
+tmp/
