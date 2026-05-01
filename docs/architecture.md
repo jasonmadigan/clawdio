@@ -33,12 +33,17 @@ graph TD
     Decision -->|vague issue| Refine[refine agent]
     Decision -->|what's on| WhatNext[clawdio:what-next skill]
     Decision -->|ship| Ship[clawdio:ship skill]
+    Decision -->|multi-issue| Parallel[parallel dispatch]
     Review -->|parallel| CR[code-reviewer]
     Review -->|parallel| TV[test-verifier]
     Review -->|if Go| GK[go-k8s-reviewer]
     Review -->|if auth| AR[auth-reviewer]
     Review -->|if security| SA[security-auditor]
     CR & TV & GK & AR & SA -->|findings| Router
+    Parallel -->|worktree| WW1[worktree-worker 1]
+    Parallel -->|worktree| WW2[worktree-worker 2]
+    Parallel -->|worktree| WWN[worktree-worker N]
+    WW1 & WW2 & WWN -->|result| Router
     Router -->|present| User
 ```
 
