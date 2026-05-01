@@ -29,11 +29,17 @@ graph TD
     User -->|request| Router
     Router -->|classify| Decision{request type}
     Decision -->|issue| Implement[implement agent]
-    Decision -->|PR| Review[review coordination]
+    Decision -->|PR review| Review[review coordination]
+    Decision -->|PR feedback| AF[address-feedback agent]
     Decision -->|vague issue| Refine[refine agent]
-    Decision -->|what's on| WhatNext[clawdio:what-next skill]
-    Decision -->|ship| Ship[clawdio:ship skill]
+    Decision -->|triage| Triage[triage agent]
+    Decision -->|what's on| WhatNext[clawdio:what-next]
+    Decision -->|ship| Ship[clawdio:ship]
+    Decision -->|create/update issue| Issues[clawdio:issues]
     Decision -->|multi-issue| Parallel[parallel dispatch]
+    Decision -->|release notes| RN[release-notes agent]
+    Decision -->|write tests| TW[test-writer agent]
+    Decision -->|update docs| Docs[docs agent]
     Review -->|parallel| CR[code-reviewer]
     Review -->|parallel| TV[test-verifier]
     Review -->|if Go| GK[go-k8s-reviewer]
@@ -44,6 +50,7 @@ graph TD
     Parallel -->|worktree| WW2[worktree-worker 2]
     Parallel -->|worktree| WWN[worktree-worker N]
     WW1 & WW2 & WWN -->|result| Router
+    Implement & AF & Refine & Triage & RN & TW & Docs -->|result| Router
     Router -->|present| User
 ```
 
