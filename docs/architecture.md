@@ -145,9 +145,10 @@ Skills for commit conventions, security checklists, and review rubrics are provi
 
 | Hook | Trigger | Purpose |
 |-|-|-|
-| lint-on-edit | PostToolUse (Write/Edit) | Run linter after every file edit |
 | block-env-writes | PreToolUse (Write/Edit) | Prevent writing to .env, credentials files |
+| doc-sync-reminder | PostToolUse (Write/Edit) | Remind to update docs when agent/skill/hook files change |
 | format-on-save | PostToolUse (Write/Edit) | Auto-format code after edits |
+| lint-on-edit | PostToolUse (Write/Edit) | Run linter after every file edit |
 
 ## MCP servers
 
