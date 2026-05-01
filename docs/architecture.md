@@ -151,6 +151,7 @@ Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The ro
 | ship | Full lifecycle: implement > push > PR > review > merge | `<issue>`, `--resume`, `--skip-review`, `--draft` |
 | pr-description | PR body template and conventions | none |
 | issues | Create, update, link, and manage GitHub issues and PR relationships | `create`, `update`, `close`, `link`, `--repo` |
+| doc-sync | Verify and fix documentation accuracy against actual repo contents | none |
 
 Skills for commit conventions, security checklists, and review rubrics are provided by the companion plugin [agent-skills](https://github.com/addyosmani/agent-skills) (`git-workflow-and-versioning`, `security-and-hardening`, `code-review-and-quality`).
 

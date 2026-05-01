@@ -63,9 +63,11 @@ gh issue edit <number> --remove-label "in-progress"
 
 ### Phase 2: Pre-ship checks
 
-2. Invoke `agent-skills:shipping-and-launch` for pre-ship checklist.
-3. Invoke `agent-skills:git-workflow-and-versioning` for commit conventions.
+2. If any files in `agents/`, `skills/`, or `hooks/` were changed, invoke `clawdio:doc-sync` to verify and fix documentation.
+3. Invoke `agent-skills:shipping-and-launch` for pre-ship checklist.
+4. Invoke `agent-skills:git-workflow-and-versioning` for commit conventions.
 
+- [ ] Docs are in sync (if agent/skill/hook files changed)
 - [ ] Pre-ship checklist passes
 - [ ] Commits follow conventions
 

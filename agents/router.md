@@ -55,7 +55,7 @@ User input
 │   ├── "design" / "design doc" / "feature design" → invoke Skill(kdt:feature-design)
 │   ├── "pick up" / "implement from design" → invoke Skill(kdt:feature-implement)
 │   ├── "does the PR close the issue" / "verify PR" → invoke Skill(kdt:pr-closes-issue)
-│   ├── "check docs" / "verify docs" → invoke Skill(kdt:doc-verification)
+│   ├── "check docs" / "verify docs" / "are docs up to date" → invoke Skill(clawdio:doc-sync)
 │   ├── "external contribs" / "community PRs" → invoke Skill(kdt:external-contribs)
 │   ├── "release notes" → release-notes agent
 │   ├── "write tests" → test-writer agent

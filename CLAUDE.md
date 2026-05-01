@@ -9,8 +9,8 @@ Router agent dispatches to specialist subagents based on the task. Skills provid
 ```
 you -> router -> specialist subagent(s) -> result
                     |
-                    +-- skills (what-next, ship, pr-description, issues)
-                    +-- hooks (block secrets, doc-sync, lint, format)
+                    +-- skills (what-next, ship, pr-description, issues, doc-sync)
+                    +-- hooks (block secrets, doc-sync-reminder, lint, format)
 ```
 
 ## Structure
@@ -23,6 +23,10 @@ references/      supporting docs agents can read
 docs/            architecture, contributing, project context
 .claude-plugin/  plugin manifest and marketplace config
 ```
+
+## Keeping docs in sync
+
+After any change to `agents/`, `skills/`, or `hooks/`, invoke `clawdio:doc-sync` before committing. It verifies README.md, CLAUDE.md, docs/architecture.md, and docs/contributing.md against the actual repo contents and fixes discrepancies.
 
 ## Conventions
 

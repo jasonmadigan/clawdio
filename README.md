@@ -202,6 +202,7 @@ graph TD
 | ship | "ship #42" | Full lifecycle: implement > push > PR > self-review > fix |
 | pr-description | Creating a PR | PR body template: summary, linked issue, test evidence |
 | issues | "create issue", "update issue" | Create, update, close issues. Manages PR-issue links and lifecycle state. |
+| doc-sync | "check docs", "are docs up to date" | Verify and fix documentation accuracy against actual repo contents |
 
 ## Hooks
 
