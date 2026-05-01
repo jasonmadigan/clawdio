@@ -23,7 +23,11 @@ You were dispatched with `isolation: "worktree"`. Your working directory IS your
 
 ### Phase 2: Implement
 
-3. Write the code. Run tests. Iterate until tests pass.
+3. Update the issue: assign to user and add "in-progress" label.
+   ```bash
+   gh issue edit <number> --add-assignee "@me" --add-label "in-progress"
+   ```
+4. Write the code. Run tests. Iterate until tests pass.
 
 - [ ] All tests pass
 - [ ] Implementation matches acceptance criteria
@@ -38,7 +42,14 @@ COMMITS=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
 CHANGES=$(git status --porcelain)
 ```
 
-If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report `RESULT: blocked` with reason "no code changes produced". Do not proceed.
+If `COMMITS` is 0 AND `CHANGES` is empty: comment on the issue and remove the label, then STOP.
+
+```bash
+gh issue comment <number> --body "Blocked: implement agent produced no code changes."
+gh issue edit <number> --remove-label "in-progress"
+```
+
+Report `RESULT: blocked` with reason "no code changes produced". Do not proceed.
 
 ### Phase 4: Commit and push
 
@@ -47,7 +58,7 @@ If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report `RESULT: blocked` with re
 
 ### Phase 5: Create PR
 
-6. Create the PR via `gh pr create`. Follow the clawdio:pr-description skill format. Link the issue. If the router passed `--draft` in your prompt, add `--draft` to the `gh pr create` command.
+6. Create the PR via `gh pr create`. Follow the clawdio:pr-description skill format. Link the issue with `Closes #N` in the PR body. If the router passed `--draft` in your prompt, add `--draft` to the `gh pr create` command.
 
 - [ ] PR description follows template
 - [ ] Issue is linked

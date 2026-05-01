@@ -35,7 +35,11 @@ Before starting a new workflow, check for existing state:
 
 ### Phase 1: Implement
 
-1. Dispatch the implement agent on the issue. Wait for completion.
+1. Update the issue state: assign to user and add "in-progress" label (per `clawdio:issues` lifecycle).
+   ```bash
+   gh issue edit <number> --add-assignee "@me" --add-label "in-progress"
+   ```
+2. Dispatch the implement agent on the issue. Wait for completion.
 
 - [ ] All tests pass
 - [ ] Implementation matches acceptance criteria
@@ -48,7 +52,12 @@ COMMITS=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
 CHANGES=$(git status --porcelain)
 ```
 
-If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report "implementation produced no code changes -- the implement agent may have failed." Write state with `phase: blocked`. Do not proceed.
+If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report "implementation produced no code changes -- the implement agent may have failed." Comment on the issue (per `clawdio:issues`), remove "in-progress" label, write state with `phase: blocked`. Do not proceed.
+
+```bash
+gh issue comment <number> --body "Blocked: implement agent produced no code changes."
+gh issue edit <number> --remove-label "in-progress"
+```
 
 **Write state:** `phase: pre-ship`
 
@@ -70,7 +79,7 @@ If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report "implementation produced 
    ```
 5. Push: `git push -u origin HEAD`
 6. Ask the user via `AskUserQuestion`: "Create as draft PR or ready for review?" with options "Draft PR" and "Ready for review".
-7. Create the PR via `gh pr create` following the clawdio:pr-description skill format. Link the issue. If draft, add `--draft`.
+7. Create the PR via `gh pr create` following the clawdio:pr-description skill format. Link the issue with `Closes #N` in the body. If draft, add `--draft`.
 
 - [ ] PR description follows template (summary, linked issue, test evidence)
 - [ ] Branch name is descriptive
