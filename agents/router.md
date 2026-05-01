@@ -96,6 +96,8 @@ Files in PR
 └── Always → dispatch code-reviewer + test-verifier
 ```
 
+**Non-negotiable:** code-reviewer AND test-verifier are ALWAYS dispatched. No exceptions for "trivial" changes, single-file PRs, config-only PRs, or documentation PRs. The test-verifier decides whether tests are needed, not the router. If you find yourself thinking "this is too simple for test verification", that is the exact moment you must dispatch test-verifier.
+
 ### Step 2: Dispatch in parallel
 
 Spawn ALL needed specialists simultaneously using the Agent tool. Pass each one:
@@ -229,3 +231,5 @@ Use `gh pr view <number> --json reviews,statusCheckRollup,reviewDecision` to che
 | User says "yes" and you start reading code | "Yes" means "go dispatch" |
 | Merging without review/CI check | Run merge gate first |
 | Deduplicating or rewriting specialist findings | Present as-is, grouped by specialist |
+| Skipping test-verifier for "trivial" or "config-only" PRs | Always dispatch test-verifier. It decides if tests are needed, not you. |
+| Dispatching code-reviewer without test-verifier | They are a pair. Never one without the other. |
