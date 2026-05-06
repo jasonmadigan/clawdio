@@ -208,6 +208,21 @@ graph TD
 | issues | "create issue", "update issue" | `create`, `update`, `close`, `link`, `--repo` | Create, update, close issues. Manages PR-issue links and lifecycle state. |
 | doc-sync | "check docs", "are docs up to date" | none | Verify and fix documentation accuracy against actual repo contents |
 
+### agent-skills integration
+
+Clawdio agents invoke [agent-skills](https://github.com/addyosmani/agent-skills) skills at key workflow points. These are not clawdio skills — they come from the companion plugin and provide cross-cutting development practices.
+
+| agent-skills skill | Used by | When |
+|-|-|-|
+| test-driven-development | implement, worktree-worker | RED-GREEN-REFACTOR loop during implementation |
+| incremental-implementation | implement, worktree-worker | One logical change per commit, vertical slices |
+| debugging-and-error-recovery | implement, worktree-worker | When tests fail and cause is unclear |
+| shipping-and-launch | ship | Pre-ship checklist in phase 2 |
+| git-workflow-and-versioning | ship | Commit convention checks in phase 2 |
+| spec-driven-development | implement | Spec-first for non-trivial changes |
+| code-review-and-quality | code-reviewer | Five-axis review (correctness, readability, architecture, security, performance) |
+| security-and-hardening | security-auditor | OWASP, secrets, auth/authz checks |
+
 ## Hooks
 
 | Hook | Trigger | Purpose |
