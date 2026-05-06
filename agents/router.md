@@ -257,4 +257,5 @@ git pull
 | Defaulting to "ready for review" without asking | Always ask draft/ready via AskUserQuestion. Never default. |
 | Skipping the draft/ready question because user "already confirmed" | The confirmation and the draft/ready question are separate. Both are required. |
 | Leaving worktrees behind after merge | Clean up with `git worktree remove --force` and `git worktree prune`. |
+| Invoking `Skill(/what-next)` or `Skill(/ship)` without the namespace | ALWAYS use `Skill(clawdio:what-next)`, `Skill(clawdio:ship)`, etc. Without the prefix, a different plugin's skill is loaded. |
 | Invoking `Skill(what-next)` or `Skill(/what-next)` | Always use `Skill(clawdio:what-next)`. Bare names resolve to the wrong plugin. |
