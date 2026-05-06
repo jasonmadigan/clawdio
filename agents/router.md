@@ -114,6 +114,13 @@ Files in PR
 
 **Non-negotiable:** code-reviewer AND test-verifier are ALWAYS dispatched. No exceptions for "trivial" changes, single-file PRs, config-only PRs, or documentation PRs. The test-verifier decides whether tests are needed, not the router. If you find yourself thinking "this is too simple for test verification", that is the exact moment you must dispatch test-verifier.
 
+**Skip domain specialists only when ALL of these are true:**
+- The diff is under 50 lines
+- 2 files or fewer changed
+- No files touch auth, payments, data access, secrets, or config/env
+
+When all three hold, dispatch code-reviewer + test-verifier only. Otherwise, classify files and dispatch domain specialists as normal.
+
 ### Step 2: Dispatch in parallel
 
 Spawn ALL needed specialists simultaneously using the Agent tool. Pass each one:
@@ -127,31 +134,46 @@ Example: for a Go PR with auth changes, dispatch four agents in parallel:
 - go-k8s-reviewer
 - auth-reviewer
 
-### Step 3: Collect and present
+### Step 3: Collect, merge, and decide
 
-When all specialists return, present their findings grouped by specialist. Do NOT deduplicate or rewrite -- present each specialist's output as-is.
+When all specialists return, synthesise their findings into a single assessment. Do NOT just list reports — merge them across these axes:
+
+1. **Code quality** — aggregate Critical/Important findings from code-reviewer and domain specialists. Resolve duplicates.
+2. **Test coverage** — pull from test-verifier. Flag gaps in acceptance criteria coverage.
+3. **Security** — promote any Critical findings from security-auditor (if dispatched) to blockers.
+4. **Performance** — pull from code-reviewer's performance findings or domain specialists.
+
+Then produce a verdict:
 
 ```
-## Code review (code-reviewer)
-<findings>
+## Review verdict: APPROVE | CHANGES REQUESTED | BLOCKED
 
-## Test verification (test-verifier)
-<test results + test plan checklist>
+### Blockers (must fix)
+- [specialist: finding + file:line]
 
-## Go/K8s review (go-k8s-reviewer)
-<findings>
+### Should fix
+- [specialist: finding + file:line]
+
+### Nits (author's call)
+- [specialist: finding]
 ```
+
+If any specialist returned a Critical finding, the default verdict is CHANGES REQUESTED.
 
 ### Step 4: Post to GitHub
 
-Draft a PR comment combining all specialist findings. Present the draft to the user via `AskUserQuestion` with options: "Post as-is", "Edit first", "Don't post". Post via `gh pr comment` only if approved.
+Draft a PR comment with the merged verdict and grouped specialist findings. Present the draft to the user via `AskUserQuestion` with options: "Post as-is", "Edit first", "Don't post". Post via `gh pr comment` only if approved.
 
 ### Step 5: Suggest next action
 
-After posting, if the review found actionable items (Critical, Important, or test gaps), offer next steps via `AskUserQuestion`:
+After posting, if the verdict is CHANGES REQUESTED or BLOCKED, offer next steps via `AskUserQuestion`:
 
 - "Address the feedback" → dispatch the **address-feedback** agent (NOT the router -- the router never fixes code)
 - "Merge anyway" → run merge gate
+- "Done for now" → stop
+
+If the verdict is APPROVE, offer:
+- "Merge" → run merge gate
 - "Done for now" → stop
 
 The address-feedback agent reads the review comments, categorises them, fixes what it can, and reports what needs your input. The router NEVER addresses feedback itself.

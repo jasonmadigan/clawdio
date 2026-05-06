@@ -27,9 +27,11 @@ You were dispatched with `isolation: "worktree"`. Your working directory IS your
    ```bash
    gh issue edit <number> --add-assignee "@me" --add-label "in-progress"
    ```
-4. Write the code. Run tests. Iterate until tests pass.
+4. Write code using TDD (invoke `agent-skills:test-driven-development`). Write a failing test, make it pass, refactor.
+5. Deliver incrementally (invoke `agent-skills:incremental-implementation`). One logical change per commit where practical.
+6. If tests fail and the cause is unclear, invoke `agent-skills:debugging-and-error-recovery` for systematic root-cause analysis.
 
-- [ ] All tests pass
+- [ ] All tests pass, including new ones
 - [ ] Implementation matches acceptance criteria
 - [ ] No scope creep
 
