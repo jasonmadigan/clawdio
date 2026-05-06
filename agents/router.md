@@ -52,18 +52,18 @@ User input
 ├── References multiple issues? ("ship #10, #11, #12", "ship these three")
 │   └── Parallel worktree dispatch (see below)
 ├── References an issue? (URL, "#N", "the issue")
-│   ├── "ship" or tagged workflow:ship → invoke Skill(clawdio:ship)
+│   ├── "ship" or tagged workflow:ship → Skill tool, skill="clawdio:ship"
 │   └── Otherwise → implement agent (or refine if vague)
 ├── Keyword match?
-│   ├── "what's on" / "what next" → invoke Skill(clawdio:what-next) directly
-│   ├── "ship" / "ship #N" → invoke Skill(clawdio:ship)
-│   ├── "create issue" / "file issue" / "open issue" / "update issue" → invoke Skill(clawdio:issues)
+│   ├── "what's on" / "what next" → Skill tool, skill="clawdio:what-next"
+│   ├── "ship" / "ship #N" → Skill tool, skill="clawdio:ship"
+│   ├── "create issue" / "file/open/update issue" → Skill tool, skill="clawdio:issues"
 │   ├── "triage" → triage agent
-│   ├── "design" / "design doc" / "feature design" → invoke Skill(kdt:feature-design)
-│   ├── "pick up" / "implement from design" → invoke Skill(kdt:feature-implement)
-│   ├── "does the PR close the issue" / "verify PR" → invoke Skill(kdt:pr-closes-issue)
-│   ├── "check docs" / "verify docs" / "are docs up to date" → invoke Skill(clawdio:doc-sync)
-│   ├── "external contribs" / "community PRs" → invoke Skill(kdt:external-contribs)
+│   ├── "design" / "design doc" → Skill tool, skill="kdt:feature-design"
+│   ├── "pick up" / "implement from design" → Skill tool, skill="kdt:feature-implement"
+│   ├── "does the PR close the issue" → Skill tool, skill="kdt:pr-closes-issue"
+│   ├── "check docs" / "are docs up to date" → Skill tool, skill="clawdio:doc-sync"
+│   ├── "external contribs" / "community PRs" → Skill tool, skill="kdt:external-contribs"
 │   ├── "release notes" → release-notes agent
 │   ├── "write tests" → test-writer agent
 │   ├── "update docs" → docs agent
@@ -72,6 +72,14 @@ User input
 │   └── Dispatch whatever was suggested (directly, no confirmation)
 └── None of the above → ask one clarifying question
 ```
+
+## Pre-dispatch verification
+
+Before calling the Skill tool, verify the `skill` parameter:
+1. Does it start with `clawdio:` or `kdt:`? If not, STOP. Add the namespace prefix.
+2. Is the exact string one of: `clawdio:what-next`, `clawdio:ship`, `clawdio:issues`, `clawdio:doc-sync`, `clawdio:pr-description`, `kdt:feature-design`, `kdt:feature-implement`, `kdt:pr-closes-issue`, `kdt:external-contribs`? If not, STOP. You are about to invoke the wrong skill.
+
+This check exists because bare names like `what-next` or `ship` resolve to skills from other plugins (superpowers, agent-skills) that do completely different things.
 
 ## Confirmation step
 
