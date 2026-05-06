@@ -89,20 +89,24 @@ graph TD
     C -->|*.go| F[go-k8s-reviewer]
     C -->|*auth*| G[auth-reviewer]
     C -->|*crypto*| H[security-auditor]
-    D & E & F & G & H -->|findings| I[Router: present by specialist]
-    I --> J[Draft PR comment]
-    J --> K{User: post?}
-    K -->|post as-is| L[gh pr comment]
-    K -->|edit first| J
-    K -->|don't post| M{Next?}
-    L --> M
-    M -->|address feedback| N[address-feedback agent]
-    M -->|merge| O[merge gate]
-    M -->|done| P[what's on]
-    N --> Q{Next?}
-    Q -->|re-review| B
-    Q -->|merge| O
-    Q -->|what's on| P
+    D & E & F & G & H -->|findings| I[Router: merge across axes]
+    I --> J{Verdict}
+    J -->|APPROVE| K[offer merge]
+    J -->|CHANGES REQUESTED| L[draft PR comment]
+    J -->|BLOCKED| L
+    L --> M{User: post?}
+    M -->|post| N[gh pr comment]
+    M -->|edit| L
+    M -->|don't post| O{Next?}
+    N --> O
+    K --> O
+    O -->|address feedback| P[address-feedback agent]
+    O -->|merge| Q[merge gate]
+    O -->|done| R[next]
+    P --> S{Next?}
+    S -->|re-review| B
+    S -->|merge| Q
+    S -->|next| R
 ```
 
 ### Ship flow
@@ -196,13 +200,13 @@ graph TD
 
 ## Skills
 
-| Skill | Trigger | Purpose |
-|-|-|-|
-| next | "what's on?", "what next?" | Scans GitHub for issues, PRs, and feedback across repos |
-| ship | "ship #42" | Full lifecycle: implement > push > PR > self-review > fix |
-| pr-description | Creating a PR | PR body template: summary, linked issue, test evidence |
-| issues | "create issue", "update issue" | Create, update, close issues. Manages PR-issue links and lifecycle state. |
-| doc-sync | "check docs", "are docs up to date" | Verify and fix documentation accuracy against actual repo contents |
+| Skill | Trigger | Args | Purpose |
+|-|-|-|-|
+| next | "what's on?", "what next?" | none | Scans GitHub and Jira for issues, PRs, and feedback across repos |
+| ship | "ship #42" | `<issue>`, `--resume`, `--skip-review`, `--draft` | Full lifecycle: implement > push > PR > self-review > fix |
+| pr-description | Creating a PR | none | PR body template: summary, linked issue, test evidence |
+| issues | "create issue", "update issue" | `create`, `update`, `close`, `link`, `--repo` | Create, update, close issues. Manages PR-issue links and lifecycle state. |
+| doc-sync | "check docs", "are docs up to date" | none | Verify and fix documentation accuracy against actual repo contents |
 
 ## Hooks
 

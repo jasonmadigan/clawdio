@@ -32,6 +32,8 @@ docs/            architecture, contributing, project context
 | `agents/worktree-worker.md` | isolated implementation agent for shipping issues via worktrees |
 | `skills/ship/SKILL.md` | full lifecycle skill: implement, push, PR, self-review, merge-prep |
 | `skills/next/SKILL.md` | scans GitHub and Jira for actionable work |
+| `skills/issues/SKILL.md` | GitHub issue lifecycle: create, update, link PRs, manage state |
+| `skills/pr-description/SKILL.md` | PR body template and conventions |
 | `skills/doc-sync/SKILL.md` | verifies and fixes docs against actual repo contents |
 | `hooks/hooks.json` | lifecycle hooks: secret blocking, doc-sync reminders, lint, format |
 | `.claude-plugin/plugin.json` | plugin manifest (name, version, entry points) |
