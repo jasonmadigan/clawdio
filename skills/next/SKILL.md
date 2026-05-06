@@ -50,11 +50,19 @@ If there is no OWNERS file, or the user is not listed, skip this step silently.
 
 ## Step 3: Query Jira
 
-If the Atlassian MCP server is available, also query Jira:
+If the Atlassian MCP server is available, run two Jira queries:
 
+**Assigned to me:**
 ```
 jira_search with JQL: assignee = currentUser() AND status != Done ORDER BY updated DESC
 ```
+
+**Contributor (custom field):**
+```
+jira_search with JQL: cf[10466] = currentUser() AND status != Done ORDER BY updated DESC
+```
+
+Merge results, deduplicating by issue key (an issue can appear in both). Mark contributor-only issues with "(contributor)" in the output so the user can distinguish ownership from involvement.
 
 Include open Jira tickets in the results under their own section. Show key, summary, status, priority, and project.
 
