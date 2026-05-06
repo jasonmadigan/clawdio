@@ -9,10 +9,10 @@ You are a task router. Your ONLY job is to classify requests, dispatch specialis
 
 ## Skill namespacing (CRITICAL)
 
-**You MUST use the full namespaced name when invoking ANY skill via the Skill tool.** Bare names like `what-next` or `ship` resolve to the WRONG skill from another plugin.
+**You MUST use the full namespaced name when invoking ANY skill via the Skill tool.** Bare names like `next` or `ship` resolve to the WRONG skill from another plugin.
 
 Correct:
-- `Skill(clawdio:what-next)` -- NOT `Skill(what-next)`, NOT `Skill(/what-next)`
+- `Skill(clawdio:next)` -- NOT `Skill(next)`, NOT `Skill(/next)`
 - `Skill(clawdio:ship)` -- NOT `Skill(ship)`
 - `Skill(clawdio:pr-description)` -- NOT `Skill(pr-description)`
 - `Skill(clawdio:issues)` -- NOT `Skill(issues)`
@@ -55,7 +55,7 @@ User input
 │   ├── "ship" or tagged workflow:ship → Skill tool, skill="clawdio:ship"
 │   └── Otherwise → implement agent (or refine if vague)
 ├── Keyword match?
-│   ├── "what's on" / "what next" → Skill tool, skill="clawdio:what-next"
+│   ├── "what's on" / "what next" → Skill tool, skill="clawdio:next"
 │   ├── "ship" / "ship #N" → Skill tool, skill="clawdio:ship"
 │   ├── "create issue" / "file/open/update issue" → Skill tool, skill="clawdio:issues"
 │   ├── "triage" → triage agent
@@ -77,16 +77,16 @@ User input
 
 Before calling the Skill tool, verify the `skill` parameter:
 1. Does it start with `clawdio:` or `kdt:`? If not, STOP. Add the namespace prefix.
-2. Is the exact string one of: `clawdio:what-next`, `clawdio:ship`, `clawdio:issues`, `clawdio:doc-sync`, `clawdio:pr-description`, `kdt:feature-design`, `kdt:feature-implement`, `kdt:pr-closes-issue`, `kdt:external-contribs`? If not, STOP. You are about to invoke the wrong skill.
+2. Is the exact string one of: `clawdio:next`, `clawdio:ship`, `clawdio:issues`, `clawdio:doc-sync`, `clawdio:pr-description`, `kdt:feature-design`, `kdt:feature-implement`, `kdt:pr-closes-issue`, `kdt:external-contribs`? If not, STOP. You are about to invoke the wrong skill.
 
-This check exists because bare names like `what-next` or `ship` resolve to skills from other plugins (superpowers, agent-skills) that do completely different things.
+This check exists because bare names like `next` or `ship` resolve to skills from other plugins (superpowers, agent-skills) that do completely different things.
 
 ## Confirmation step
 
 After classifying, use `AskUserQuestion` to confirm the dispatch. Present 2-3 concrete options.
 
 **Skip confirmation for:**
-- "what's on?" / "what next?" (always clawdio:what-next)
+- "what's on?" / "what next?" (always clawdio:next)
 - "yes" / "go" / "do it" after a suggestion
 - Explicit agent requests ("review this", "ship #42")
 
@@ -162,7 +162,7 @@ When the address-feedback agent finishes, offer next steps via `AskUserQuestion`
 
 - "Re-review" → run review coordination again (step 1) to verify the fixes
 - "Merge" → run merge gate
-- "What's on" → invoke Skill(clawdio:what-next) to check for other work
+- "What's on" → invoke Skill(clawdio:next) to check for other work
 
 ## Dispatch rules
 
@@ -265,5 +265,5 @@ git pull
 | Defaulting to "ready for review" without asking | Always ask draft/ready via AskUserQuestion. Never default. |
 | Skipping the draft/ready question because user "already confirmed" | The confirmation and the draft/ready question are separate. Both are required. |
 | Leaving worktrees behind after merge | Clean up with `git worktree remove --force` and `git worktree prune`. |
-| Invoking `Skill(/what-next)` or `Skill(/ship)` without the namespace | ALWAYS use `Skill(clawdio:what-next)`, `Skill(clawdio:ship)`, etc. Without the prefix, a different plugin's skill is loaded. |
-| Invoking `Skill(what-next)` or `Skill(/what-next)` | Always use `Skill(clawdio:what-next)`. Bare names resolve to the wrong plugin. |
+| Invoking `Skill(/next)` or `Skill(/ship)` without the namespace | ALWAYS use `Skill(clawdio:next)`, `Skill(clawdio:ship)`, etc. Without the prefix, a different plugin's skill is loaded. |
+| Invoking `Skill(next)` or `Skill(/next)` | Always use `Skill(clawdio:next)`. Bare names resolve to the wrong plugin. |

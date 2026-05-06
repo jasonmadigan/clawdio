@@ -47,7 +47,7 @@ Clawdio handles SDLC orchestration (router, specialists, shipping). agent-skills
 
 | Tool | Purpose | Used by |
 |-|-|-|
-| [`gh`](https://cli.github.com/) | GitHub issue/PR operations | implement, review, triage, refine, address-feedback, what-next, ship, worktree-worker, issues |
+| [`gh`](https://cli.github.com/) | GitHub issue/PR operations | implement, review, triage, refine, address-feedback, next, ship, worktree-worker, issues |
 
 Must be authenticated (`gh auth login`).
 
@@ -56,7 +56,7 @@ Must be authenticated (`gh auth login`).
 | Server | Purpose | Used by |
 |-|-|-|
 | GitHub MCP | Issue/PR comments, review threads | address-feedback |
-| [Atlassian MCP](https://github.com/sooperset/mcp-atlassian) | Jira issue search, creation, updates | what-next, triage, router |
+| [Atlassian MCP](https://github.com/sooperset/mcp-atlassian) | Jira issue search, creation, updates | next, triage, router |
 
 Install Atlassian MCP via `claude mcp add atlassian -s user -e JIRA_URL=https://your-site.atlassian.net -e JIRA_USERNAME=you@company.com -e JIRA_API_TOKEN=your-token -- uvx mcp-atlassian --jira-url https://your-site.atlassian.net`. Requires `uv` installed.
 
@@ -68,7 +68,7 @@ Talk to the **router** agent. It classifies your request and dispatches the righ
 graph LR
     You -->|request| Router
     Router -->|classify & dispatch| Agents[agents: implement, triage, refine, address-feedback, release-notes, test-writer, docs, worktree-worker]
-    Router -->|invoke| Skills[skills: what-next, ship, issues, pr-description]
+    Router -->|invoke| Skills[skills: next, ship, issues, pr-description]
     Router -->|review fanout| Review[code-reviewer + test-verifier + domain specialists]
     Agents -->|result| Router
     Review -->|findings| Router
@@ -161,7 +161,7 @@ graph TD
 
 ### Typical commands
 
-**"What's on?"** -- invokes the `what-next` skill. Queries GitHub for issues, PRs, and feedback in the current repo. Returns a prioritised table.
+**"What's on?"** -- invokes the `next` skill. Queries GitHub for issues, PRs, and feedback in the current repo. Returns a prioritised table.
 
 **"Ship #42"** -- invokes the `ship` skill. Implements, pushes, creates PR, self-reviews, fixes findings, reports back.
 
@@ -198,7 +198,7 @@ graph TD
 
 | Skill | Trigger | Purpose |
 |-|-|-|
-| what-next | "what's on?", "what next?" | Scans GitHub for issues, PRs, and feedback across repos |
+| next | "what's on?", "what next?" | Scans GitHub for issues, PRs, and feedback across repos |
 | ship | "ship #42" | Full lifecycle: implement > push > PR > self-review > fix |
 | pr-description | Creating a PR | PR body template: summary, linked issue, test evidence |
 | issues | "create issue", "update issue" | Create, update, close issues. Manages PR-issue links and lifecycle state. |

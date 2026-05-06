@@ -9,7 +9,7 @@ Router agent dispatches to specialist subagents based on the task. Skills provid
 ```
 you -> router -> specialist subagent(s) -> result
                     |
-                    +-- skills (what-next, ship, pr-description, issues, doc-sync)
+                    +-- skills (next, ship, pr-description, issues, doc-sync)
                     +-- hooks (block secrets, doc-sync-reminder, lint, format)
 ```
 
@@ -31,7 +31,7 @@ docs/            architecture, contributing, project context
 | `agents/router.md` | entry point -- classifies tasks, dispatches to specialist agents |
 | `agents/worktree-worker.md` | isolated implementation agent for shipping issues via worktrees |
 | `skills/ship/SKILL.md` | full lifecycle skill: implement, push, PR, self-review, merge-prep |
-| `skills/what-next/SKILL.md` | scans GitHub and Jira for actionable work |
+| `skills/next/SKILL.md` | scans GitHub and Jira for actionable work |
 | `skills/doc-sync/SKILL.md` | verifies and fixes docs against actual repo contents |
 | `hooks/hooks.json` | lifecycle hooks: secret blocking, doc-sync reminders, lint, format |
 | `.claude-plugin/plugin.json` | plugin manifest (name, version, entry points) |

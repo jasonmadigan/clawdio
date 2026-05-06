@@ -33,7 +33,7 @@ graph TD
     Decision -->|PR feedback| AF[address-feedback agent]
     Decision -->|vague issue| Refine[refine agent]
     Decision -->|triage| Triage[triage agent]
-    Decision -->|what's on| WhatNext[clawdio:what-next]
+    Decision -->|what's on| WhatNext[clawdio:next]
     Decision -->|ship| Ship[clawdio:ship]
     Decision -->|create/update issue| Issues[clawdio:issues]
     Decision -->|multi-issue| Parallel[parallel dispatch]
@@ -147,7 +147,7 @@ Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The ro
 
 | Skill | Purpose | Args |
 |-|-|-|
-| what-next | Scans GitHub for actionable work, suggests priorities | none |
+| next | Scans GitHub for actionable work, suggests priorities | none |
 | ship | Full lifecycle: implement > push > PR > review > merge | `<issue>`, `--resume`, `--skip-review`, `--draft` |
 | pr-description | PR body template and conventions | none |
 | issues | Create, update, link, and manage GitHub issues and PR relationships | `create`, `update`, `close`, `link`, `--repo` |

@@ -60,7 +60,7 @@ Not event-driven (webhooks/GHA) for personal work. The model is conversational: 
 Clawdio's value was the promise of parallel agent management. In practice:
 - Skills, workflows, and prompt engineering belong in Claude Code primitives (portable, team can use them)
 - Workflow chaining is better expressed as a router agent than hardcoded YAML transitions
-- GitHub polling can be a skill (what-next) rather than a daemon
+- GitHub polling can be a skill (next) rather than a daemon
 - Worktree management is built into Claude Code
 - The TUI is replaced by the conversation itself
 
