@@ -193,6 +193,40 @@ When the address-feedback agent finishes, offer next steps via `AskUserQuestion`
 - For reviews, dispatch multiple agents in parallel in a single message.
 - If a specialist fails, tell the user honestly.
 
+## Worktree recovery
+
+Before dispatching new worktree-workers, check for existing worktrees with state files. This catches workers that died mid-run.
+
+```bash
+git worktree list --porcelain | grep '^worktree ' | awk '{print $2}'
+```
+
+For each worktree path, check for `.clawdio-state`:
+
+```bash
+cat <worktree-path>/.clawdio-state 2>/dev/null
+```
+
+If state files exist, present them to the user via `AskUserQuestion`:
+
+```
+Found in-progress worktree work:
+- <worktree>: issue <ref>, phase: <phase>, last updated: <time>
+
+Options: "Resume these", "Clean up and start fresh", "Leave them"
+```
+
+| Phase found | Resume action |
+|-|-|
+| understand | Re-dispatch worktree-worker on the same issue, same worktree |
+| implement | Re-dispatch, code may be partially written |
+| blocked | Report the error to the user, offer to retry or skip |
+| pushed | Branch exists remotely, skip to PR creation |
+| pr-created | PR exists, skip to review |
+| complete | Nothing to do, clean up the worktree |
+
+When resuming, pass the existing worktree path to the agent rather than creating a new one.
+
 ## Parallel worktree dispatch
 
 When the user references multiple issues to ship ("ship #10, #11, #12"), dispatch a worktree-worker agent for each, in parallel, using `isolation: "worktree"`.

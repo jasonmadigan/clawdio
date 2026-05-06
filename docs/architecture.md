@@ -93,6 +93,8 @@ This enables parallel multi-issue work: the router dispatches N worktree-worker 
 
 The worktree-worker agent is deliberately constrained: no Agent tool access (can't spawn sub-subagents), no ability to escape its worktree, and a structured output format the router can parse. This makes it a predictable, parallelisable unit of work.
 
+Each worktree-worker writes a `.clawdio-state` file in the worktree root after every phase transition. This file is never git-committed — it's orchestrator-internal. The router checks for these files before dispatching new workers, enabling recovery of workers that died mid-run. The state file records the current phase, issue reference, branch, PR URL, and timestamps.
+
 ### Three-tier primitive location
 
 1. **Per-repo** (`.claude/` in each project): CLAUDE.md, repo-specific agents and hooks

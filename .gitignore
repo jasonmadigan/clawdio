@@ -17,3 +17,6 @@ node_modules/
 
 # temp
 tmp/
+
+# orchestrator state (worktree-worker writes this, never committed)
+.clawdio-state

@@ -113,6 +113,7 @@ Agents dispatched with `isolation: "worktree"` get their own git worktree. Conve
 - Use a structured output format (e.g. `RESULT: complete`, `PR_URL: ...`) so the router can parse results programmatically.
 - The agent cannot dispatch subagents (no Agent tool access). It can invoke skills.
 - Worktrees are preserved if the agent made changes, cleaned up if not. The agent does not manage its own worktree lifecycle.
+- Write `.clawdio-state` in the worktree root after every phase transition. This is how the router tracks progress and resumes failed workers. Never git-commit this file.
 
 ### When to use an agent vs a skill
 
