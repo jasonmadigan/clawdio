@@ -200,6 +200,10 @@ graph TD
 
 ## Skills
 
+Clawdio provides its own skills for SDLC orchestration. For cross-cutting development practices (TDD, debugging, security hardening, code review), it leans on the companion [agent-skills](https://github.com/addyosmani/agent-skills) plugin. Design doc workflows and feature lifecycle come from [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin) (kdt).
+
+### Clawdio skills
+
 | Skill | Trigger | Args | Purpose |
 |-|-|-|-|
 | next | "what's on?", "what next?" | none | Scans GitHub and Jira for issues, PRs, and feedback across repos |
@@ -208,9 +212,9 @@ graph TD
 | issues | "create issue", "update issue" | `create`, `update`, `close`, `link`, `--repo` | Create, update, close issues. Manages PR-issue links and lifecycle state. |
 | doc-sync | "check docs", "are docs up to date" | none | Verify and fix documentation accuracy against actual repo contents |
 
-### agent-skills integration
+### agent-skills (companion plugin)
 
-Clawdio agents invoke [agent-skills](https://github.com/addyosmani/agent-skills) skills at key workflow points. These are not clawdio skills — they come from the companion plugin and provide cross-cutting development practices.
+Clawdio agents invoke [agent-skills](https://github.com/addyosmani/agent-skills) skills at key workflow points. These provide the development discipline that clawdio orchestrates.
 
 | agent-skills skill | Used by | When |
 |-|-|-|
@@ -222,6 +226,17 @@ Clawdio agents invoke [agent-skills](https://github.com/addyosmani/agent-skills)
 | spec-driven-development | implement | Spec-first for non-trivial changes |
 | code-review-and-quality | code-reviewer | Five-axis review (correctness, readability, architecture, security, performance) |
 | security-and-hardening | security-auditor | OWASP, secrets, auth/authz checks |
+
+### kdt (companion plugin)
+
+The router dispatches [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin) skills for design and feature lifecycle work.
+
+| kdt skill | Trigger | Purpose |
+|-|-|-|
+| feature-design | "design doc", "feature design" | Create and review design docs, generate issues from TODOs |
+| feature-implement | "pick up", "implement from design" | Pick up issues from design docs, manage feature lifecycle |
+| pr-closes-issue | "does the PR close the issue" | Verify PR changes match issue requirements |
+| external-contribs | "external contribs", "community PRs" | Find external contributions needing attention |
 
 ## Hooks
 
