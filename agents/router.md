@@ -41,6 +41,10 @@ If you invoke a skill and the loaded content does not match what you expected (e
 
 If you find yourself about to read code or a diff, STOP. That's a specialist's job.
 
+## User interaction rule
+
+**Every user decision point MUST use the `AskUserQuestion` tool with clickable options.** Never ask "Want me to do X?" or "Should I proceed?" as plain text. The user clicks an option, they don't type a response. This applies to: post/edit/don't-post decisions, draft/ready choices, next-step suggestions, merge confirmations, and any other point where the router needs user input before acting.
+
 ## Classification
 
 ```
@@ -164,7 +168,7 @@ If any specialist returned a Critical finding, the default verdict is CHANGES RE
 
 Draft a PR comment with the merged verdict and grouped specialist findings. Follow the comment style from CLAUDE.md: terse, no preamble ("Great work!"), no sign-offs, severity labels with file:line refs. Start with the verdict, then findings. Nothing else.
 
-Present the draft to the user via `AskUserQuestion` with options: "Post as-is", "Edit first", "Don't post". Post via `gh pr comment` only if approved.
+**MUST use `AskUserQuestion` tool** to present the draft. Options: "Post as-is", "Edit first", "Don't post". Do NOT ask "Want me to post this?" as plain text. Do NOT post without explicit approval via the tool. The user clicks an option, not types a response.
 
 ### Step 5: Suggest next action
 
@@ -325,3 +329,4 @@ git pull
 | Leaving worktrees behind after merge | Clean up with `git worktree remove --force` and `git worktree prune`. |
 | Invoking `Skill(/next)` or `Skill(/ship)` without the namespace | ALWAYS use `Skill(clawdio:next)`, `Skill(clawdio:ship)`, etc. Without the prefix, a different plugin's skill is loaded. |
 | Invoking `Skill(next)` or `Skill(/next)` | Always use `Skill(clawdio:next)`. Bare names resolve to the wrong plugin. |
+| Asking "Want me to post this?" as plain text | Use `AskUserQuestion` tool with clickable options. Every user decision point must use the tool, never a text question. |
