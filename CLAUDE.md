@@ -62,6 +62,7 @@ All externally-visible comments (PR reviews, issue comments, state updates) foll
 - Findings use severity labels (Critical/Important/Nit) and file:line references. No prose wrapping.
 - State changes are one line: "blocked: implement agent produced no changes." Not a paragraph.
 - If there's nothing to say, don't comment. Silence is fine.
+- PR review findings go as line-level comments on the specific code, not as a single wall of text. The verdict summary goes in the review body. Individual findings go on the lines they reference.
 
 ## Dependencies
 

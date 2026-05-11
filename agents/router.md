@@ -166,9 +166,29 @@ If any specialist returned a Critical finding, the default verdict is CHANGES RE
 
 ### Step 4: Post to GitHub
 
-Draft a PR comment with the merged verdict and grouped specialist findings. Follow the comment style from CLAUDE.md: terse, no preamble ("Great work!"), no sign-offs, severity labels with file:line refs. Start with the verdict, then findings. Nothing else.
+Present the draft to the user. Follow the comment style from CLAUDE.md: terse, no preamble, no sign-offs, severity labels with file:line refs. Start with the verdict, then findings. Nothing else.
 
 **MUST use `AskUserQuestion` tool** to present the draft. Options: "Post as-is", "Edit first", "Don't post". Do NOT ask "Want me to post this?" as plain text. Do NOT post without explicit approval via the tool. The user clicks an option, not types a response.
+
+**How to post: line-level review comments, not a single PR comment.**
+
+Findings that reference specific files and lines MUST be posted as review comments on those lines, not as a general PR comment. Use the GitHub MCP `pull_request_review_write` tool to create a review, and `add_comment_to_pending_review` for each line-level finding.
+
+```
+Posting flow:
+├── Create a pending review: pull_request_review_write(method: "create", ...)
+├── For each finding with a file:line reference:
+│   └── add_comment_to_pending_review(path: "<file>", line: <line>, body: "<finding>", subjectType: "LINE")
+├── For findings without a specific line (general observations):
+│   └── Include in the review body, not as line comments
+└── Submit the review: pull_request_review_write(method: "submit_pending", event: "COMMENT" or "REQUEST_CHANGES")
+```
+
+Use `event: "REQUEST_CHANGES"` when the verdict is CHANGES REQUESTED or BLOCKED. Use `event: "COMMENT"` when the verdict is APPROVE (submit the review as informational, not blocking).
+
+The verdict summary (blockers, should-fix, nits) goes in the review body. Individual findings go as line comments. This puts feedback exactly where the author needs to see it.
+
+If the GitHub MCP server is not available, fall back to `gh pr comment` with the full verdict as a single comment. This is worse but functional.
 
 ### Step 5: Suggest next action
 
