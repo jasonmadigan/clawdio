@@ -48,7 +48,25 @@ Filter out any results already shown in step 1 (same PR/issue number). These go 
 
 If there is no OWNERS file, or the user is not listed, skip this step silently.
 
-## Step 3: Query Jira
+## Step 3: Repo activity
+
+Regardless of OWNERS, check for open PRs in the repo that might need attention. These are PRs not authored by the user that have no reviews yet:
+
+```bash
+gh pr list --state open --json number,title,author,updatedAt,url,reviewDecision,reviewRequests --limit 20
+```
+
+Filter to PRs where:
+- `author.login` is not the current user
+- `reviewDecision` is empty or `REVIEW_REQUIRED` (no reviews submitted yet)
+
+Exclude any PRs already captured in step 1 (requesting your review) or step 2 (component ownership).
+
+These go into a **Repo activity** section — PRs that exist in the repo and may need a reviewer. This catches PRs on small teams where explicit review requests aren't always used.
+
+If no unreviewed PRs from others exist, skip this step silently.
+
+## Step 4: Query Jira
 
 If the Atlassian MCP server is available, run two Jira queries:
 
@@ -78,7 +96,7 @@ When scoping results to the current repo, use this mapping to show relevant Jira
 
 If the current repo is in the Kuadrant org, include CONNLINK tickets. For repos not in this mapping, show all Jira tickets without filtering.
 
-## Step 4: Format
+## Step 5: Format
 
 Present results in markdown tables. Group by priority (highest first):
 
@@ -88,7 +106,8 @@ Present results in markdown tables. Group by priority (highest first):
 4. **My PRs** -- my open PRs where `reviewDecision` is `REVIEW_REQUIRED`
 5. **Implement** -- GitHub issues assigned to me
 6. **Component owner** -- open PRs and unassigned issues in repos where I am an OWNERS approver/reviewer
-7. **Jira** -- open Jira tickets assigned to me
+7. **Repo activity** -- open PRs from others with no reviews yet
+8. **Jira** -- open Jira tickets assigned to me
 
 Skip sections with no results.
 
@@ -96,6 +115,6 @@ Every table uses three columns. The first column is a markdown link built from t
 
 For Jira tickets, link to the Jira URL: `| [PROJ-123](https://site.atlassian.net/browse/PROJ-123) | Title | status, priority |`
 
-## Step 5: Recommend
+## Step 6: Recommend
 
 Suggest what to do first. Offer to pull up the top item.
