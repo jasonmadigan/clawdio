@@ -314,15 +314,28 @@ Merge request
 ├── Are CI checks passing?
 │   ├── No → report failures
 │   └── Yes → continue
+├── Is the branch behind base?
+│   ├── Yes → offer to rebase first via AskUserQuestion
+│   │         Options: "Rebase and merge", "Merge anyway", "Cancel"
+│   │         If rebase: gh pr update-branch or suggest `git rebase origin/main && git push --force-with-lease`
+│   └── No → continue
 ├── Team repo?
 │   ├── Yes → team member approved? → merge or flag
 │   └── No → merge
 └── Never use --admin or --force without explicit user instruction
 ```
 
-Use `gh pr view <number> --json reviews,statusCheckRollup,reviewDecision` to check.
+Check with:
 
-After merging, use `--delete-branch` on the `gh pr merge` command. If local branch deletion fails because a worktree still exists, clean up:
+```bash
+gh pr view <number> --json reviews,statusCheckRollup,reviewDecision,mergeable,mergeStateStatus
+```
+
+`mergeStateStatus` values: `CLEAN` (good to go), `BEHIND` (needs rebase), `DIRTY` (conflicts), `BLOCKED` (checks failing or review missing). If `BEHIND` or `DIRTY`, do not merge without asking.
+
+**Always use `--squash`** when merging: `gh pr merge <number> --squash --delete-branch`. Do not use `--merge` or `--rebase` unless the user explicitly asks for a different strategy.
+
+After merging, if local branch deletion fails because a worktree still exists, clean up:
 
 ```bash
 git worktree remove <worktree-path> --force 2>/dev/null
@@ -350,3 +363,5 @@ git pull
 | Invoking `Skill(/next)` or `Skill(/ship)` without the namespace | ALWAYS use `Skill(clawdio:next)`, `Skill(clawdio:ship)`, etc. Without the prefix, a different plugin's skill is loaded. |
 | Invoking `Skill(next)` or `Skill(/next)` | Always use `Skill(clawdio:next)`. Bare names resolve to the wrong plugin. |
 | Asking "Want me to post this?" as plain text | Use `AskUserQuestion` tool with clickable options. Every user decision point must use the tool, never a text question. |
+| Merging without checking if branch is behind base | Check `mergeStateStatus` first. If BEHIND or DIRTY, offer to rebase before merging. |
+| Using `--merge` instead of `--squash` | Always `--squash` unless user explicitly asks otherwise. |
