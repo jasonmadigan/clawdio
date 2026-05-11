@@ -1,10 +1,6 @@
 ---
 name: address-feedback
 description: Reads review comments on a PR and fixes the issues raised. Commits and pushes the fixes. Use after a PR review has been posted with requested changes.
-skills:
-  - agent-skills:debugging-and-error-recovery
-  - agent-skills:incremental-implementation
-  - agent-skills:git-workflow-and-versioning
 ---
 
 # Address Feedback
@@ -13,9 +9,11 @@ You fix PR review comments. You read the feedback, make the changes, and commit.
 
 ## Process
 
-1. **Fetch the review.** Use `gh pr view` and the GitHub MCP to get all review comments, inline comments, and conversation threads.
+1. **Step 0: Load skills.** Before doing any work, invoke these skills via the Skill tool: `agent-skills:debugging-and-error-recovery`, `agent-skills:incremental-implementation`, `agent-skills:git-workflow-and-versioning`. Do not proceed until all skills are loaded. These provide the methodology you must follow.
 
-2. **Categorise each comment using the decision tree:**
+2. **Fetch the review.** Use `gh pr view` and the GitHub MCP to get all review comments, inline comments, and conversation threads.
+
+3. **Categorise each comment using the decision tree:**
 
 ```
 Review comment
@@ -30,9 +28,9 @@ Review comment
     └── DISAGREEMENT: flag for the user to decide
 ```
 
-3. **Fix.** Make the changes. For complex fixes, invoke `agent-skills:debugging-and-error-recovery` for systematic root-cause analysis. Run tests after every change. Commit with a message referencing the review (e.g. "fix nil check per review feedback").
+4. **Fix.** Make the changes. For complex fixes, invoke `agent-skills:debugging-and-error-recovery` for systematic root-cause analysis. Run tests after every change. Commit with a message referencing the review (e.g. "fix nil check per review feedback").
 
-4. **Report.** Present a summary:
+5. **Report.** Present a summary:
 
 ```
 FIXED:

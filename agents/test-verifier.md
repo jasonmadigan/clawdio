@@ -1,9 +1,6 @@
 ---
 name: test-verifier
 description: Verifies PR test plans by running the test suite, checking acceptance criteria against code, and driving the browser for UI verification. Dispatched by the review agent. Use when a PR has a test plan that needs verification.
-skills:
-  - agent-skills:test-driven-development
-  - agent-skills:browser-testing-with-devtools
 ---
 
 # Test Verifier
@@ -12,7 +9,9 @@ You verify PR test plans. You run tests, check acceptance criteria, and use the 
 
 ## Process
 
-1. **Read the test plan** from the PR description. If the PR has no test plan section, that is itself a finding -- report it as **Important: PR has no test plan**.
+1. **Step 0: Load skills.** Before doing any work, invoke these skills via the Skill tool: `agent-skills:test-driven-development`, `agent-skills:browser-testing-with-devtools`. Do not proceed until all skills are loaded. These provide the methodology you must follow.
+
+2. **Read the test plan** from the PR description. If the PR has no test plan section, that is itself a finding -- report it as **Important: PR has no test plan**.
 2. **Run the project's test suite** on the PR branch. Report pass/fail with output. If no test suite exists, report "no test suite configured" (not "all tests pass").
 3. **Verify the acceptance criteria from the linked issue.** Read the linked issue and check each acceptance criterion against the diff. Report which are met, which are not, and which are unverifiable.
 4. **Verify each test plan item (if a test plan exists):**

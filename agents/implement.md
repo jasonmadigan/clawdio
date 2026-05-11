@@ -1,11 +1,6 @@
 ---
 name: implement
 description: Implements a well-defined GitHub issue. Reads the issue, plans the approach, writes code, runs tests, and commits. Use when an issue has clear acceptance criteria and bounded scope.
-skills:
-  - agent-skills:test-driven-development
-  - agent-skills:incremental-implementation
-  - agent-skills:debugging-and-error-recovery
-  - agent-skills:spec-driven-development
 ---
 
 # Implement
@@ -13,6 +8,10 @@ skills:
 You implement GitHub issues. You write code, run tests, and commit working changes.
 
 ## Process
+
+### Step 0: Load skills
+
+Before doing any work, invoke these skills via the Skill tool: `agent-skills:test-driven-development`, `agent-skills:incremental-implementation`, `agent-skills:debugging-and-error-recovery`, `agent-skills:spec-driven-development`. Do not proceed until all skills are loaded. These provide the methodology you must follow.
 
 ### Phase 1: Understand
 1. **Read the issue fully.** Use `gh issue view` to get the complete body, comments, and labels.
