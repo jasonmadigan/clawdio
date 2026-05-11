@@ -1,4 +1,5 @@
 ---
+name: pr-description
 description: PR body template and conventions. Use when creating or reviewing a PR description to ensure it follows the team format.
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: doc-sync
 description: Verify and fix documentation accuracy against the actual repo contents. Use when source files change, before committing, or when asked to check docs. Works in any repo by discovering documentation files and cross-referencing against the codebase.
 ---
 

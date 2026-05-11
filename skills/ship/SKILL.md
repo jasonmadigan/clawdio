@@ -1,4 +1,5 @@
 ---
+name: ship
 description: Full lifecycle skill for shipping an issue. Implements, pushes, creates PR, self-reviews, addresses issues, and prepares for merge. Use when the user says "ship this" or "ship #42".
 ---
 

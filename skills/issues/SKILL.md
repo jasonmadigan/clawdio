@@ -1,4 +1,5 @@
 ---
+name: issues
 description: Create, update, and manage GitHub issues and their relationship to PRs. Use when creating issues, updating issue state, linking PRs to issues, or managing issue lifecycle. Replaces kdt:github-issues for clawdio workflows.
 ---
 
