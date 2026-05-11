@@ -218,14 +218,20 @@ Clawdio agents invoke [agent-skills](https://github.com/addyosmani/agent-skills)
 
 | agent-skills skill | Used by | When |
 |-|-|-|
-| test-driven-development | implement, worktree-worker | RED-GREEN-REFACTOR loop during implementation |
-| incremental-implementation | implement, worktree-worker | One logical change per commit, vertical slices |
-| debugging-and-error-recovery | implement, worktree-worker | When tests fail and cause is unclear |
+| code-review-and-quality | code-reviewer, go-k8s-reviewer | Five-axis review (correctness, readability, architecture, security, performance) |
+| code-simplification | code-reviewer | Identify simplification opportunities in reviewed code |
+| security-and-hardening | security-auditor, auth-reviewer | OWASP, secrets, auth/authz checks |
+| test-driven-development | implement, worktree-worker, test-verifier, test-writer | RED-GREEN-REFACTOR loop |
+| incremental-implementation | implement, worktree-worker, address-feedback | One logical change per commit, vertical slices |
+| debugging-and-error-recovery | implement, worktree-worker, address-feedback | When tests fail and cause is unclear |
+| spec-driven-development | implement, refine | Spec-first for non-trivial changes |
+| planning-and-task-breakdown | refine, triage | Break scope into ordered tasks |
+| api-and-interface-design | go-k8s-reviewer, auth-reviewer | API surface stability, Hyrum's Law checks |
+| performance-optimization | go-k8s-reviewer | N+1 queries, unbounded ops, async patterns |
+| git-workflow-and-versioning | ship, worktree-worker, address-feedback | Commit conventions, branch hygiene |
 | shipping-and-launch | ship | Pre-ship checklist in phase 2 |
-| git-workflow-and-versioning | ship | Commit convention checks in phase 2 |
-| spec-driven-development | implement | Spec-first for non-trivial changes |
-| code-review-and-quality | code-reviewer | Five-axis review (correctness, readability, architecture, security, performance) |
-| security-and-hardening | security-auditor | OWASP, secrets, auth/authz checks |
+| documentation-and-adrs | docs | ADR structure and documentation patterns |
+| browser-testing-with-devtools | test-verifier | Drive browser for UI verification |
 
 ### kdt (companion plugin)
 

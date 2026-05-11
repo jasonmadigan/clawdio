@@ -1,6 +1,10 @@
 ---
 name: address-feedback
 description: Reads review comments on a PR and fixes the issues raised. Commits and pushes the fixes. Use after a PR review has been posted with requested changes.
+skills:
+  - agent-skills:debugging-and-error-recovery
+  - agent-skills:incremental-implementation
+  - agent-skills:git-workflow-and-versioning
 ---
 
 # Address Feedback

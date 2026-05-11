@@ -1,6 +1,11 @@
 ---
 name: implement
 description: Implements a well-defined GitHub issue. Reads the issue, plans the approach, writes code, runs tests, and commits. Use when an issue has clear acceptance criteria and bounded scope.
+skills:
+  - agent-skills:test-driven-development
+  - agent-skills:incremental-implementation
+  - agent-skills:debugging-and-error-recovery
+  - agent-skills:spec-driven-development
 ---
 
 # Implement

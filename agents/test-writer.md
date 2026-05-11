@@ -1,6 +1,8 @@
 ---
 name: test-writer
 description: Writes tests for existing code or improves test coverage. Analyses the codebase to find gaps and writes targeted tests. Use when coverage is lacking or specific functions need test cases.
+skills:
+  - agent-skills:test-driven-development
 ---
 
 # Test Writer

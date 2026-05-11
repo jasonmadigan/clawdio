@@ -1,6 +1,9 @@
 ---
 name: refine
 description: Takes a vague or underspecified issue and produces clear acceptance criteria. Asks clarifying questions, analyses the codebase for context, and outputs a structured specification. Use when triage marks an issue as needs-refinement.
+skills:
+  - agent-skills:spec-driven-development
+  - agent-skills:planning-and-task-breakdown
 ---
 
 # Refine

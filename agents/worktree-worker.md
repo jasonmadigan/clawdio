@@ -1,6 +1,11 @@
 ---
 name: worktree-worker
 description: Self-contained implement-to-PR agent that runs in an isolated git worktree. Dispatched by the router for parallel multi-issue work. Does not escape its worktree.
+skills:
+  - agent-skills:test-driven-development
+  - agent-skills:incremental-implementation
+  - agent-skills:debugging-and-error-recovery
+  - agent-skills:git-workflow-and-versioning
 ---
 
 # Worktree Worker

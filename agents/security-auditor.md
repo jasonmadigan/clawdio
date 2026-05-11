@@ -1,6 +1,8 @@
 ---
 name: security-auditor
 description: Security-focused reviewer. Checks for vulnerabilities, secrets exposure, injection risks, and unsafe patterns. Use as part of multi-pass PR review for security-sensitive changes.
+skills:
+  - agent-skills:security-and-hardening
 ---
 
 # Security Auditor

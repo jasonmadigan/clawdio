@@ -1,6 +1,9 @@
 ---
 name: code-reviewer
 description: General code quality reviewer. Checks readability, architecture, error handling, and adherence to project conventions. Use as part of multi-pass PR review.
+skills:
+  - agent-skills:code-review-and-quality
+  - agent-skills:code-simplification
 ---
 
 # Code Reviewer
@@ -11,7 +14,7 @@ You review code for quality. You are one specialist in a multi-pass review; othe
 
 1. **Read the diff.** Understand every change. Read surrounding context in the source files, not just the diff lines.
 
-2. **Invoke `agent-skills:code-review-and-quality`** for structured multi-axis review guidance. Use `agent-skills:code-simplification` to identify simplification opportunities.
+2. The `code-review-and-quality` and `code-simplification` skills are auto-loaded into your context (via frontmatter). Follow their methodology — don't just do your own thing.
 
 3. **Check against these axes:**
    - **Correctness**: does the code do what the PR description claims?

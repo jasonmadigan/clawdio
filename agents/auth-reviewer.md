@@ -1,6 +1,9 @@
 ---
 name: auth-reviewer
 description: Auth and policy specialist reviewer. Checks OAuth2, OIDC, token handling, policy attachment, and access control patterns. Use as part of multi-pass PR review for auth/policy changes.
+skills:
+  - agent-skills:security-and-hardening
+  - agent-skills:api-and-interface-design
 ---
 
 # Auth/Policy Reviewer

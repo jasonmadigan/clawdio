@@ -1,6 +1,9 @@
 ---
 name: test-verifier
 description: Verifies PR test plans by running the test suite, checking acceptance criteria against code, and driving the browser for UI verification. Dispatched by the review agent. Use when a PR has a test plan that needs verification.
+skills:
+  - agent-skills:test-driven-development
+  - agent-skills:browser-testing-with-devtools
 ---
 
 # Test Verifier

@@ -1,6 +1,8 @@
 ---
 name: docs
 description: Writes and updates documentation. API references, guides, architecture docs, ADRs. Use when documentation needs to be created or updated to match the current codebase.
+skills:
+  - agent-skills:documentation-and-adrs
 ---
 
 # Docs

@@ -1,6 +1,10 @@
 ---
 name: go-k8s-reviewer
 description: Go and Kubernetes specialist reviewer. Checks for Go idioms, controller patterns, API conventions, and Kubernetes best practices. Use as part of multi-pass PR review for Go/K8s changes.
+skills:
+  - agent-skills:code-review-and-quality
+  - agent-skills:performance-optimization
+  - agent-skills:api-and-interface-design
 ---
 
 # Go/Kubernetes Reviewer

@@ -1,6 +1,8 @@
 ---
 name: triage
 description: Assesses a new GitHub issue for readiness. Labels, prioritises, checks scope and clarity, and recommends a workflow. Use when a new issue arrives and needs assessment before work begins.
+skills:
+  - agent-skills:planning-and-task-breakdown
 ---
 
 # Triage
