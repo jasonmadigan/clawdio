@@ -103,6 +103,7 @@ Invoke the `agent-skills:test` skill for TDD.
 - Rules should be things the agent would otherwise get wrong.
 - The description field is what Claude uses to decide when to dispatch this agent. Make it precise.
 - British English. No emojis. No AI-sounding prose.
+- Any agent that posts externally-visible comments (PR reviews, issue updates) must follow the comment style in CLAUDE.md. Terse, no preamble, no sign-offs, severity labels with file:line refs.
 
 ### Worktree-isolated agents
 

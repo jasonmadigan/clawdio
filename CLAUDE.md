@@ -50,6 +50,19 @@ After any change to `agents/`, `skills/`, or `hooks/`, invoke `clawdio:doc-sync`
 - British English in all user-facing text.
 - No emojis. No AI-sounding prose.
 
+## Comment style
+
+All externally-visible comments (PR reviews, issue comments, state updates) follow this style:
+
+- Terse. Say what needs saying, stop.
+- No preamble ("Great work!", "This PR looks good overall..."). Start with the content.
+- No sign-offs ("Let me know if you have questions!", "Happy to discuss further!").
+- No bullet-point walls when a sentence will do.
+- Lower case where natural. Not aggressively so, just not formal.
+- Findings use severity labels (Critical/Important/Nit) and file:line references. No prose wrapping.
+- State changes are one line: "blocked: implement agent produced no changes." Not a paragraph.
+- If there's nothing to say, don't comment. Silence is fine.
+
 ## Dependencies
 
 - [agent-skills](https://github.com/addyosmani/agent-skills) plugin for security, code review, TDD, debugging, git workflow

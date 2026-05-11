@@ -162,7 +162,9 @@ If any specialist returned a Critical finding, the default verdict is CHANGES RE
 
 ### Step 4: Post to GitHub
 
-Draft a PR comment with the merged verdict and grouped specialist findings. Present the draft to the user via `AskUserQuestion` with options: "Post as-is", "Edit first", "Don't post". Post via `gh pr comment` only if approved.
+Draft a PR comment with the merged verdict and grouped specialist findings. Follow the comment style from CLAUDE.md: terse, no preamble ("Great work!"), no sign-offs, severity labels with file:line refs. Start with the verdict, then findings. Nothing else.
+
+Present the draft to the user via `AskUserQuestion` with options: "Post as-is", "Edit first", "Don't post". Post via `gh pr comment` only if approved.
 
 ### Step 5: Suggest next action
 
