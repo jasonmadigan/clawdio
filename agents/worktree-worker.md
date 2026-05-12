@@ -85,26 +85,26 @@ gh issue edit <number> --remove-label "in-progress"
 
 Report `RESULT: blocked` with reason "no code changes produced". Do not proceed.
 
-### Phase 4: Commit and push
+### Phase 4: Commit
 
 9. Stage and commit with a descriptive message. Use `git commit -s` for DCO.
-10. Push: `git push -u origin HEAD`
-11. Write `.clawdio-state` with `phase: pushed`.
+10. Write `.clawdio-state` with `phase: pushed`.
 
-### Phase 5: Create PR
+### Phase 5: Push and create PR
 
-12. Create the PR via `gh pr create --draft`. Follow the clawdio:pr-description skill format. Link the issue with `Closes #N` in the PR body. Draft is the default. Only omit `--draft` if the router passed `--ready` in your prompt.
-13. Write `.clawdio-state` with `phase: pr-created` and `pr: <url>`.
+12. Push: `git push -u origin HEAD`
+13. Create the PR via `gh pr create --draft`. Follow the clawdio:pr-description skill format. Link the issue with `Closes #N` in the PR body. Draft is the default. Only omit `--draft` if the router passed `--ready` in your prompt.
+14. Write `.clawdio-state` with `phase: pr-created` and `pr: <url>`.
 
 - [ ] PR description follows template
 - [ ] Issue is linked
-- [ ] Branch name is descriptive
+- [ ] Branch name is descriptive (`<issue-number>-<short-description>`, not system-generated)
 - [ ] PR is draft (unless --ready was explicitly passed)
 
 ### Phase 6: Report
 
-14. Write `.clawdio-state` with `phase: complete`.
-15. Output your result in this exact format:
+15. Write `.clawdio-state` with `phase: complete`.
+16. Output your result in this exact format:
 
 ```
 RESULT: complete

@@ -76,39 +76,39 @@ gh issue edit <number> --remove-label "in-progress"
 - [ ] Pre-ship checklist passes
 - [ ] Commits follow conventions
 
-**Write state:** `phase: pushing`
+**Write state:** `phase: reviewing`
 
-### Phase 3: Push and PR
-
-4. Create a branch if not already on one:
-   ```bash
-   git checkout -b <issue-number>-<short-description>
-   ```
-5. Push: `git push -u origin HEAD`
-6. Create the PR via `gh pr create --draft` following the clawdio:pr-description skill format. Link the issue with `Closes #N` in the body. Draft is the default. Only omit `--draft` if `--ready` was passed.
-
-- [ ] PR description follows template (summary, linked issue, test evidence)
-- [ ] Branch name is descriptive
-- [ ] PR is draft (unless --ready was explicitly passed)
-
-**Write state:** `phase: reviewing`, include `pr: <url>`
-
-### Phase 4: Self-review
+### Phase 3: Self-review
 
 Skip this phase if `--skip-review` was passed.
 
-7. Tell `agents/router.md` to review the PR you just created. The router dispatches specialist reviewers (code-reviewer, test-verifier, and any domain specialists) in parallel.
-8. If the review found real issues (Critical or Important), fix them. Commit and push.
+5. Review the changes locally before pushing. Tell the router to dispatch specialist reviewers (code-reviewer, test-verifier, and any domain specialists) against the local diff (`git diff origin/main..HEAD`).
+6. If the review found real issues (Critical or Important), fix them. Commit.
 
 - [ ] All Critical findings addressed
 - [ ] All Important findings addressed
 - [ ] Nits addressed if trivial, skipped if contentious
 
-**Write state:** `phase: complete`
+**Write state:** `phase: pushing`
+
+### Phase 4: Push and PR
+
+7. Create a branch if not already on one:
+   ```bash
+   git checkout -b <issue-number>-<short-description>
+   ```
+8. Push: `git push -u origin HEAD`
+9. Create the PR via `gh pr create --draft` following the clawdio:pr-description skill format. Link the issue with `Closes #N` in the body. Draft is the default. Only omit `--draft` if `--ready` was passed.
+
+- [ ] PR description follows template (summary, linked issue, test evidence)
+- [ ] Branch name is descriptive (`<issue-number>-<short-description>`, not a system-generated name)
+- [ ] PR is draft (unless --ready was explicitly passed)
+
+**Write state:** `phase: complete`, include `pr: <url>`
 
 ### Phase 5: Report
 
-9. Tell the user: PR is ready for team review. Link to the PR.
+10. Tell the user: PR is ready for team review. Link to the PR.
 10. Delete the state file from memory. Remove from MEMORY.md index.
 
 ## ## State file

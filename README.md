@@ -123,18 +123,14 @@ graph TD
     C --> D{diff gate}
     D -->|no changes| E[blocked: comment on issue, remove label]
     D -->|changes exist| F[pre-ship checks]
-    F --> G[git push + gh pr create]
-    G --> H{draft or ready?}
-    H -->|draft| I[gh pr create --draft]
-    H -->|ready| J[gh pr create]
-    I --> K[review coordination]
-    J --> K
-    K --> L{findings?}
-    L -->|critical/important| M[address-feedback agent]
-    M --> K
-    L -->|clean| N{repo type?}
-    N -->|personal + user says merge| O[gh pr merge --squash]
-    N -->|team| P[report PR link, wait for team review]
+    F --> G[self-review locally]
+    G --> H{findings?}
+    H -->|critical/important| I[fix + recommit]
+    I --> G
+    H -->|clean| J[push + gh pr create --draft]
+    J --> K{repo type?}
+    K -->|personal + user says merge| L[gh pr merge --squash]
+    K -->|team| M[report draft PR link]
 ```
 
 For multiple issues ("ship #1, #2, #3"), the router dispatches worktree-worker agents in parallel, each in an isolated git worktree.
