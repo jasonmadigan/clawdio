@@ -5,7 +5,7 @@ description: Create, update, and manage GitHub issues and their relationship to 
 
 # Issues
 
-Manage GitHub issues and their relationships to PRs throughout the SDLC lifecycle.
+Manage GitHub issues and their relationships to PRs throughout the SDLC lifecycle. Invoke via `clawdio:issues`.
 
 ## Arguments
 
@@ -16,7 +16,7 @@ Manage GitHub issues and their relationships to PRs throughout the SDLC lifecycl
 
 ## Creating issues
 
-Use `gh issue create`. Always include:
+Run `gh issue create` with the template below. Always include:
 
 ```bash
 gh issue create \
@@ -92,15 +92,15 @@ Issue created (open)
 └── user manually closes → respect it, don't reopen
 ```
 
-When other skills or agents reach lifecycle points, they should invoke this skill to keep issue state accurate:
-- **ship phase 1 start**: assign issue, add "in-progress" label
-- **ship phase 3 complete**: add comment with PR link
-- **ship phase 5 complete**: close issue if PR was merged
-- **worktree-worker blocked**: add comment with reason
+When other skills or agents reach lifecycle points, invoke this skill to keep issue state accurate:
+- **`skills/ship/SKILL.md` phase 1 start**: assign issue, add "in-progress" label
+- **`skills/ship/SKILL.md` phase 3 complete**: add comment with PR link
+- **`skills/ship/SKILL.md` phase 5 complete**: close issue if PR was merged
+- **`agents/worktree-worker.md` blocked**: add comment with reason
 
 ## Linking PRs to issues
 
-PRs link to issues via the PR body, not via issue comments. Use `Closes #N` or `Fixes #N` in the PR body.
+PRs link to issues via the PR body, not via issue comments. Use `Closes #N` or `Fixes #N` in the PR body (see `skills/pr-description/SKILL.md` for the full template).
 
 ```bash
 # when creating a PR that addresses an issue
@@ -110,7 +110,7 @@ gh pr create --body "## Summary
 Closes #42"
 ```
 
-GitHub auto-closes the issue when the PR merges if the keyword is in the body. Supported keywords: `Closes`, `Fixes`, `Resolves`.
+GitHub auto-closes the issue when the PR merges if the keyword is in the body. Supported keywords: `Closes`, `Fixes`, `Resolves`. Verify the link was picked up by running `gh pr view <number> --json body`.
 
 To check existing links:
 
@@ -137,14 +137,14 @@ gh issue view <number> --json number,title,body,labels,assignees,state,comments
 
 ## Commenting on issues
 
-Use comments to record workflow state changes, not for conversation. Keep them terse.
+Run `gh issue comment` to record workflow state changes, not for conversation. Keep them terse.
 
 ```bash
 gh issue comment <number> --body "PR #<N> created. Implementation in progress."
 gh issue comment <number> --body "Blocked: implement agent produced no changes. See diff gate."
 ```
 
-Don't comment unless there's a state change worth recording. "Starting work" is not worth a comment. "Blocked because X" is.
+Don't run `gh issue comment` unless there's a state change worth recording. "Starting work" is not worth a comment. "Blocked because X" is.
 
 ## Bulk operations
 
@@ -182,5 +182,5 @@ gh pr view <number> --json body --jq '.body'
 | Adding "in-progress" but never removing it | Remove the label if the PR is closed without merge or work is abandoned. |
 | Commenting on every lifecycle step | Only comment on state changes that matter: blocked, PR created, reopened. |
 | Creating duplicate issues | Search first: `gh issue list --search "<keywords>"` |
-| Leaving issues open after PR merges | If `Closes #N` wasn't in the PR body, close manually after merge. |
-| Updating issue state without checking current state | Read the issue first. Don't add "in-progress" if it's already there. |
+| Leaving issues open after PR merges | If `Closes #N` wasn't in the PR body, run `gh issue close <N> --reason completed` after merge. |
+| Updating issue state without checking current state | Run `gh issue view <number> --json labels` first. Don't add "in-progress" if it's already there. |

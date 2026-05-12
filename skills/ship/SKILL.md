@@ -20,13 +20,13 @@ Passed via the Skill tool's `args` string. Parse the following:
 
 If no issue ref is provided and no `--resume`, ask the user.
 
-**Multiple issues:** if the user passes multiple issue refs ("ship #10, #11, #12"), do not handle this yourself. Tell the router to use parallel worktree dispatch instead. Ship handles one issue at a time.
+**Multiple issues:** if the user passes multiple issue refs ("ship #10, #11, #12"), do not handle this yourself. Tell `agents/router.md` to use parallel worktree dispatch via `agents/worktree-worker.md` instead. Ship handles one issue at a time.
 
 ## Resume
 
 Before starting a new workflow, check for existing state:
 
-1. Look for `workflow_ship_*.md` files in memory
+1. Look for `memory/workflow_ship_*.md` files
 2. If one exists for the current repo:
    - If `--resume` was passed, resume from the recorded phase
    - Otherwise, tell the user about the existing workflow and offer: "Resume from phase N" or "Start fresh"
@@ -64,7 +64,11 @@ gh issue edit <number> --remove-label "in-progress"
 
 ### Phase 2: Pre-ship checks
 
-2. If any files in `agents/`, `skills/`, or `hooks/` were changed, invoke `clawdio:doc-sync` to verify and fix documentation.
+2. Check if any files in `agents/`, `skills/`, or `hooks/` were changed:
+   ```bash
+   git diff --name-only origin/main..HEAD | grep -E '^(agents/|skills/|hooks/)'
+   ```
+   If matches found, invoke `clawdio:doc-sync` to verify and fix documentation.
 3. Invoke `agent-skills:shipping-and-launch` for pre-ship checklist.
 4. Invoke `agent-skills:git-workflow-and-versioning` for commit conventions.
 
@@ -94,7 +98,7 @@ gh issue edit <number> --remove-label "in-progress"
 
 Skip this phase if `--skip-review` was passed.
 
-7. Tell the router to review the PR you just created. The router will dispatch specialist reviewers (code-reviewer, test-verifier, and any domain specialists) in parallel.
+7. Tell `agents/router.md` to review the PR you just created. The router dispatches specialist reviewers (code-reviewer, test-verifier, and any domain specialists) in parallel.
 8. If the review found real issues (Critical or Important), fix them. Commit and push.
 
 - [ ] All Critical findings addressed
@@ -108,9 +112,9 @@ Skip this phase if `--skip-review` was passed.
 9. Tell the user: PR is ready for team review. Link to the PR.
 10. Delete the state file from memory. Remove from MEMORY.md index.
 
-## State file
+## ## State file
 
-Written to memory after each phase gate. Path: `memory/workflow_ship_<branch>.md`
+Written after each phase gate. Path: `memory/workflow_ship_<branch>.md`
 
 ```markdown
 ---
@@ -126,14 +130,14 @@ type: project
 - last-updated: <ISO date>
 ```
 
-Add to `MEMORY.md` index when created. Remove on completion or when starting fresh.
+Add to `MEMORY.md` index when created. Remove from `MEMORY.md` on completion or when starting fresh.
 
 ## Decision tree: merge or wait?
 
 ```
 PR ready
 ├── Personal repo + user said "ship and merge"?
-│   └── Merge via gh pr merge --squash
+│   └── Run `gh pr merge --squash`
 ├── Personal repo + user didn't say to merge?
 │   └── Report PR link, let user decide
 └── Team repo?
@@ -146,7 +150,7 @@ PR ready
 |-|-|
 | Merging on a team repo without asking | Never. The user decides after team review. |
 | Skipping self-review | Always self-review unless `--skip-review`. Catches obvious issues before team sees them. |
-| Pushing without running tests | Tests must pass before push. |
-| Creating a PR with a one-line description | Follow the clawdio:pr-description skill format. |
-| Proceeding to push after implement produced nothing | Diff gate catches this. Check git state before advancing. |
-| Not checking for existing workflow state | Always check memory for in-progress workflows before starting fresh. |
+| Pushing without running tests | Tests must pass before `git push`. |
+| Creating a PR with a one-line description | Follow `skills/pr-description/SKILL.md` format. |
+| Proceeding to push after implement produced nothing | Diff gate catches this. Check `git status --porcelain` before advancing. |
+| Not checking for existing workflow state | Always check `memory/workflow_ship_*.md` for in-progress workflows before starting fresh. |

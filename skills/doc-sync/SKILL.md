@@ -1,11 +1,11 @@
 ---
 name: doc-sync
-description: Verify and fix documentation accuracy against the actual repo contents. Use when source files change, before committing, or when asked to check docs. Works in any repo by discovering documentation files and cross-referencing against the codebase.
+description: Verify and fix documentation accuracy against the actual repo contents. Use when source files change, before committing, or when asked to check docs. Works in any repo by discovering documentation files and cross-referencing against the repo.
 ---
 
 # Doc Sync
 
-Verify that all documentation accurately reflects the current state of the repo. Fix any discrepancies found.
+Verify that all documentation accurately reflects the current state of the repo. Invoke via `clawdio:doc-sync`. Fix discrepancies found.
 
 ## Process
 
@@ -17,14 +17,14 @@ Find all documentation files in the repo:
 find . -maxdepth 3 -name '*.md' -not -path './.claude/*' -not -path './node_modules/*' -not -path './vendor/*' | sort
 ```
 
-Key files to always check if they exist: `README.md`, `CLAUDE.md`, `CONTRIBUTING.md`, any files in `docs/` or `doc/`.
+Key files to always check if they exist: `README.md`, `CLAUDE.md`, `CONTRIBUTING.md`, any files in `docs/` or `doc/`. In this repo, check `docs/architecture.md`, `docs/contributing.md`, and `docs/references.md`.
 
 ### Step 2: Discover what's documentable
 
 Scan the repo for things documentation typically references:
 
 - **Directory structure**: `ls -d */` at the root
-- **Entry points**: main files, manifests (`package.json`, `plugin.json`, `go.mod`, `Cargo.toml`, `Makefile`)
+- **Entry points**: main files, manifests (`package.json`, `.claude-plugin/plugin.json`, `go.mod`, `Cargo.toml`, `Makefile`)
 - **Agents/skills/hooks**: `agents/*.md`, `skills/*/SKILL.md`, `hooks/`, `.claude/` config files (if a Claude Code plugin)
 - **Commands/targets**: `make -qp 2>/dev/null | grep '^[a-zA-Z].*:' | head -30` for Makefile targets
 - **Dependencies**: package files, import statements, dependency declarations
@@ -56,9 +56,9 @@ Report findings as a table:
 | CLAUDE.md | Skills list outdated | Update list |
 ```
 
-If no issues: "All docs are in sync."
+If no issues found, report: "All docs are in sync."
 
-If issues found: fix them. Edit the documentation files to match the source of truth. The source of truth is always the code, never the docs.
+If issues found: fix them. Edit the documentation files to match the source of truth. The source of truth is always the code and file system, never the docs. Run `git diff` after fixing to confirm changes are correct.
 
 ## Rules
 
@@ -72,18 +72,18 @@ If issues found: fix them. Edit the documentation files to match the source of t
 
 When running in a Claude Code plugin repo (detected by `.claude-plugin/` directory):
 
-- Agent catalogue: compare `ls agents/*.md` against any agent tables in docs
-- Skill catalogue: compare `ls -d skills/*/` against any skill tables in docs
-- Hook catalogue: compare `hooks/hooks.json` entries against any hook tables in docs
-- Router dispatch: if `agents/router.md` exists, verify all dispatch targets appear in any dispatch diagrams
-- Plugin manifest: verify `version` in docs matches `.claude-plugin/plugin.json`
+- Agent catalogue: run `ls agents/*.md` and compare against any agent tables in docs
+- Skill catalogue: run `ls -d skills/*/` and compare against any skill tables in docs
+- Hook catalogue: read `hooks/hooks.json` and compare entries against any hook tables in docs
+- Router dispatch: read `agents/router.md` and verify all dispatch targets appear in dispatch diagrams
+- Plugin manifest: read `.claude-plugin/plugin.json` and verify `version` matches what docs claim
 
 ## Anti-patterns
 
 | Problem | Fix |
 |-|-|
-| Checking only README.md | Check ALL .md files. CLAUDE.md, docs/, CONTRIBUTING.md. |
-| Fixing docs without reading the source | Always read the actual file first. |
+| Checking only `README.md` | Check ALL `.md` files: `CLAUDE.md`, `docs/`, `CONTRIBUTING.md`. |
+| Fixing docs without reading the source | Always read the actual file with `Read` first. |
 | Flagging missing documentation | Only flag inaccuracies. Missing docs is a separate concern. |
 | Skipping diagrams | Diagrams go stale fastest. Always check them. |
 | Reporting issues without fixing them | If you can fix it, fix it. Don't just report. |

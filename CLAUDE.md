@@ -4,7 +4,7 @@ Personal Claude Code plugin for SDLC automation.
 
 ## Architecture
 
-Router agent dispatches to specialist subagents based on the task. Skills provide cross-cutting knowledge. Hooks enforce guardrails.
+`agents/router.md` classifies tasks and dispatches to specialist subagents. Skills provide cross-cutting knowledge invoked via the Skill tool. Hooks in `hooks/hooks.json` enforce guardrails at commit time.
 
 ```
 you -> router -> specialist subagent(s) -> result
@@ -17,11 +17,11 @@ you -> router -> specialist subagent(s) -> result
 
 ```
 agents/          subagent definitions (.md)
-skills/          on-demand skills (SKILL.md per directory)
-hooks/           lifecycle hooks (hooks.json)
+skills/          on-demand skills (skills/*/SKILL.md)
+hooks/           lifecycle hooks (hooks/hooks.json)
 references/      supporting docs agents can read
-docs/            architecture, contributing, project context
-.claude-plugin/  plugin manifest and marketplace config
+docs/            docs/architecture.md, docs/contributing.md, docs/references.md
+.claude-plugin/  plugin manifest (.claude-plugin/plugin.json)
 ```
 
 ## Key files
@@ -40,19 +40,20 @@ docs/            architecture, contributing, project context
 
 ## Keeping docs in sync
 
-After any change to `agents/`, `skills/`, or `hooks/`, invoke `clawdio:doc-sync` before committing. It verifies README.md, CLAUDE.md, docs/architecture.md, and docs/contributing.md against the actual repo contents and fixes discrepancies.
+After changing files in `agents/`, `skills/`, or `hooks/`, invoke `clawdio:doc-sync` before running `git commit`. It reads `README.md`, `CLAUDE.md`, `docs/architecture.md`, and `docs/contributing.md`, cross-references against `ls agents/*.md`, `ls -d skills/*/`, and `hooks/hooks.json`, and fixes discrepancies.
 
 ## Conventions
 
-- Agents: as short as possible. Decision trees, anti-pattern tables, verification checklists where they earn their place.
-- Skills: progressive disclosure. Lead with the rule, details below.
-- Hooks: deterministic, fast, fail silently if tools missing.
+- Agents in `agents/*.md`: as short as possible. Decision trees, anti-pattern tables, verification checklists where they earn their place.
+- Skills in `skills/*/SKILL.md`: progressive disclosure. Lead with the rule, details below.
+- Hooks in `hooks/hooks.json`: deterministic, fast, fail silently if tools missing.
+- Run `uvx skillsaw lint` to verify skill quality before committing skill changes.
 - British English in all user-facing text.
 - No emojis. No AI-sounding prose.
 
 ## Comment style
 
-All externally-visible comments (PR reviews, issue comments, state updates) follow this style:
+All externally-visible comments (PR reviews, issue comments, state updates) follow this style. See `skills/pr-description/SKILL.md` for PR body conventions and `skills/issues/SKILL.md` for issue comment conventions:
 
 - Terse. Say what needs saying, stop.
 - No preamble ("Great work!", "This PR looks good overall..."). Start with the content.
@@ -66,11 +67,11 @@ All externally-visible comments (PR reviews, issue comments, state updates) foll
 
 ## Dependencies
 
-- [agent-skills](https://github.com/addyosmani/agent-skills) plugin for security, code review, TDD, debugging, git workflow
-- [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin) plugin for design docs, feature lifecycle, Go PR review
-- `gh` CLI (authenticated) for GitHub operations
-- GitHub MCP server for issue/PR comment threads
-- [Atlassian MCP](https://github.com/sooperset/mcp-atlassian) for Jira integration (optional)
+- [agent-skills](https://github.com/addyosmani/agent-skills) plugin -- invoke via `agent-skills:<skill>` for security, code review, TDD, debugging, git workflow
+- [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin) plugin -- invoke via `kdt:<skill>` for design docs, feature lifecycle, Go PR review
+- `gh` CLI (authenticated) -- verify with `gh auth status`
+- GitHub MCP server -- provides `mcp__github__*` tools for issue/PR comment threads
+- [Atlassian MCP](https://github.com/sooperset/mcp-atlassian) -- provides `mcp__atlassian__jira_*` tools for Jira integration (optional)
 
 ## Docs
 
