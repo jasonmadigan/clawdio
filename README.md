@@ -128,9 +128,13 @@ graph TD
     H -->|critical/important| I[fix + recommit]
     I --> G
     H -->|clean| J[push + gh pr create --draft]
-    J --> K{repo type?}
-    K -->|personal + user says merge| L[gh pr merge --squash]
-    K -->|team| M[report draft PR link]
+    J --> K{CI checks}
+    K -->|pass| L{repo type?}
+    K -->|fail| N[report failures, offer to fix]
+    K -->|running| O[report status, check back later]
+    N --> I
+    L -->|personal + user says merge| P[gh pr merge --squash]
+    L -->|team| Q[report draft PR link]
 ```
 
 For multiple issues ("ship #1, #2, #3"), the router dispatches worktree-worker agents in parallel, each in an isolated git worktree.

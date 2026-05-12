@@ -104,12 +104,33 @@ Skip this phase if `--skip-review` was passed.
 - [ ] Branch name is descriptive (`<issue-number>-<short-description>`, not a system-generated name)
 - [ ] PR is draft (unless --ready was explicitly passed)
 
-**Write state:** `phase: complete`, include `pr: <url>`
+**Write state:** `phase: ci-check`, include `pr: <url>`
 
-### Phase 5: Report
+### Phase 5: CI check
 
-10. Tell the user: PR is ready for team review. Link to the PR.
-10. Delete the state file from memory. Remove from MEMORY.md index.
+10. Check the status of CI checks on the PR:
+    ```bash
+    gh pr checks <number> --watch --fail-fast
+    ```
+    If `--watch` is available and checks are still running, this blocks until they complete. If `--watch` is not supported, poll with:
+    ```bash
+    gh pr view <number> --json statusCheckRollup --jq '[.statusCheckRollup[] | {name: .name, status: .status, conclusion: .conclusion}]'
+    ```
+
+11. If CI fails: report the failing checks, read the logs (`gh run view <run-id> --log-failed`), and offer to fix. Do not mark as ready for review.
+12. If CI passes: report success. The PR is ready to be marked for review.
+13. If CI is still running and has been for more than 5 minutes: report current status and tell the user to check back later or use `gh pr checks <number> --watch`.
+
+- [ ] CI checks have completed
+- [ ] All required checks pass
+- [ ] If checks failed, failures reported with log excerpts
+
+**Write state:** `phase: complete`
+
+### Phase 6: Report
+
+14. Tell the user: PR is ready for team review. Link to the PR. Include CI status.
+15. Delete the state file from memory. Remove from MEMORY.md index.
 
 ## ## State file
 
