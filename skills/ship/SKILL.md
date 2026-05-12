@@ -22,15 +22,60 @@ If no issue ref is provided and no `--resume`, ask the user.
 
 **Multiple issues:** if the user passes multiple issue refs ("ship #10, #11, #12"), do not handle this yourself. Tell `agents/router.md` to use parallel worktree dispatch via `agents/worktree-worker.md` instead. Ship handles one issue at a time.
 
+## State file
+
+Write `.clawdio-state` in the working directory after every phase transition (same format as worktree-worker). This is how the workflow tracks progress and enables resume.
+
+```bash
+cat > .clawdio-state << 'STATEEOF'
+phase: <current phase>
+issue: <issue ref>
+branch: <branch name>
+pr: <PR URL or "pending">
+started: <ISO timestamp of first state write>
+updated: <ISO timestamp of this write>
+error: <error message if blocked, otherwise empty>
+STATEEOF
+```
+
+Do NOT git-commit this file. It is orchestrator-internal.
+
 ## Resume
 
-Before starting a new workflow, check for existing state:
+Before starting a new workflow, check for existing state in this order:
 
-1. Look for `memory/workflow_ship_*.md` files
-2. If one exists for the current repo:
-   - If `--resume` was passed, resume from the recorded phase
-   - Otherwise, tell the user about the existing workflow and offer: "Resume from phase N" or "Start fresh"
-3. If starting fresh with an existing state file, delete the old one first
+1. Check for `.clawdio-state` in the current directory
+2. Check for `memory/workflow_ship_*.md` files
+
+If state is found:
+- If `--resume` was passed, resume from the recorded phase
+- Otherwise, tell the user about the existing workflow and offer: "Resume from phase N" or "Start fresh"
+
+**If no state file exists but `--resume` was passed**, infer the current phase from observable state:
+
+```bash
+# are there commits ahead of main?
+COMMITS=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
+
+# does a PR exist for this branch?
+BRANCH=$(git branch --show-current)
+PR=$(gh pr list --head "$BRANCH" --json number,url,isDraft --jq '.[0]' 2>/dev/null)
+
+# what's the CI status?
+PR_NUM=$(echo "$PR" | jq -r '.number // empty' 2>/dev/null)
+CI=$(gh pr view "$PR_NUM" --json statusCheckRollup --jq '[.statusCheckRollup[] | {name: .name, conclusion: .conclusion}]' 2>/dev/null)
+```
+
+| Observable state | Inferred phase | Resume action |
+|-|-|-|
+| No commits ahead of main | Not started | Start from Phase 1 |
+| Commits ahead, no PR | Pre-push | Resume at Phase 4 (push and PR) |
+| PR exists, CI not run or running | CI pending | Resume at Phase 5 (CI check) |
+| PR exists, CI failed | CI failed | Report failures, offer to fix |
+| PR exists, CI passed, draft | Ready | Offer to mark ready for review |
+| PR exists, CI passed, not draft | Complete | Report done |
+
+Report the inferred state to the user before proceeding.
 
 ## Process
 
@@ -60,7 +105,7 @@ gh issue comment <number> --body "Blocked: implement agent produced no code chan
 gh issue edit <number> --remove-label "in-progress"
 ```
 
-**Write state:** `phase: pre-ship`
+**Write `.clawdio-state`:** `phase: pre-ship`
 
 ### Phase 2: Pre-ship checks
 
@@ -76,7 +121,7 @@ gh issue edit <number> --remove-label "in-progress"
 - [ ] Pre-ship checklist passes
 - [ ] Commits follow conventions
 
-**Write state:** `phase: reviewing`
+**Write `.clawdio-state`:** `phase: reviewing`
 
 ### Phase 3: Self-review
 
@@ -89,7 +134,7 @@ Skip this phase if `--skip-review` was passed.
 - [ ] All Important findings addressed
 - [ ] Nits addressed if trivial, skipped if contentious
 
-**Write state:** `phase: pushing`
+**Write `.clawdio-state`:** `phase: pushing`
 
 ### Phase 4: Push and PR
 
@@ -104,7 +149,7 @@ Skip this phase if `--skip-review` was passed.
 - [ ] Branch name is descriptive (`<issue-number>-<short-description>`, not a system-generated name)
 - [ ] PR is draft (unless --ready was explicitly passed)
 
-**Write state:** `phase: ci-check`, include `pr: <url>`
+**Write `.clawdio-state`:** `phase: ci-check`, include `pr: <url>`
 
 ### Phase 5: CI check
 
@@ -125,7 +170,7 @@ Skip this phase if `--skip-review` was passed.
 - [ ] All required checks pass
 - [ ] If checks failed, failures reported with log excerpts
 
-**Write state:** `phase: complete`
+**Write `.clawdio-state`:** `phase: complete`
 
 ### Phase 6: Report
 
