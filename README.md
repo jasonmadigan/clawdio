@@ -207,7 +207,7 @@ Clawdio provides its own skills for SDLC orchestration. For cross-cutting develo
 | Skill | Trigger | Args | Purpose |
 |-|-|-|-|
 | next | "what's on?", "what next?" | none | Scans GitHub and Jira for issues, PRs, and feedback across repos |
-| ship | "ship #42" | `<issue>`, `--resume`, `--skip-review`, `--draft` | Full lifecycle: implement > push > PR > self-review > fix |
+| ship | "ship #42" | `<issue>`, `--resume`, `--skip-review`, `--ready` | Full lifecycle: implement > push > draft PR > self-review > fix |
 | pr-description | Creating a PR | none | PR body template: summary, linked issue, test evidence |
 | issues | "create issue", "update issue" | `create`, `update`, `close`, `link`, `--repo` | Create, update, close issues. Manages PR-issue links and lifecycle state. |
 | doc-sync | "check docs", "are docs up to date" | none | Verify and fix documentation accuracy against actual repo contents |

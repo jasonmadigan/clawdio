@@ -16,7 +16,7 @@ Passed via the Skill tool's `args` string. Parse the following:
 | issue ref | positional or `--issue` | `ship #42`, `ship --issue https://github.com/org/repo/issues/42` |
 | `--resume` | flag | Resume an in-progress workflow from memory |
 | `--skip-review` | flag | Skip the self-review phase |
-| `--draft` | flag | Create PR as draft (skips the draft/ready prompt) |
+| `--ready` | flag | Create PR as ready for review instead of draft |
 
 If no issue ref is provided and no `--resume`, ask the user.
 
@@ -85,12 +85,11 @@ gh issue edit <number> --remove-label "in-progress"
    git checkout -b <issue-number>-<short-description>
    ```
 5. Push: `git push -u origin HEAD`
-6. Ask the user via `AskUserQuestion`: "Create as draft PR or ready for review?" with options "Draft PR" and "Ready for review".
-7. Create the PR via `gh pr create` following the clawdio:pr-description skill format. Link the issue with `Closes #N` in the body. If draft, add `--draft`.
+6. Create the PR via `gh pr create --draft` following the clawdio:pr-description skill format. Link the issue with `Closes #N` in the body. Draft is the default. Only omit `--draft` if `--ready` was passed.
 
 - [ ] PR description follows template (summary, linked issue, test evidence)
 - [ ] Branch name is descriptive
-- [ ] Draft/ready matches user preference
+- [ ] PR is draft (unless --ready was explicitly passed)
 
 **Write state:** `phase: reviewing`, include `pr: <url>`
 

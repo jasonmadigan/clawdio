@@ -259,11 +259,10 @@ When the user references multiple issues to ship ("ship #10, #11, #12"), dispatc
 
 ### Step 1: Confirm scope and PR type
 
-**Non-negotiable:** always use `AskUserQuestion` here, even if the user already said "ship" or "yes". The confirmation step and draft/ready question cannot be skipped or defaulted. Ask two things:
+**Non-negotiable:** always use `AskUserQuestion` here, even if the user already said "ship" or "yes". The confirmation step cannot be skipped. Ask:
 1. "Ship these N issues in parallel?" with options to proceed or adjust.
-2. "Create PRs as draft or ready for review?" with options "Draft" and "Ready for review".
 
-Do NOT default to "ready for review" because the user "explicitly confirmed". Do NOT skip the draft question because the changes are "small". The user decides, always.
+PRs default to draft. Only pass `--ready` if the user explicitly asks for ready-for-review PRs.
 
 ### Step 2: Dispatch in parallel
 
@@ -271,13 +270,13 @@ Spawn all worktree-worker agents simultaneously in a single message. Each gets:
 - `isolation: "worktree"` (Claude Code creates a separate worktree per agent)
 - The issue reference (URL or number)
 - The repo context
-- `--draft` in the prompt if the user chose draft PRs
+- `--ready` in the prompt only if the user explicitly asked for ready-for-review PRs
 
-Example for three issues (draft mode):
+Example for three issues (default draft mode):
 
 ```
-Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #10 in <repo>. --draft")
-Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #11 in <repo>. --draft")
+Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #10 in <repo>.")
+Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #11 in <repo>.")
 Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #12 in <repo>. --draft")
 ```
 

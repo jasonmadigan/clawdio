@@ -150,7 +150,7 @@ Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The ro
 | Skill | Purpose | Args |
 |-|-|-|
 | next | Scans GitHub for actionable work, suggests priorities | none |
-| ship | Full lifecycle: implement > push > PR > review > merge | `<issue>`, `--resume`, `--skip-review`, `--draft` |
+| ship | Full lifecycle: implement > push > draft PR > review > merge | `<issue>`, `--resume`, `--skip-review`, `--ready` |
 | pr-description | PR body template and conventions | none |
 | issues | Create, update, link, and manage GitHub issues and PR relationships | `create`, `update`, `close`, `link`, `--repo` |
 | doc-sync | Verify and fix documentation accuracy against actual repo contents | none |

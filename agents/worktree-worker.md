@@ -93,13 +93,13 @@ Report `RESULT: blocked` with reason "no code changes produced". Do not proceed.
 
 ### Phase 5: Create PR
 
-12. Create the PR via `gh pr create`. Follow the clawdio:pr-description skill format. Link the issue with `Closes #N` in the PR body. If the router passed `--draft` in your prompt, add `--draft` to the `gh pr create` command.
+12. Create the PR via `gh pr create --draft`. Follow the clawdio:pr-description skill format. Link the issue with `Closes #N` in the PR body. Draft is the default. Only omit `--draft` if the router passed `--ready` in your prompt.
 13. Write `.clawdio-state` with `phase: pr-created` and `pr: <url>`.
 
 - [ ] PR description follows template
 - [ ] Issue is linked
 - [ ] Branch name is descriptive
-- [ ] Draft/ready matches what the router specified
+- [ ] PR is draft (unless --ready was explicitly passed)
 
 ### Phase 6: Report
 
