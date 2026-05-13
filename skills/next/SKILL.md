@@ -16,6 +16,9 @@ REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
 gh search issues --assignee=@me --state=open --repo="$REPO" --json number,title,labels,updatedAt,url --limit 20
 
+# if the above returns zero results, query the backlog
+gh search issues --no-assignee --state=open --repo="$REPO" --json number,title,labels,updatedAt,url --limit 10 --sort updated
+
 gh search prs --review-requested=@me --state=open --repo="$REPO" --json number,title,author,updatedAt,url --limit 20
 
 gh pr list --author @me --json number,title,updatedAt,url,reviewDecision --limit 20
@@ -106,9 +109,10 @@ Present results in markdown tables. Group by priority (highest first):
 3. **Merge** -- my PRs where `reviewDecision` is `APPROVED`. Merge with `gh pr merge <number> --squash`.
 4. **My PRs** -- my open PRs where `reviewDecision` is `REVIEW_REQUIRED`
 5. **Implement** -- GitHub issues assigned to me. Invoke `clawdio:ship #<number>` to start.
-6. **Component owner** -- open PRs and unassigned issues in repos where I am an `OWNERS` approver/reviewer
-7. **Repo activity** -- open PRs from others with no reviews yet
-8. **Jira** -- open Jira tickets assigned to me
+6. **Backlog** -- unassigned issues in this repo. Only shown when no issues are assigned to me. Invoke `clawdio:ship #<number>` to pick up, or `clawdio:pluck` to claim without implementing.
+7. **Component owner** -- open PRs and unassigned issues in repos where I am an `OWNERS` approver/reviewer
+8. **Repo activity** -- open PRs from others with no reviews yet
+9. **Jira** -- open Jira tickets assigned to me
 
 Skip sections with no results. Omit empty tables entirely.
 
