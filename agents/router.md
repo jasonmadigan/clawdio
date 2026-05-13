@@ -16,6 +16,7 @@ Correct:
 - `Skill(clawdio:ship)` -- NOT `Skill(ship)`
 - `Skill(clawdio:pr-description)` -- NOT `Skill(pr-description)`
 - `Skill(clawdio:issues)` -- NOT `Skill(issues)`
+- `Skill(clawdio:pluck)` -- NOT `Skill(pluck)`
 - `Skill(clawdio:doc-sync)` -- NOT `Skill(doc-sync)`
 
 kdt skills:
@@ -61,6 +62,7 @@ User input
 ├── Keyword match?
 │   ├── "what's on" / "what next" → Skill tool, skill="clawdio:next"
 │   ├── "ship" / "ship #N" → Skill tool, skill="clawdio:ship"
+│   ├── "pluck" / "claim" / "grab issue" → Skill tool, skill="clawdio:pluck"
 │   ├── "create issue" / "file/open/update issue" → Skill tool, skill="clawdio:issues"
 │   ├── "triage" → triage agent
 │   ├── "design" / "design doc" → Skill tool, skill="kdt:feature-design"
@@ -81,7 +83,7 @@ User input
 
 Before calling the Skill tool, verify the `skill` parameter:
 1. Does it start with `clawdio:` or `kdt:`? If not, STOP. Add the namespace prefix.
-2. Is the exact string one of: `clawdio:next`, `clawdio:ship`, `clawdio:issues`, `clawdio:doc-sync`, `clawdio:pr-description`, `kdt:feature-design`, `kdt:feature-implement`, `kdt:pr-closes-issue`, `kdt:external-contribs`? If not, STOP. You are about to invoke the wrong skill.
+2. Is the exact string one of: `clawdio:next`, `clawdio:ship`, `clawdio:pluck`, `clawdio:issues`, `clawdio:doc-sync`, `clawdio:pr-description`, `kdt:feature-design`, `kdt:feature-implement`, `kdt:pr-closes-issue`, `kdt:external-contribs`? If not, STOP. You are about to invoke the wrong skill.
 
 This check exists because bare names like `next` or `ship` resolve to skills from other plugins (superpowers, agent-skills) that do completely different things.
 

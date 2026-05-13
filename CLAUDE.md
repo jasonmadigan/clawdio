@@ -9,7 +9,7 @@ Personal Claude Code plugin for SDLC automation.
 ```
 you -> router -> specialist subagent(s) -> result
                     |
-                    +-- skills (next, ship, pr-description, issues, doc-sync)
+                    +-- skills (next, ship, pluck, pr-description, issues, doc-sync)
                     +-- hooks (block secrets, doc-sync-reminder, lint, format)
 ```
 
@@ -32,6 +32,7 @@ docs/            docs/architecture.md, docs/contributing.md, docs/references.md
 | `agents/worktree-worker.md` | isolated implementation agent for shipping issues via worktrees |
 | `skills/ship/SKILL.md` | full lifecycle skill: implement, push, PR, self-review, merge-prep |
 | `skills/next/SKILL.md` | scans GitHub and Jira for actionable work |
+| `skills/pluck/SKILL.md` | claim unassigned issues from the repo backlog |
 | `skills/issues/SKILL.md` | GitHub issue lifecycle: create, update, link PRs, manage state |
 | `skills/pr-description/SKILL.md` | PR body template and conventions |
 | `skills/doc-sync/SKILL.md` | verifies and fixes docs against actual repo contents |

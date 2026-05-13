@@ -36,6 +36,7 @@ graph TD
     Decision -->|what's on| WhatNext[clawdio:next]
     Decision -->|ship| Ship[clawdio:ship]
     Decision -->|create/update issue| Issues[clawdio:issues]
+    Decision -->|claim issue| Pluck[clawdio:pluck]
     Decision -->|multi-issue| Parallel[parallel dispatch]
     Decision -->|release notes| RN[release-notes agent]
     Decision -->|write tests| TW[test-writer agent]
@@ -153,6 +154,7 @@ Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The ro
 | ship | Full lifecycle: implement > push > draft PR > review > merge | `<issue>`, `--resume`, `--skip-review`, `--ready` |
 | pr-description | PR body template and conventions | none |
 | issues | Create, update, link, and manage GitHub issues and PR relationships | `create`, `update`, `close`, `link`, `--repo` |
+| pluck | Claim unassigned issues from the repo backlog | none |
 | doc-sync | Verify and fix documentation accuracy against actual repo contents | none |
 
 Skills for commit conventions, security checklists, and review rubrics are provided by the companion plugin [agent-skills](https://github.com/addyosmani/agent-skills) (`git-workflow-and-versioning`, `security-and-hardening`, `code-review-and-quality`).

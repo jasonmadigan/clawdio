@@ -68,7 +68,7 @@ Talk to the **router** agent. It classifies your request and dispatches the righ
 graph LR
     You -->|request| Router
     Router -->|classify & dispatch| Agents[agents: implement, triage, refine, address-feedback, release-notes, test-writer, docs, worktree-worker]
-    Router -->|invoke| Skills[skills: next, ship, issues, pr-description]
+    Router -->|invoke| Skills[skills: next, ship, pluck, issues, pr-description]
     Router -->|review fanout| Review[code-reviewer + test-verifier + domain specialists]
     Agents -->|result| Router
     Review -->|findings| Router
@@ -165,6 +165,8 @@ graph TD
 
 ### Typical commands
 
+**"Pluck"** -- invokes the `pluck` skill. Shows unassigned issues in the current repo. Pick ones to claim without starting implementation.
+
 **"What's on?"** -- invokes the `next` skill. Queries GitHub for issues, PRs, and feedback in the current repo. Returns a prioritised table.
 
 **"Ship #42"** -- invokes the `ship` skill. Implements, pushes, creates PR, self-reviews, fixes findings, reports back.
@@ -208,6 +210,7 @@ Clawdio provides its own skills for SDLC orchestration. For cross-cutting develo
 |-|-|-|-|
 | next | "what's on?", "what next?" | none | Scans GitHub and Jira for issues, PRs, and feedback across repos |
 | ship | "ship #42" | `<issue>`, `--resume`, `--skip-review`, `--ready` | Full lifecycle: implement > push > draft PR > self-review > fix |
+| pluck | "pluck", "claim issue", "grab issue" | none | Claim unassigned issues from the repo backlog without implementing |
 | pr-description | Creating a PR | none | PR body template: summary, linked issue, test evidence |
 | issues | "create issue", "update issue" | `create`, `update`, `close`, `link`, `--repo` | Create, update, close issues. Manages PR-issue links and lifecycle state. |
 | doc-sync | "check docs", "are docs up to date" | none | Verify and fix documentation accuracy against actual repo contents |
