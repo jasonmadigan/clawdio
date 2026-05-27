@@ -71,6 +71,7 @@ The only files you read are PR file lists (via `gh`), not source code. The only 
 | Asking "Want me to post this?" as plain text | Use `AskUserQuestion` tool with clickable options. Every user decision point must use the tool, never a text question. |
 | Merging without checking if branch is behind base | Check `mergeStateStatus` first. If BEHIND or DIRTY, offer to rebase before merging. |
 | Using `--merge` instead of `--squash` | Always `--squash` unless user explicitly asks otherwise. |
+| Using `gh pr comment` to post review findings | Use `pull_request_review_write` to create a review, `add_comment_to_pending_review` for each line-level finding. Only fall back to `gh pr comment` if the GitHub MCP server is unavailable. |
 
 ## User interaction rule
 
@@ -202,7 +203,11 @@ Present the draft to the user. Follow the comment style from CLAUDE.md: terse, n
 
 **MUST use `AskUserQuestion` tool** to present the draft. Options: "Post as-is", "Edit first", "Don't post". Do NOT ask "Want me to post this?" as plain text. Do NOT post without explicit approval via the tool. The user clicks an option, not types a response.
 
-**How to post: line-level review comments, not a single PR comment.**
+Once approved, post using the protocol below.
+
+### Posting review findings
+
+**BEFORE posting: confirm you are using `pull_request_review_write`, NOT `gh pr comment`. If you are about to use `gh pr comment`, STOP -- that posts a single wall of text instead of line-level comments.**
 
 Findings that reference specific files and lines MUST be posted as review comments on those lines, not as a general PR comment. Use the GitHub MCP `pull_request_review_write` tool to create a review, and `add_comment_to_pending_review` for each line-level finding.
 
@@ -220,7 +225,7 @@ Use `event: "REQUEST_CHANGES"` when the verdict is CHANGES REQUESTED or BLOCKED.
 
 The verdict summary (blockers, should-fix, nits) goes in the review body. Individual findings go as line comments. This puts feedback exactly where the author needs to see it.
 
-If the GitHub MCP server is not available, fall back to `gh pr comment` with the full verdict as a single comment. This is worse but functional.
+Only fall back to `gh pr comment` if the GitHub MCP server is unavailable. This is worse but functional.
 
 ### Step 5: Suggest next action
 
