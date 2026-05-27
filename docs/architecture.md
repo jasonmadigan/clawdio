@@ -57,9 +57,9 @@ graph TD
 
 ### Multi-pass review
 
-Reviews use the fanout pattern: the router classifies the PR's file paths, then spawns multiple specialist reviewers in parallel. Results are collected and presented grouped by specialist.
+Reviews use the fanout pattern: the router invokes the `review-coordination` skill, which classifies the PR's file paths and determines which specialist reviewers to spawn. The router then dispatches the specialists in parallel and collects results grouped by specialist.
 
-The router owns this fanout directly because subagents cannot spawn sub-subagents (they don't have access to the Agent tool). There is no intermediate "review coordinator" agent.
+The router owns the agent dispatch because subagents cannot spawn sub-subagents (they don't have access to the Agent tool). The review-coordination skill provides the classification logic and merge strategy; the router executes it.
 
 ### SDLC loop
 
@@ -156,6 +156,10 @@ Note: subagents cannot spawn sub-subagents (no access to the Agent tool). The ro
 | issues | Create, update, link, and manage GitHub issues and PR relationships | `create`, `update`, `close`, `link`, `--repo` |
 | pluck | Claim unassigned issues from the repo backlog | none |
 | doc-sync | Verify and fix documentation accuracy against actual repo contents | none |
+| review-coordination | Coordinates multi-specialist PR review fanout | none |
+| merge-gate | Pre-merge safety checks before any merge | none |
+| worktree-recovery | Recovers in-progress worktree workers before dispatching new ones | none |
+| parallel-ship | Dispatches multiple worktree-workers in parallel for multi-issue ship | `<issues>` |
 
 Skills for commit conventions, security checklists, and review rubrics are provided by the companion plugin [agent-skills](https://github.com/addyosmani/agent-skills) (`git-workflow-and-versioning`, `security-and-hardening`, `code-review-and-quality`).
 
