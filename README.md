@@ -68,7 +68,7 @@ Talk to the **router** agent. It classifies your request and dispatches the righ
 graph LR
     You -->|request| Router
     Router -->|classify & dispatch| Agents[agents: implement, triage, refine, address-feedback, release-notes, test-writer, docs, worktree-worker]
-    Router -->|invoke| Skills[skills: next, ship, pluck, issues, pr-description]
+    Router -->|invoke| Skills[skills: next, ship, pluck, issues, pr-description, doc-sync, review-coordination, merge-gate, worktree-recovery, parallel-ship]
     Router -->|review fanout| Review[code-reviewer + test-verifier + domain specialists]
     Agents -->|result| Router
     Review -->|findings| Router
@@ -214,6 +214,10 @@ Clawdio provides its own skills for SDLC orchestration. For cross-cutting develo
 | pr-description | Creating a PR | none | PR body template: summary, linked issue, test evidence |
 | issues | "create issue", "update issue" | `create`, `update`, `close`, `link`, `--repo` | Create, update, close issues. Manages PR-issue links and lifecycle state. |
 | doc-sync | "check docs", "are docs up to date" | none | Verify and fix documentation accuracy against actual repo contents |
+| review-coordination | PR review dispatch | none | Coordinates multi-specialist PR review fanout |
+| merge-gate | pre-merge checks | none | Pre-merge safety checks before any merge |
+| worktree-recovery | worktree recovery | none | Recovers in-progress worktree workers before dispatching new ones |
+| parallel-ship | "ship #1, #2, #3" | `<issues>` | Dispatches multiple worktree-workers in parallel for multi-issue ship |
 
 ### agent-skills (companion plugin)
 
