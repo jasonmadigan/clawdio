@@ -49,3 +49,4 @@ git worktree remove <worktree-path> --force 2>/dev/null
 git worktree prune
 git pull
 ```
+
