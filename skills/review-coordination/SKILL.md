@@ -85,25 +85,36 @@ Once approved, post using the protocol below.
 
 ### Posting review findings
 
-**BEFORE posting: confirm you are using `pull_request_review_write`, NOT `gh pr comment`. If you are about to use `gh pr comment`, STOP -- that posts a single wall of text instead of line-level comments.**
+Get the head commit SHA first:
 
-Findings that reference specific files and lines MUST be posted as review comments on those lines, not as a general PR comment. Use the GitHub MCP `pull_request_review_write` tool to create a review, and `add_comment_to_pending_review` for each line-level finding.
-
-```
-Posting flow:
-├── Create a pending review: pull_request_review_write(method: "create", ...)
-├── For each finding with a file:line reference:
-│   └── add_comment_to_pending_review(path: "<file>", line: <line>, body: "<finding>", subjectType: "LINE")
-├── For findings without a specific line (general observations):
-│   └── Include in the review body, not as line comments
-└── Submit the review: pull_request_review_write(method: "submit_pending", event: "COMMENT" or "REQUEST_CHANGES")
+```bash
+COMMIT_SHA=$(gh api repos/{owner}/{repo}/pulls/{number} --jq '.head.sha')
 ```
 
-Use `event: "REQUEST_CHANGES"` when the verdict is CHANGES REQUESTED or BLOCKED. Use `event: "COMMENT"` when the verdict is APPROVE (submit the review as informational, not blocking).
+Post via `gh api` with the reviews endpoint:
 
-The verdict summary (blockers, should-fix, nits) goes in the review body. Individual findings go as line comments. This puts feedback exactly where the author needs to see it.
+```bash
+gh api repos/{owner}/{repo}/pulls/{number}/reviews --method POST --input - <<'EOF'
+{
+  "commit_id": "<commit_sha>",
+  "event": "REQUEST_CHANGES",
+  "body": "## Review verdict: CHANGES REQUESTED\n\n### Blockers\n- ...\n\n### Should fix\n- ...\n\n(plus any findings that reference lines outside the diff)",
+  "comments": [
+    {
+      "path": "internal/broker/broker.go",
+      "line": 42,
+      "body": "**Critical:** unchecked nil dereference on error path"
+    }
+  ]
+}
+EOF
+```
 
-Only fall back to `gh pr comment` if the GitHub MCP server is unavailable. This is worse but functional.
+Rules:
+- `event`: `"REQUEST_CHANGES"` when verdict is CHANGES REQUESTED or BLOCKED. `"COMMENT"` when APPROVE.
+- `body`: the verdict summary (blockers, should-fix, nits) plus any findings that reference lines NOT in the diff. GitHub rejects inline comments on lines outside the diff, so those go here.
+- `comments`: array of inline findings. Each needs `path`, `line` (line number in the NEW file from the diff hunk headers), and `body`.
+- `commit_id`: the head SHA fetched above. Required.
 
 ## Step 5: Suggest next action
 
