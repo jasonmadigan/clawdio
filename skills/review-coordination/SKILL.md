@@ -36,6 +36,19 @@ Files in PR
 
 When all three hold, dispatch code-reviewer + test-verifier only. Otherwise, classify files and dispatch domain specialists as normal.
 
+## Step 1.5: Check if the fix already landed on main
+
+Many external PRs are weeks old. Before dispatching review agents, check if the code the PR changes still looks the same on main. If the fix already landed (via a different PR or a core team commit), close the PR as superseded.
+
+```bash
+# for each file the PR touches, check if the relevant code was already changed on main
+for file in $(gh pr view <number> --json files --jq '.files[].path'); do
+  git log --oneline -3 -- "$file"
+done
+```
+
+If any recent commit on main addresses the same issue, close the PR with a comment crediting the author and pointing to the commit that fixed it.
+
 ## Step 2: Dispatch in parallel
 
 Spawn ALL needed specialists simultaneously using the Agent tool. Pass each one:
