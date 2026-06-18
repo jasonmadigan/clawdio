@@ -86,6 +86,14 @@ Multi-phase skills persist their progress to memory files (`memory/workflow_<ski
 
 This replaces the archived engine's `WorkflowRun` database table and `.clawdio-progress.md` file. The memory system is simpler (plain markdown files with frontmatter) and already survives context compression. State files are cleaned up on workflow completion.
 
+### Agent dispatch: no `name` parameter
+
+The Agent tool's `name` parameter switches agents into "teammate/mailbox" mode. In this mode agents spawn idle, send `idle_notification` heartbeats, and never execute their prompt or respond to SendMessage with tool calls. They eventually time out and terminate ("come to rest") having done nothing.
+
+All agent dispatch in this plugin MUST use `subagent_type` (e.g. `subagent_type: "clawdio:implement"`) WITHOUT `name`. Track agents by the `agentId` returned in the spawn response. This applies to the router, review-coordination, parallel-ship, and ship.
+
+Discovered June 2025 via controlled experiment: 8 named agents produced zero output; 1 unnamed agent completed instantly.
+
 ### Worktree isolation
 
 Agents that do implementation work can be dispatched with `isolation: "worktree"` on the Agent tool. Claude Code creates a separate git worktree per agent, the agent works entirely within it, and the worktree is preserved if changes were made (cleaned up if not).

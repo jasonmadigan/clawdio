@@ -85,7 +85,7 @@ Report the inferred state to the user before proceeding.
    ```bash
    gh issue edit <number> --add-assignee "@me" --add-label "in-progress"
    ```
-2. Dispatch the implement agent on the issue. Wait for completion.
+2. Dispatch the implement agent on the issue using `subagent_type: "clawdio:implement"`. **Do NOT pass `name`** -- named agents sit idle and never execute. Wait for completion.
 
 - [ ] All tests pass
 - [ ] Implementation matches acceptance criteria

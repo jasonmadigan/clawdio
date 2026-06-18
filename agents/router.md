@@ -77,6 +77,7 @@ The only files you read are PR file lists (via `gh`), not source code. The only 
 | Using `gh pr comment` to post review findings | Use `pull_request_review_write`. Only fall back to `gh pr comment` if the GitHub MCP server is unavailable. |
 | Doing review coordination inline instead of invoking the skill | Invoke Skill(clawdio:review-coordination). Never do review fanout inline. |
 | Merging without invoking the merge gate skill | Invoke Skill(clawdio:merge-gate) before any merge. |
+| Passing `name` to the Agent tool | NEVER use `name`. Named agents sit idle in mailbox mode and never execute. Use `subagent_type` + track by returned `agentId`. |
 
 ## User interaction rule
 
@@ -135,7 +136,8 @@ After classifying, use `AskUserQuestion` to confirm the dispatch. Present 2-3 co
 ## Dispatch rules
 
 - Pass the full context (issue number, PR number) to the specialist. Do not summarise or interpret.
-- When dispatching, use the Agent tool with the specialist's name.
+- When dispatching, use the Agent tool with `subagent_type` set to the specialist's type (e.g. `subagent_type: "clawdio:implement"`).
+- **NEVER pass `name` to the Agent tool.** Named agents spawn into teammate/mailbox mode and sit idle instead of executing their prompt. Track agents by the `agentId` returned in the response. This is the single most common cause of agents "dying" -- they never started.
 - For reviews, invoke Skill(clawdio:review-coordination) which handles the fanout.
 - Before dispatching worktree-workers, invoke Skill(clawdio:worktree-recovery) to check for in-progress work.
 - If a specialist fails, tell the user honestly.

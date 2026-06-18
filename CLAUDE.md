@@ -13,6 +13,8 @@ you -> router -> specialist subagent(s) -> result
                     +-- hooks (block secrets, doc-sync-reminder, lint, format)
 ```
 
+**Critical dispatch rule:** NEVER pass `name` to the Agent tool. Named agents spawn into idle mailbox mode and never execute. Use `subagent_type` and track by returned `agentId`. See `docs/architecture.md` for details.
+
 ## Structure
 
 ```

@@ -51,16 +51,18 @@ If any recent commit on main addresses the same issue, close the PR with a comme
 
 ## Step 2: Dispatch in parallel
 
-Spawn ALL needed specialists simultaneously using the Agent tool. Pass each one:
+Spawn ALL needed specialists simultaneously using the Agent tool with `subagent_type`. **NEVER pass `name` to the Agent tool** -- named agents sit idle in mailbox mode and never execute their prompt. Track agents by the `agentId` returned in each response.
+
+Pass each agent:
 - The PR number
 - The full file list
 - Instructions to read the diff via `gh pr diff <number>` and the PR description via `gh pr view <number>`
 
-Example: for a Go PR with auth changes, dispatch four agents in parallel:
-- code-reviewer
-- test-verifier
-- go-k8s-reviewer
-- auth-reviewer
+Example: for a Go PR with auth changes, dispatch four agents in parallel (no `name` parameter):
+- `subagent_type: "clawdio:code-reviewer"`
+- `subagent_type: "clawdio:test-verifier"`
+- `subagent_type: "clawdio:go-k8s-reviewer"`
+- `subagent_type: "clawdio:auth-reviewer"`
 
 ## Step 3: Collect, merge, and decide
 

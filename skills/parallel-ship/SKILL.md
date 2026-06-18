@@ -19,17 +19,20 @@ PRs default to draft. Only pass `--ready` if the user explicitly asks for ready-
 Invoke `Skill(clawdio:worktree-recovery)` first to check for in-progress work.
 
 Spawn all worktree-worker agents simultaneously in a single message. Each gets:
+- `subagent_type: "clawdio:worktree-worker"`
 - `isolation: "worktree"` (Claude Code creates a separate worktree per agent)
 - The issue reference (URL or number)
 - The repo context
 - `--ready` in the prompt only if the user explicitly asked for ready-for-review PRs
 
+**NEVER pass `name` to the Agent tool.** Named agents sit idle in mailbox mode and never execute. Track agents by the returned `agentId`.
+
 Example for three issues (default draft mode):
 
 ```
-Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #10 in <repo>.")
-Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #11 in <repo>.")
-Agent(worktree-worker, isolation: worktree, prompt: "Implement issue #12 in <repo>. --draft")
+Agent(subagent_type: "clawdio:worktree-worker", isolation: "worktree", prompt: "Implement issue #10 in <repo>.")
+Agent(subagent_type: "clawdio:worktree-worker", isolation: "worktree", prompt: "Implement issue #11 in <repo>.")
+Agent(subagent_type: "clawdio:worktree-worker", isolation: "worktree", prompt: "Implement issue #12 in <repo>.")
 ```
 
 ## Step 3: Collect results
