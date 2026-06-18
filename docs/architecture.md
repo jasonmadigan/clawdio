@@ -86,9 +86,31 @@ Multi-phase skills persist their progress to memory files (`memory/workflow_<ski
 
 This replaces the archived engine's `WorkflowRun` database table and `.clawdio-progress.md` file. The memory system is simpler (plain markdown files with frontmatter) and already survives context compression. State files are cleaned up on workflow completion.
 
-### Agent dispatch: no `name` parameter
+### Subagents vs agent teams
 
-The Agent tool's `name` parameter switches agents into "teammate/mailbox" mode. In this mode agents spawn idle, send `idle_notification` heartbeats, and never execute their prompt or respond to SendMessage with tool calls. They eventually time out and terminate ("come to rest") having done nothing.
+Claude Code has two multi-agent models. This plugin uses subagents exclusively.
+
+**Subagents** (what we use): fire-and-forget. Prompt in, result out. The caller blocks or collects results later. No inter-agent communication. Agent tool WITHOUT `name`.
+
+**Agent teams** (experimental, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`): persistent collaborators with shared task lists and bidirectional messaging via SendMessage. Agents talk to each other, claim tasks, challenge findings. Agent tool WITH `name`.
+
+The `name` parameter on the Agent tool is what switches between the two models. Passing `name` spawns a teammate that sits idle in mailbox mode waiting for task assignments. Omitting `name` spawns a subagent that executes its prompt immediately.
+
+| | Subagents | Agent teams |
+|-|-|-|
+| Trigger | Agent tool without `name` | Agent tool with `name` |
+| Execution | Prompt executes immediately, result returns | Spawns idle, waits for SendMessage/task claims |
+| Communication | Result returns to caller only | Bidirectional via SendMessage, shared task list |
+| Best for | Focused tasks where only the result matters | Tasks requiring discussion and cross-agent coordination |
+| Maturity | Stable | Experimental -- no session resume, task status lag, one team per session |
+
+**Why subagents fit our dispatch patterns:** all our workflows are router-sends-task, specialist-does-it, result-comes-back. Review fanout dispatches code-reviewer and test-verifier in parallel, but they don't need to share findings mid-flight -- the router merges results after both complete. Worktree-workers are isolated by design. No agent needs to talk to another agent.
+
+**When agent teams would add value** (not currently implemented): competing-hypothesis debugging where agents challenge each other's theories; cross-layer coordination where frontend/backend/test agents share discoveries mid-flight; research tasks that build on each other's findings.
+
+**Decision:** don't build workflows around agent teams until the feature stabilises. Revisit when session resumption and task status reliability are resolved.
+
+### Agent dispatch rule
 
 All agent dispatch in this plugin MUST use `subagent_type` (e.g. `subagent_type: "clawdio:implement"`) WITHOUT `name`. Track agents by the `agentId` returned in the spawn response. This applies to the router, review-coordination, parallel-ship, and ship.
 
