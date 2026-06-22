@@ -49,6 +49,24 @@ done
 
 If any recent commit on main addresses the same issue, close the PR with a comment crediting the author and pointing to the commit that fixed it.
 
+## Step 1.9: Gather prior review context (round 2+ only)
+
+On re-review (when Step 6 loops back with a round number > 1), fetch prior review context before dispatching agents. Skip this step entirely on the first review round.
+
+```bash
+# fetch prior review verdicts (state, author, body)
+gh api repos/{owner}/{repo}/pulls/{number}/reviews --jq '[.[] | {state, user: .user.login, body}]'
+
+# fetch prior inline review comments (path, line, body, author)
+gh api repos/{owner}/{repo}/pulls/{number}/comments --jq '[.[] | {path, line: .original_line, user: .user.login, body, created_at}]'
+```
+
+Assemble a prior-review summary containing:
+- **Prior verdicts**: which reviewers posted, what verdict (APPROVED, CHANGES_REQUESTED, COMMENTED), and the verdict body
+- **Prior findings**: the inline comments grouped by file, with severity labels if present
+
+This summary is passed to agents in Step 2.
+
 ## Step 2: Dispatch in parallel
 
 Spawn ALL needed specialists simultaneously using the Agent tool with `subagent_type`. **NEVER pass `name` to the Agent tool** -- named agents sit idle in mailbox mode and never execute their prompt. Track agents by the `agentId` returned in each response.
@@ -57,6 +75,11 @@ Pass each agent:
 - The PR number
 - The full file list
 - Instructions to read the diff via `gh pr diff <number>` and the PR description via `gh pr view <number>`
+
+**On round 2+, also pass each agent:**
+- The round number (e.g. "This is review round 2")
+- The prior-review summary from Step 1.9
+- These instructions: "Prior review findings are listed below. Verify that flagged issues were addressed. Do not re-flag findings that have been resolved. Only raise genuinely new issues not covered by prior rounds."
 
 Example: for a Go PR with auth changes, dispatch four agents in parallel (no `name` parameter):
 - `subagent_type: "clawdio:code-reviewer"`
@@ -149,6 +172,6 @@ The address-feedback agent reads the review comments, categorises them, fixes wh
 
 When the address-feedback agent finishes, offer next steps via `AskUserQuestion`:
 
-- "Re-review" → run review coordination again (step 1) to verify the fixes
+- "Re-review" → run review coordination again (Step 1) with the round number incremented (first review = round 1, so first re-review = round 2, etc.). The round number triggers Step 1.9 to gather prior context before dispatch.
 - "Merge" → invoke Skill(clawdio:merge-gate)
 - "What's on" → invoke Skill(clawdio:next) to check for other work
