@@ -32,7 +32,7 @@ router skill loads the canonical Markdown files at runtime.
 Run these before handing off changes:
 
 ```bash
-claude plugin validate .
+claude plugin validate --strict .
 python3 /path/to/plugin-creator/scripts/validate_plugin.py .
 uvx skillsaw lint
 python3 -m py_compile hooks/file_hook.py

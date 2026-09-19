@@ -114,9 +114,9 @@ This is inline in the ship skill, not a universal hook. A PostToolUse hook can't
 
 ### Workflow state
 
-Multi-phase skills persist their progress to memory files (`memory/workflow_<skill>_<branch>.md`) after each phase gate. If a session dies mid-flow, the next invocation detects the state file and offers to resume.
+Multi-phase skills write `.clawdio-state` in the working directory after each phase transition. If a session dies mid-flow, the next invocation detects the file and offers to resume; `clawdio:worktree-recovery` finds the same file in abandoned worktrees.
 
-This replaces the archived engine's `WorkflowRun` database table and `.clawdio-progress.md` file. The memory system is simpler (plain markdown files with frontmatter) and already survives context compression. State files are cleaned up on workflow completion.
+This replaces the archived engine's `WorkflowRun` database table and `.clawdio-progress.md` file. A plain key-value file next to the work is simpler, survives context compression, and needs no index. State files are deleted on workflow completion and never git-committed.
 
 ### Client dispatch adapters
 

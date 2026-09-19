@@ -5,8 +5,6 @@ description: Coordinates multi-specialist PR review. Use when the router receive
 
 # Review Coordination
 
-Coordinates multi-specialist PR review. Invoked by the router when a PR needs review.
-
 Read `../../references/dispatch-rules.md` before dispatching or asking the user
 for a decision. The router owns the review fanout on every client.
 
@@ -115,12 +113,6 @@ Pass each agent:
 - The prior-review summary from Step 1.9
 - These instructions: "Prior review findings are listed below. Verify that flagged issues were addressed. Do not re-flag findings that have been resolved. Findings listed as refuted were checked by an adversarial verifier and found to be false positives -- do not re-raise them. Only raise genuinely new issues not covered by prior rounds."
 
-Example: for a Go PR with auth changes, dispatch these four logical agents in parallel:
-- `code-reviewer`
-- `test-verifier`
-- `go-k8s-reviewer`
-- `auth-reviewer`
-
 ## Step 3: Collect, merge, and decide
 
 When all specialists return, synthesise their findings into a single assessment. Do NOT just list reports -- merge them across these axes:
@@ -142,7 +134,7 @@ If any specialist returned a Critical finding, the default verdict is CHANGES RE
 
 ## Step 3.5: Verify findings
 
-Before presenting or posting anything, invoke `clawdio:verify-findings` on the merged Critical and Important findings. Nits pass through unverified. The skill fans out one verifier agent per finding (router main loop, in parallel) and returns a verdict for each.
+Before presenting or posting anything, invoke `clawdio:verify-findings` on the merged Critical and Important findings. Nits pass through unverified.
 
 - **Confirmed** and **plausible** findings proceed to Step 4 unchanged.
 - **Refuted** findings stay in the internal draft with a one-line refutation so the user can audit what was filtered. Do not post them to the author.
@@ -235,7 +227,7 @@ If the verdict is APPROVE, offer for both:
 Merging a fork PR into a base repository we own is normal: provenance gates
 writes to the head branch, not the merge.
 
-The address-feedback agent reads the review comments, categorises them, fixes what it can, and reports what needs your input. The router NEVER addresses feedback itself.
+The router NEVER addresses feedback itself.
 
 ## Step 6: After address-feedback completes
 

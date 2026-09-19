@@ -331,7 +331,7 @@ The router prefers [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin
 agents/           subagent definitions (one .md per agent)
 skills/           on-demand skills (SKILL.md per directory)
 hooks/            shared lifecycle config and portable hook implementation
-references/       supporting docs agents can read (includes dispatch-rules.md)
+references/       supporting docs agents can read (dispatch-rules.md, review-style.md)
 docs/             architecture decisions and project context
 .claude-plugin/   Claude Code manifest and shared marketplace config
 .codex-plugin/    Codex manifest

@@ -132,7 +132,7 @@ Resolve the `agent-skills:test-driven-development` capability for TDD.
 - Rules should be things the agent would otherwise get wrong.
 - The description field informs Claude dispatch and documents Codex routing intent. Make it precise.
 - British English. No emojis. No AI-sounding prose.
-- Any agent that posts externally-visible comments (PR reviews, issue updates) must follow the comment style in CLAUDE.md. Keep review severity and file:line evidence internally; make posted comments terse, friendly, concrete, and actionable.
+- Any agent that posts externally-visible comments (PR reviews, issue updates) must follow the comment style in CLAUDE.md. Review agents follow `references/review-style.md`, which holds the shared wording rules so specialists do not restate them; keep severity and file:line evidence internal.
 
 ### Worktree-isolated agents
 
@@ -211,15 +211,14 @@ Example:
 
 ### Workflow state
 
-Workflow skills (multi-phase, resumable) can persist state to memory between sessions.
+Workflow skills (multi-phase, resumable) persist state between sessions.
 
-- Write state to `memory/workflow_<skill>_<branch>.md` after each phase gate.
-- Use standard memory frontmatter (`name`, `description`, `type: project`).
-- Check for existing state at skill start. Offer to resume or start fresh.
-- Clean up on completion: delete the state file and remove from `MEMORY.md` index.
-- State files are project-scoped (in the project memory directory), not global.
+- Write `.clawdio-state` in the working directory after every phase transition.
+- Check for an existing file at skill start. Offer to resume or start fresh.
+- Clean up on completion: delete the file.
+- Never git-commit it. It is orchestrator-internal.
 
-State file body should be simple key-value pairs: phase, issue, branch, PR URL, timestamp.
+The body is simple key-value pairs: phase, issue, branch, pr, started, updated, error.
 
 ### Conventions
 

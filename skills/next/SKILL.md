@@ -236,7 +236,7 @@ Present results in markdown tables. Group by priority (highest first):
 9. **Repo activity** -- open PRs from others with no reviews yet
 10. **Jira** -- open Jira tickets assigned to me
 
-Skip sections with no results. Omit empty tables entirely. When no open board exists, the output has no board section, no annotations, and no mention of boards.
+Skip sections with no results, tables included.
 
 Every table uses three columns. Build the first column as a markdown link from the `url` field returned by `gh`. Example row: `| [#30](https://github.com/org/repo/issues/30) | Title here | detail |`
 

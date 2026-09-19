@@ -31,14 +31,6 @@ error: <error message if blocked, otherwise empty>
 STATEEOF
 ```
 
-Write this file:
-- After Phase 1 (understand): `phase: understand`
-- After Phase 2 (implement): `phase: implement`
-- After Phase 3 (diff-gate) if blocked: `phase: blocked`, fill `error:`
-- After Phase 4 (commit-push): `phase: pushed`
-- After Phase 5 (create-pr): `phase: pr-created`, fill `pr:`
-- After Phase 6 (report): `phase: complete`
-
 Do NOT git-commit this file. It is orchestrator-internal.
 
 ## Process

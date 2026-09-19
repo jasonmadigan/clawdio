@@ -202,4 +202,4 @@ PR ready
 | Pushing without running tests | Tests must pass before `git push`. |
 | Creating a PR with a one-line description | Follow `skills/pr-description/SKILL.md` format. |
 | Proceeding to push after implement produced nothing | Diff gate catches this. Check `git status --porcelain` before advancing. |
-| Not checking for existing workflow state | Always check `memory/workflow_ship_*.md` for in-progress workflows before starting fresh. |
+| Not checking for existing workflow state | Always check `.clawdio-state` for an in-progress workflow before starting fresh. |
