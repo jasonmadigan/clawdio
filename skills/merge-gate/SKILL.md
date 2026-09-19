@@ -30,8 +30,15 @@ Merge request
 ├── Team repo?
 │   ├── Yes → team member approved? → merge or flag
 │   └── No → merge
-└── Never use --admin or --force without explicit user instruction
+└── Never use --admin, --force or --force-with-lease without explicit user instruction
 ```
+
+`--force-with-lease` is a force push. It refuses when the remote moved since
+your last fetch, which is narrower than `--force`, but it still rewrites the
+branch and is not a safe default. The only instruction that authorises the one
+above is the user picking "Rebase and merge" at the `BEHIND` branch, and it
+covers that push alone. On a contributor's branch there is no such option: see
+the PR provenance section of `../../references/dispatch-rules.md`.
 
 ## Check command
 
