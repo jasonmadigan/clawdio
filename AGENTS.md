@@ -7,7 +7,7 @@ Clawdio supports Claude Code and Codex from one set of workflow sources.
 - `agents/*.md`: canonical specialist behaviour and routing policy
 - `skills/*/SKILL.md`: portable workflow behaviour
 - `references/dispatch-rules.md`: the only client-adaptation and external-skill
-  resolution layer
+  resolution layer, and the only place write gating is defined
 - `hooks/hooks.json` and `hooks/file_hook.py`: shared lifecycle configuration
   and implementation
 - `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`: client manifests;
