@@ -73,6 +73,25 @@ merging, deleting a branch, and pushing to a branch we do not own. A verdict, a
 plan, or an earlier confirmation is not that approval. Skills name which of
 these they perform and point here rather than restating the rule.
 
+### Issue writes
+
+An issue has no head branch, so the PR provenance test below does not apply to
+one. Gate issue writes on what the write destroys and on how many issues it
+touches.
+
+| Write | Approval |
+|-|-|
+| Add or remove one label, or assign or unassign, on a single issue | None. Ordinary maintainer work, and gating it makes the claim and ship flows unusable. |
+| Overwrite an issue body with `gh issue edit --body` | In the turn it happens. Show the replacement text first; the old body is not recoverable from the API. |
+| Close or reopen an issue | In the turn it happens |
+| Post an issue comment | In the turn it happens, under Externally visible writes above |
+| Any write touching more than one issue in one turn, whatever its type | In the turn it happens. List every issue number in the prompt. |
+
+The cardinality ceiling counts the turn, not the command. A loop over ten issue
+numbers is a bulk write even though each iteration edits one issue. So is one
+label edit from each of ten workers dispatched together: count the issues the
+dispatch will touch in total, not the issues any single agent can see.
+
 ## PR provenance
 
 Establish who owns a pull request's head branch before dispatching anything that

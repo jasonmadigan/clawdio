@@ -68,12 +68,15 @@ COMMITS=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
 CHANGES=$(git status --porcelain)
 ```
 
-If `COMMITS` is 0 AND `CHANGES` is empty: write `.clawdio-state` with `phase: blocked` and `error:`, comment on the issue, remove the label, then STOP.
+If `COMMITS` is 0 AND `CHANGES` is empty: write `.clawdio-state` with `phase: blocked` and `error:`, remove the label, then STOP.
 
 ```bash
-gh issue comment <number> --body "Blocked: implement agent produced no code changes."
 gh issue edit <number> --remove-label "in-progress"
 ```
+
+Do not comment on the issue. You cannot ask the user, and a comment from each
+of N workers dispatched together is a bulk externally visible write. Put the
+reason in your result instead; the router posts it once, on approval.
 
 Report `RESULT: blocked` with reason "no code changes produced". Do not proceed.
 
@@ -125,9 +128,12 @@ ISSUE: <issue-ref>
 | Modifying files in the main worktree | You cannot see the main worktree. Work only in yours. |
 | Not writing .clawdio-state after each phase | Always write it. The router depends on it for recovery. |
 | Git-committing .clawdio-state | Never. It is orchestrator-internal. |
+| Commenting on the issue when blocked | Report the reason. The router posts it once, on approval. |
+| Closing your issue after creating the PR | `Closes #N` in the PR body does it on merge. Never close it yourself. |
 
 ## Rules
 
+- The only issue writes you make are the assignee and label edits in Phase 2 and Phase 3, on your own issue. No comments, no close, no reopen, no body edit. The router holds the user-decision mechanism; you do not. See the issue-writes rule in [`../references/dispatch-rules.md`](../references/dispatch-rules.md).
 - Do not dispatch other agents. The router owns all fanout and review dispatch.
 - You can invoke skills (they load into your context).
 - Your output format (RESULT/PR_URL/BRANCH/ISSUE) is how the router collects your results. Always include it as the last thing you output.

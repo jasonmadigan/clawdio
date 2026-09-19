@@ -16,6 +16,12 @@ worktrees.
 **Non-negotiable:** always use the active client's user-decision mechanism here, even if the user already said "ship" or "yes". The confirmation step cannot be skipped. Ask:
 1. "Ship these N issues in parallel?" with options to proceed or adjust.
 
+List every issue number in that prompt. Each worker assigns and labels its own
+issue, so the dispatch is a bulk issue write and this is where it is approved;
+see the issue-writes rule in [`../../references/dispatch-rules.md`](../../references/dispatch-rules.md). Workers post
+no issue comments -- collect any blocked reasons in step 3 and offer to post
+them once.
+
 PRs default to draft. Only pass `--ready` if the user explicitly asks for ready-for-review PRs.
 
 ## Step 2: Dispatch in parallel
@@ -53,4 +59,4 @@ Through the active user-decision mechanism:
 - "Review PR #N" → review a specific one
 - "Done for now" → stop
 
-For any blocked results, report the reason and offer to retry or skip.
+For any blocked results, report the reason and offer to retry or skip. Offer to post the reason as an issue comment; that is a separate approval, and covers every blocked issue in one prompt.

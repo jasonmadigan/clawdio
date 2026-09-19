@@ -102,7 +102,9 @@ COMMITS=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
 CHANGES=$(git status --porcelain)
 ```
 
-If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report "implementation produced no code changes -- the implement agent may have failed." Comment on the issue (per `clawdio:issues`), remove "in-progress" label, write state with `phase: blocked`. Do not proceed.
+If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report "implementation produced no code changes -- the implement agent may have failed." Remove the "in-progress" label, write state with `phase: blocked`, and offer to comment on the issue. Do not proceed.
+
+The label removal goes unprompted. The comment is an externally visible write: show the text and get approval in the turn, per the issue-writes rule in [`../../references/dispatch-rules.md`](../../references/dispatch-rules.md).
 
 ```bash
 gh issue comment <number> --body "Blocked: implement agent produced no code changes."
