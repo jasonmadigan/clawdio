@@ -51,10 +51,29 @@ Merging and branch deletion are externally visible writes. Confirm both in the t
 
 ## Post-merge cleanup
 
-After merging, if local branch deletion fails because a worktree still exists, clean up:
+After merging, local branch deletion can fail because a worktree still holds
+the branch. Remove only the worktree this workflow created for the branch that
+was just merged. Resolve it from the branch rather than accepting a path:
 
 ```bash
-git worktree remove <worktree-path> --force 2>/dev/null
+BRANCH=$(gh pr view <number> --json headRefName --jq '.headRefName')
+WT=$(git worktree list --porcelain | awk -v b="refs/heads/$BRANCH" '
+  /^worktree /{p=substr($0,10)} /^branch /{if ($2==b) print p}')
+```
+
+Remove it only when both hold: `$WT` is non-empty, and `$WT/.clawdio-state`
+exists, which is what marks the worktree as one clawdio created. Otherwise stop
+and leave it alone -- a worktree without that file belongs to the user.
+
+```bash
+git -C "$WT" status --porcelain   # must print nothing
+git worktree remove "$WT"
 git worktree prune
 git pull
 ```
+
+Run `git worktree remove` without `--force` and without redirecting stderr. It
+refuses on uncommitted or untracked files, and that refusal is the signal to
+stop and tell the user which files are in the way. `--force` discards them with
+no copy anywhere. Removing the worktree does not delete the branch, so commits
+made in it survive.
