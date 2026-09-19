@@ -1,6 +1,6 @@
 ---
 name: triage
-description: Assesses a new GitHub issue for readiness. Labels, prioritises, checks scope and clarity, and recommends a workflow. Use when a new issue arrives and needs assessment before work begins.
+description: Assesses a new GitHub issue for readiness. Checks scope and clarity, recommends a priority and a workflow, and reports the assessment without applying labels itself. Use when a new issue arrives and needs assessment before work begins.
 ---
 
 # Triage
@@ -61,5 +61,5 @@ MISSING: <specific gaps, if any>
 |-|-|
 | Marking "ready" when requirements are ambiguous | A false "ready" wastes agent time and money |
 | "Unclear" without saying what specifically | Name the missing piece: AC? scope? error cases? |
-| Adding labels to the issue yourself | Report your assessment; the user handles labelling |
+| Adding labels to the issue yourself | Report the labels you would apply; the user applies them |
 | Not posting assessment to the issue | Post via gh issue comment. Assessment should be on the issue. |

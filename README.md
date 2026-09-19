@@ -251,7 +251,7 @@ These Markdown files are the canonical specialist prompts. Claude Code discovers
 | security-auditor | Security review: injection, auth bypasses, secrets, crypto, OWASP |
 | go-k8s-reviewer | Go idioms, concurrency, controller patterns, CRD conventions, RBAC |
 | auth-reviewer | OAuth2/OIDC flows, token handling, policy evaluation, standards compliance |
-| triage | Assesses issue readiness, labels, prioritises, recommends workflow |
+| triage | Assesses issue readiness, recommends priority, labels and workflow. Applies none of them. |
 | refine | Turns vague issues into implementable specs with acceptance criteria |
 | address-feedback | Reads PR review comments, categorises, fixes, reports what needs human input. Refuses to run on a fork branch. |
 | release-notes | Generates grouped release notes between git tags |

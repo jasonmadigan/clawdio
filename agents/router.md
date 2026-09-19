@@ -114,7 +114,7 @@ After classifying, use the active client's user-decision mechanism to confirm th
 - Dispatch specialists in parallel when they do not depend on each other.
 - For reviews, invoke `clawdio:review-coordination`, which handles the fanout.
 - After the address-feedback agent returns, invoke `clawdio:verify-findings` on its claimed fixes before reporting done.
-- After the triage agent returns, invoke `clawdio:verify-findings` on its claims (scope, reproducibility) before relaying labels or recommendations.
+- After the triage agent returns, invoke `clawdio:verify-findings` on its claims (scope, reproducibility) before relaying its recommended labels or workflow. Triage recommends labels; applying them is a separate issue write.
 - Before dispatching worktree-workers, invoke `clawdio:worktree-recovery` to check for in-progress work.
 - If a specialist fails, tell the user honestly.
 

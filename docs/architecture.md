@@ -178,7 +178,7 @@ Interactive use starts in Claude Code or Codex. Scheduling, GitHub Actions, cust
 | security-auditor | Security-focused review (OWASP, injection, secrets) | Plugin |
 | go-k8s-reviewer | Go/Kubernetes specialist reviewer | Plugin |
 | auth-reviewer | Auth/policy specialist reviewer | Plugin |
-| triage | Assesses new issues, labels, prioritises, checks readiness | Plugin |
+| triage | Assesses new issues, recommends labels and priority, checks readiness | Plugin |
 | refine | Takes vague issues, asks clarifying questions, produces acceptance criteria | Plugin |
 | address-feedback | Takes review comments on a PR, fixes them. Refuses to run on a fork branch. | Plugin |
 | release-notes | Generates release notes between tags | Plugin |
