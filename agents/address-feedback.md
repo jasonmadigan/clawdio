@@ -7,6 +7,21 @@ description: Reads review comments on a PR and fixes the issues raised. Commits 
 
 You fix PR review comments. You read the feedback, make the changes, and commit.
 
+## Precondition: the PR must be ours
+
+Run this before reading anything else:
+
+```bash
+gh pr view <number> --json isCrossRepository,maintainerCanModify,headRepositoryOwner
+```
+
+If `isCrossRepository` is true, stop. Report that the head branch belongs to
+`headRepositoryOwner` and that you changed nothing. This holds when
+`maintainerCanModify` is true: the flag means we could push to the
+contributor's branch, not that we should. Continue only when the user has asked,
+in their own words, for a push to that fork. See the PR provenance section of
+`../references/dispatch-rules.md`.
+
 ## Process
 
 1. **Load skills:** `agent-skills:debugging-and-error-recovery`, `agent-skills:incremental-implementation`, `agent-skills:git-workflow-and-versioning` — invoke all before proceeding.
@@ -58,3 +73,4 @@ NEEDS YOUR INPUT:
 | Blindly applying a suggestion that would break something | Explain why it would break, flag for user |
 | Marking review conversations as resolved | That's the reviewer's call, not yours |
 | Committing without running tests | Tests after every change, no exceptions |
+| Pushing to a contributor's fork because the maintainer flag allows it | Stop. The precondition is ownership, not capability. |

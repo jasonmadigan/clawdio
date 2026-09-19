@@ -22,33 +22,7 @@ Read `references/dispatch-rules.md` before routing. It defines how logical agent
 skill, and user-decision operations map to the active client. Its adapter rules
 supersede client-specific tool syntax in this file.
 
-**You MUST use the full namespaced name when invoking ANY skill.** Bare names like `next` or `ship` can resolve to the WRONG skill from another plugin.
-
-Correct:
-- `clawdio:next` -- NOT `next`, NOT `/next`
-- `clawdio:ship` -- NOT `ship`
-- `clawdio:pr-description` -- NOT `pr-description`
-- `clawdio:issues` -- NOT `issues`
-- `clawdio:pluck` -- NOT `pluck`
-- `clawdio:doc-sync` -- NOT `doc-sync`
-- `clawdio:review-coordination` -- NOT `review-coordination`
-- `clawdio:verify-findings` -- NOT `verify-findings`
-- `clawdio:merge-gate` -- NOT `merge-gate`
-- `clawdio:worktree-recovery` -- NOT `worktree-recovery`
-- `clawdio:parallel-ship` -- NOT `parallel-ship`
-
-kdt skills:
-- `kdt:feature-design`, `kdt:feature-implement`, `kdt:pr-closes-issue`, `kdt:external-contribs`
-
-If you invoke a skill and the loaded content does not match what you expected (e.g. it starts reading CONTRIBUTING.md instead of querying GitHub), you invoked the wrong skill. Stop and retry with the namespaced version.
-
-## What you do
-
-1. Understand what the user needs (from their message, issue URL, or PR URL)
-2. Pick the right specialist agent(s) or skill
-3. Dispatch them (in parallel where possible)
-4. Collect and present results
-5. Relay the result back to the user
+**You MUST use the full namespaced name when invoking ANY skill.** Bare names like `next` or `ship` can resolve to the WRONG skill from another plugin. The skill roster -- every `clawdio:` and `kdt:` name this router may invoke -- and the per-client invocation syntax are in the dispatch rules.
 
 ## Pre-action gate
 
@@ -65,8 +39,9 @@ See `references/dispatch-rules.md` for cross-cutting dispatch and interaction ru
 | Problem | Fix |
 |-|-|
 | Reading source code or diffs yourself | Dispatch a specialist |
-| Editing, committing, or pushing code yourself | Dispatch address-feedback. Even one-line fixes. |
-| Fixing a "trivial" nit yourself instead of dispatching | Dispatch address-feedback. |
+| Editing, committing, or pushing code yourself | Dispatch address-feedback when the PR is ours. Even one-line fixes. |
+| Fixing a "trivial" nit yourself instead of dispatching | Dispatch address-feedback when the PR is ours. |
+| Offering address-feedback on a fork PR | Check provenance first. `maintainerCanModify: true` means we could push, not that we should. |
 | Dispatching a single "review" agent | Dispatch specialists in parallel via `clawdio:review-coordination` |
 | User says "look at the PR" and you fetch the diff | Classify files, dispatch specialists |
 | User says "yes" and you start reading code | "Yes" means "go dispatch" |
@@ -84,7 +59,9 @@ See `references/dispatch-rules.md`. Use the active client's user-decision mechan
 ```
 User input
 ├── References a PR? (URL, "#N", "the PR", "look at the PR")
-│   ├── "address feedback" / "fix the comments" → address-feedback agent
+│   ├── "address feedback" / "fix the comments"
+│   │   ├── Ours → address-feedback agent
+│   │   └── Fork → name the owner, offer review or suggested changes
 │   ├── "merge" → clawdio:merge-gate
 │   └── Anything else → clawdio:review-coordination
 ├── References multiple issues? ("ship #10, #11, #12", "ship these three")
@@ -113,13 +90,14 @@ User input
 └── None of the above → ask one clarifying question
 ```
 
+Check ownership before dispatching address-feedback: PR provenance in
+`references/dispatch-rules.md`. Never infer it from the author or branch name.
+
 ## Pre-dispatch verification
 
 Before loading a skill, verify its identity:
 1. Does it start with `clawdio:` or `kdt:`? If not, STOP. Add the namespace prefix.
-2. Is the exact string one of: `clawdio:next`, `clawdio:ship`, `clawdio:pluck`, `clawdio:issues`, `clawdio:doc-sync`, `clawdio:pr-description`, `clawdio:review-coordination`, `clawdio:verify-findings`, `clawdio:merge-gate`, `clawdio:worktree-recovery`, `clawdio:parallel-ship`, `kdt:feature-design`, `kdt:feature-implement`, `kdt:pr-closes-issue`, `kdt:external-contribs`? If not, STOP. You are about to invoke the wrong skill.
-
-This check exists because bare names like `next` or `ship` resolve to skills from other plugins (superpowers, agent-skills) that do completely different things.
+2. Is the exact string one of the names on the skill roster in `references/dispatch-rules.md`? If not, STOP. You are about to invoke the wrong skill.
 
 ## Confirmation step
 
@@ -133,10 +111,10 @@ After classifying, use the active client's user-decision mechanism to confirm th
 ## Dispatch rules
 
 - Pass the full context (issue number, PR number) to the specialist. Do not summarise or interpret.
-- Dispatch through the active client adapter in `references/dispatch-rules.md`.
+- Dispatch specialists in parallel when they do not depend on each other.
 - For reviews, invoke `clawdio:review-coordination`, which handles the fanout.
-- After the address-feedback agent returns, invoke `clawdio:verify-findings` on its claimed fixes before reporting done. The finding to refute is "this fix addresses comment X" -- the verifier checks the diff actually resolves what the comment asked.
-- After the triage agent returns, invoke `clawdio:verify-findings` on its claims (scope, reproducibility) before relaying labels or recommendations.
+- After the address-feedback agent returns, invoke `clawdio:verify-findings` on its claimed fixes before reporting done.
+- After the triage agent returns, invoke `clawdio:verify-findings` on its claims (scope, reproducibility) before relaying its recommended labels or workflow. Triage recommends labels; applying them is a separate issue write.
 - Before dispatching worktree-workers, invoke `clawdio:worktree-recovery` to check for in-progress work.
 - If a specialist fails, tell the user honestly.
 

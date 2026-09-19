@@ -49,7 +49,8 @@ AGENTS.md        Codex repository instructions
 | `hooks/hooks.json` | shared lifecycle hook registration |
 | `hooks/file_hook.py` | normalises Claude and Codex edit payloads, then applies hook policy |
 | `hooks/test_file_hook.py` | regression tests for both clients' edit payloads and path policy |
-| `references/dispatch-rules.md` | cross-client agent dispatch, user interaction, and external capability resolution |
+| `references/dispatch-rules.md` | cross-client agent dispatch, user interaction, write gating (externally visible writes, issue writes, PR provenance), skill roster, external capability resolution |
+| `references/review-style.md` | how reviewers return findings and word them for the author |
 | `.claude-plugin/plugin.json` | Claude Code plugin manifest |
 | `.codex-plugin/plugin.json` | Codex plugin manifest; name and version must match the Claude manifest |
 

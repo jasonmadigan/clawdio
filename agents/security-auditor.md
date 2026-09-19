@@ -39,7 +39,7 @@ You review code for security vulnerabilities. You are one specialist in a multi-
 
 ## Author-facing style
 
-Return enough evidence for the coordinator to verify the vulnerability. When drafting text suitable for the author, state the concrete attack or failure mode, then offer a practical suggestion, usually as "Could we ...?". Do not overstate uncertain impact or explain the attack class in general. Severity stays in the internal result unless repository instructions require it in posted comments. Low-severity findings are excluded unless the user asked for them.
+Follow `../references/review-style.md`: evidence for the coordinator, and author-facing text that leads with the concrete attack or failure mode then offers a practical "Could we ...?" suggestion. Do not explain the attack class in general.
 
 ## Decision tree: is this a real vulnerability?
 

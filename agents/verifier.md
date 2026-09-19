@@ -19,7 +19,7 @@ gh api repos/{owner}/{repo}/pulls/{number}/files --jq '.[] | select(.filename ==
 
 If the claimed line is absent from the diff, report `LINE_CHECK: invalid` -- the finding gets downgraded to a file + code snippet reference.
 
-3. **Try to refute.** Read the actual code and diff (Read, Grep, Bash `gh` only). Check:
+3. **Refute it.** Read the actual code and diff (Read, Grep, Bash `gh` only). Check:
    - Reachability: can the flagged path execute at all?
    - Existing guards: is the issue already handled elsewhere (caller, wrapper, earlier check)?
    - Tests: does an existing test exercise the claimed failure?

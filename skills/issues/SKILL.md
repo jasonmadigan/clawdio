@@ -7,6 +7,11 @@ description: Create, update, and manage GitHub issues and their relationship to 
 
 Manage GitHub issues and their relationships to PRs throughout the SDLC lifecycle. Invoke via `clawdio:issues`.
 
+Read the issue-writes rule in [`../../references/dispatch-rules.md`](../../references/dispatch-rules.md) before any
+write. Body overwrites, closes, reopens, comments, and anything touching more
+than one issue in a turn need approval in that turn. A single label or assignee
+change does not.
+
 ## Arguments
 
 | Arg | Form | Example |
@@ -71,12 +76,17 @@ gh issue close <number> --reason "not planned"
 # reopen
 gh issue reopen <number>
 
-# update body
+# update body -- destructive, see below
 gh issue edit <number> --body "$(cat <<'EOF'
 ...
 EOF
 )"
 ```
+
+`--body` replaces the whole body and the previous text is not recoverable
+through the API. Read the current body with `gh issue view <number> --json
+body` first and show the replacement. Add to a body by editing the text you
+just read, never by writing a fresh one.
 
 ### Lifecycle state map
 
@@ -86,9 +96,9 @@ Issues move through states based on what's happening in the workflow:
 Issue created (open)
 ├── ship/implement dispatched → add "in-progress" label, assign to user
 ├── PR created linking issue → no change (still in-progress)
-├── PR merged → close issue with --reason completed
+├── PR merged → close issue with --reason completed (ask in the turn)
 ├── PR closed without merge → remove "in-progress" label
-├── blocked by diff gate → add comment explaining why, keep open
+├── blocked by diff gate → add comment explaining why, keep open (ask in the turn)
 └── user manually closes → respect it, don't reopen
 ```
 
@@ -146,9 +156,15 @@ gh issue comment <number> --body "Blocked: implement agent produced no changes. 
 
 Don't run `gh issue comment` unless there's a state change worth recording. "Starting work" is not worth a comment. "Blocked because X" is.
 
+A comment is an externally visible write. Show the text before it posts.
+
 ## Bulk operations
 
 When handling multiple issues (e.g. after parallel worktree dispatch):
+
+Every loop below is a bulk write, labels and assignees included: the
+single-issue exemption does not survive the loop. List the issue numbers and
+the action before running any of them.
 
 ```bash
 # close multiple issues
@@ -182,5 +198,8 @@ gh pr view <number> --json body --jq '.body'
 | Adding "in-progress" but never removing it | Remove the label if the PR is closed without merge or work is abandoned. |
 | Commenting on every lifecycle step | Only comment on state changes that matter: blocked, PR created, reopened. |
 | Creating duplicate issues | Search first: `gh issue list --search "<keywords>"` |
-| Leaving issues open after PR merges | If `Closes #N` wasn't in the PR body, run `gh issue close <N> --reason completed` after merge. |
+| Leaving issues open after PR merges | If `Closes #N` wasn't in the PR body, offer `gh issue close <N> --reason completed` after merge and close on approval. |
 | Updating issue state without checking current state | Run `gh issue view <number> --json labels` first. Don't add "in-progress" if it's already there. |
+| Overwriting a body without reading it | `--body` replaces everything. Read it first, then show the replacement. |
+| Looping a label or assignee edit over several issues unprompted | The single-issue exemption ends at one issue. |
+| Treating an earlier "yes" as approval for a later close or bulk write | Approval is per turn, per write. |

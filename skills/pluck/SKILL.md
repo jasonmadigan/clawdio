@@ -45,6 +45,11 @@ Ask the user to pick issues through the active client. Use multi-select when the
 
 ### Step 5: Assign
 
+Assigning one issue needs no further approval. Two or more is a bulk write: the
+step 4 selection is that approval only when the user saw every number they
+picked, so confirm the list back before running the loop. See the issue-writes rule in
+[`../../references/dispatch-rules.md`](../../references/dispatch-rules.md).
+
 For each selected issue:
 
 ```bash

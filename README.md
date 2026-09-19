@@ -130,9 +130,12 @@ graph LR
 
 The router owns review fanout on both clients. Specialists never dispatch other specialists, which keeps the execution model predictable and the canonical prompts portable.
 
+Provenance is established before the fanout. A PR from a fork gets the same review, but the post-review options are review-only or GitHub suggested changes: clawdio never offers to push to a contributor's branch, including when `maintainerCanModify` is set. The rule lives in [`references/dispatch-rules.md`](references/dispatch-rules.md).
+
 ```mermaid
 graph TD
-    A[User: review PR] --> B[Router: classify files]
+    A[User: review PR] --> A0[Router: check head-branch provenance]
+    A0 --> B[Router: classify files]
     B --> BB[classifier agent: bucket changed files by behaviour vs mechanical]
     BB --> C{File types?}
     C -->|always| D[code-reviewer]
@@ -153,9 +156,11 @@ graph TD
     M -->|don't post| O{Next?}
     N --> O
     K --> O
-    O -->|address feedback| P[address-feedback agent]
+    O -->|address feedback: ours only| P[address-feedback agent]
+    O -->|suggested changes: fork| SC[post suggestion blocks]
     O -->|merge| Q[merge gate]
     O -->|done| R[next]
+    SC --> R
     P --> S{Next?}
     S -->|re-review| B
     S -->|merge| Q
@@ -246,9 +251,9 @@ These Markdown files are the canonical specialist prompts. Claude Code discovers
 | security-auditor | Security review: injection, auth bypasses, secrets, crypto, OWASP |
 | go-k8s-reviewer | Go idioms, concurrency, controller patterns, CRD conventions, RBAC |
 | auth-reviewer | OAuth2/OIDC flows, token handling, policy evaluation, standards compliance |
-| triage | Assesses issue readiness, labels, prioritises, recommends workflow |
+| triage | Assesses issue readiness, recommends priority, labels and workflow. Applies none of them. |
 | refine | Turns vague issues into implementable specs with acceptance criteria |
-| address-feedback | Reads PR review comments, categorises, fixes, reports what needs human input |
+| address-feedback | Reads PR review comments, categorises, fixes, reports what needs human input. Refuses to run on a fork branch. |
 | release-notes | Generates grouped release notes between git tags |
 | test-writer | Finds coverage gaps, writes targeted tests matching project patterns |
 | test-verifier | Verifies PR test plans: runs tests, checks criteria, drives browser for UI checks |
@@ -271,7 +276,7 @@ Clawdio provides its own skills for SDLC orchestration. Optional providers such 
 | pr-description | Creating a PR | none | PR body template: summary, linked issue, test evidence |
 | issues | "create issue", "update issue" | `create`, `update`, `close`, `link`, `--repo` | Create, update, close issues. Manages PR-issue links and lifecycle state. |
 | doc-sync | "check docs", "are docs up to date" | none | Verify and fix documentation accuracy against actual repo contents |
-| review-coordination | PR review dispatch | none | Coordinates multi-specialist PR review fanout |
+| review-coordination | PR review dispatch | none | Coordinates multi-specialist PR review fanout; classifies PR provenance and gates write actions on forks |
 | verify-findings | "verify", "double-check", after findings return | none | Adversarial verification of Critical/Important findings before presenting or posting |
 | merge-gate | pre-merge checks | none | Pre-merge safety checks before any merge |
 | worktree-recovery | worktree recovery | none | Recovers in-progress worktree workers before dispatching new ones |
@@ -326,7 +331,7 @@ The router prefers [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin
 agents/           subagent definitions (one .md per agent)
 skills/           on-demand skills (SKILL.md per directory)
 hooks/            shared lifecycle config and portable hook implementation
-references/       supporting docs agents can read (includes dispatch-rules.md)
+references/       supporting docs agents can read (dispatch-rules.md, review-style.md)
 docs/             architecture decisions and project context
 .claude-plugin/   Claude Code manifest and shared marketplace config
 .codex-plugin/    Codex manifest

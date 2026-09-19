@@ -35,6 +35,28 @@ Found in-progress worktree work:
 Options: "Resume these", "Clean up and start fresh", "Leave them"
 ```
 
+## Clean up and start fresh
+
+Only the worktrees Detection listed, which are the ones holding a
+`.clawdio-state`. Never iterate `git worktree list` and force-remove what it
+returns: that set includes the user's own worktrees and any from other tools.
+
+```bash
+for WT in <the paths from Detection>; do
+  [ -f "$WT/.clawdio-state" ] || continue
+  if [ -n "$(git -C "$WT" status --porcelain)" ]; then
+    echo "skipped $WT: uncommitted changes"
+    continue
+  fi
+  git worktree remove "$WT"
+done
+git worktree prune
+```
+
+No `--force`, and no `2>/dev/null`. A worktree with uncommitted work is
+reported and left in place; say which ones were skipped and why. Removal leaves
+the branch, so committed work survives.
+
 ## Phase-to-action table
 
 | Phase found | Resume action |

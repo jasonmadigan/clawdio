@@ -61,7 +61,7 @@ COMMITS=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
 
 # does a PR exist for this branch?
 BRANCH=$(git branch --show-current)
-PR=$(gh pr list --head "$BRANCH" --json number,url,isDraft --jq '.[0]' 2>/dev/null)
+PR=$(gh pr list --head "$BRANCH" --json number,url,isDraft,isCrossRepository --jq '[.[] | select(.isCrossRepository == false)] | .[0]' 2>/dev/null)
 
 # what's the CI status?
 PR_NUM=$(echo "$PR" | jq -r '.number // empty' 2>/dev/null)
@@ -76,6 +76,8 @@ CI=$(gh pr view "$PR_NUM" --json statusCheckRollup --jq '[.statusCheckRollup[] |
 | PR exists, CI failed | CI failed | Report failures, offer to fix |
 | PR exists, CI passed, draft | Ready | Offer to mark ready for review |
 | PR exists, CI passed, not draft | Complete | Report done |
+
+`--head` matches on branch name alone, so a fork PR sharing the name can surface here. The `isCrossRepository` filter keeps resume on our own PR; without it, phases 5 and 6 would check CI on and mark ready a contributor's PR. Ship's other phases only ever touch a branch it created, so they need no further gate.
 
 Report the inferred state to the user before proceeding.
 
@@ -100,7 +102,9 @@ COMMITS=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
 CHANGES=$(git status --porcelain)
 ```
 
-If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report "implementation produced no code changes -- the implement agent may have failed." Comment on the issue (per `clawdio:issues`), remove "in-progress" label, write state with `phase: blocked`. Do not proceed.
+If `COMMITS` is 0 AND `CHANGES` is empty: STOP. Report "implementation produced no code changes -- the implement agent may have failed." Remove the "in-progress" label, write state with `phase: blocked`, and offer to comment on the issue. Do not proceed.
+
+The label removal goes unprompted. The comment is an externally visible write: show the text and get approval in the turn, per the issue-writes rule in [`../../references/dispatch-rules.md`](../../references/dispatch-rules.md).
 
 ```bash
 gh issue comment <number> --body "Blocked: implement agent produced no code changes."
@@ -200,4 +204,4 @@ PR ready
 | Pushing without running tests | Tests must pass before `git push`. |
 | Creating a PR with a one-line description | Follow `skills/pr-description/SKILL.md` format. |
 | Proceeding to push after implement produced nothing | Diff gate catches this. Check `git status --porcelain` before advancing. |
-| Not checking for existing workflow state | Always check `memory/workflow_ship_*.md` for in-progress workflows before starting fresh. |
+| Not checking for existing workflow state | Always check `.clawdio-state` for an in-progress workflow before starting fresh. |

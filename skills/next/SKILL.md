@@ -228,7 +228,7 @@ Present results in markdown tables. Group by priority (highest first):
 1. **Board** -- only when step 2 found an open board. Head the section with the board and, when applicable, the saved view and filter so the applied lens is visible. List ranked items with status, priority, and sprint annotations, then already-in-flight items beneath as a WIP reminder.
 2. **Address feedback** -- my PRs where `reviewDecision` is `CHANGES_REQUESTED`. Invoke `clawdio:ship --resume` to fix.
 3. **Review** -- PRs requesting my review. Open with `gh pr view <number>`.
-4. **Merge** -- my PRs where `reviewDecision` is `APPROVED`. Merge with `gh pr merge <number> --squash`.
+4. **Merge** -- my PRs where `reviewDecision` is `APPROVED`. Merge with `gh pr merge <number> --squash` once the user confirms; add `--delete-branch` only when the head branch is ours (`isCrossRepository: false`). Merging is an externally visible write -- see `../../references/dispatch-rules.md`.
 5. **My PRs** -- my open PRs where `reviewDecision` is `REVIEW_REQUIRED`
 6. **Implement** -- GitHub issues assigned to me. Invoke `clawdio:ship #<number>` to start. Where an issue is a board item, annotate its status and priority inline from the step 2 data; no extra calls.
 7. **Backlog** -- unassigned issues in this repo. Only shown when no issues are assigned to me. Invoke `clawdio:ship #<number>` to pick up, or `clawdio:pluck` to claim without implementing.
@@ -236,7 +236,7 @@ Present results in markdown tables. Group by priority (highest first):
 9. **Repo activity** -- open PRs from others with no reviews yet
 10. **Jira** -- open Jira tickets assigned to me
 
-Skip sections with no results. Omit empty tables entirely. When no open board exists, the output has no board section, no annotations, and no mention of boards.
+Skip sections with no results, tables included.
 
 Every table uses three columns. Build the first column as a markdown link from the `url` field returned by `gh`. Example row: `| [#30](https://github.com/org/repo/issues/30) | Title here | detail |`
 

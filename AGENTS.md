@@ -7,7 +7,7 @@ Clawdio supports Claude Code and Codex from one set of workflow sources.
 - `agents/*.md`: canonical specialist behaviour and routing policy
 - `skills/*/SKILL.md`: portable workflow behaviour
 - `references/dispatch-rules.md`: the only client-adaptation and external-skill
-  resolution layer
+  resolution layer, and the only place write gating is defined
 - `hooks/hooks.json` and `hooks/file_hook.py`: shared lifecycle configuration
   and implementation
 - `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`: client manifests;
@@ -32,7 +32,7 @@ router skill loads the canonical Markdown files at runtime.
 Run these before handing off changes:
 
 ```bash
-claude plugin validate .
+claude plugin validate --strict .
 python3 /path/to/plugin-creator/scripts/validate_plugin.py .
 uvx skillsaw lint
 python3 -m py_compile hooks/file_hook.py
