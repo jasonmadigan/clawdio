@@ -129,13 +129,26 @@ copying kdt into this repository:
 | `kdt:pr-closes-issue` | code-reviewer plus test-verifier |
 | `kdt:external-contribs` | `clawdio:next` with external-contribution scope |
 
+### Skill roster
+
+Every skill the router may invoke, with the namespace that must be used:
+
+| Namespace | Skills |
+|-|-|
+| `clawdio:` | `next`, `ship`, `pluck`, `issues`, `pr-description`, `doc-sync`, `review-coordination`, `verify-findings`, `merge-gate`, `worktree-recovery`, `parallel-ship` |
+| `kdt:` | `feature-design`, `feature-implement`, `pr-closes-issue`, `external-contribs` |
+
+A name outside this roster is not a clawdio skill. Resolve it before invoking it.
+
 ### Invocation syntax
 
 - Claude Code: invoke the full name through the Skill tool, for example
-  `clawdio:ship`; never shorten it to `ship`.
+  `clawdio:ship`; never shorten it to `ship` or `/ship`. A bare name can resolve
+  to a different plugin's skill.
 - Codex: load or request the installed namespaced skill using the skill
   mechanism exposed by the client. Preserve the `clawdio:` or external plugin
   namespace when the client displays one.
 
-If loaded content does not match the requested capability, stop and resolve the
-correct namespaced skill before continuing.
+If loaded content does not match the requested capability -- `clawdio:next`
+reading CONTRIBUTING.md instead of querying GitHub, say -- you invoked the wrong
+skill. Stop and resolve the correct namespaced name before continuing.
