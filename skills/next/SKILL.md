@@ -228,7 +228,7 @@ Present results in markdown tables. Group by priority (highest first):
 1. **Board** -- only when step 2 found an open board. Head the section with the board and, when applicable, the saved view and filter so the applied lens is visible. List ranked items with status, priority, and sprint annotations, then already-in-flight items beneath as a WIP reminder.
 2. **Address feedback** -- my PRs where `reviewDecision` is `CHANGES_REQUESTED`. Invoke `clawdio:ship --resume` to fix.
 3. **Review** -- PRs requesting my review. Open with `gh pr view <number>`.
-4. **Merge** -- my PRs where `reviewDecision` is `APPROVED`. Merge with `gh pr merge <number> --squash`.
+4. **Merge** -- my PRs where `reviewDecision` is `APPROVED`. Merge with `gh pr merge <number> --squash` once the user confirms; add `--delete-branch` only when the head branch is ours (`isCrossRepository: false`). Merging is an externally visible write -- see `../../references/dispatch-rules.md`.
 5. **My PRs** -- my open PRs where `reviewDecision` is `REVIEW_REQUIRED`
 6. **Implement** -- GitHub issues assigned to me. Invoke `clawdio:ship #<number>` to start. Where an issue is a board item, annotate its status and priority inline from the step 2 data; no extra calls.
 7. **Backlog** -- unassigned issues in this repo. Only shown when no issues are assigned to me. Invoke `clawdio:ship #<number>` to pick up, or `clawdio:pluck` to claim without implementing.

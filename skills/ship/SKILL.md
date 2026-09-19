@@ -61,7 +61,7 @@ COMMITS=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
 
 # does a PR exist for this branch?
 BRANCH=$(git branch --show-current)
-PR=$(gh pr list --head "$BRANCH" --json number,url,isDraft --jq '.[0]' 2>/dev/null)
+PR=$(gh pr list --head "$BRANCH" --json number,url,isDraft,isCrossRepository --jq '[.[] | select(.isCrossRepository == false)] | .[0]' 2>/dev/null)
 
 # what's the CI status?
 PR_NUM=$(echo "$PR" | jq -r '.number // empty' 2>/dev/null)
@@ -76,6 +76,8 @@ CI=$(gh pr view "$PR_NUM" --json statusCheckRollup --jq '[.statusCheckRollup[] |
 | PR exists, CI failed | CI failed | Report failures, offer to fix |
 | PR exists, CI passed, draft | Ready | Offer to mark ready for review |
 | PR exists, CI passed, not draft | Complete | Report done |
+
+`--head` matches on branch name alone, so a fork PR sharing the name can surface here. The `isCrossRepository` filter keeps resume on our own PR; without it, phases 5 and 6 would check CI on and mark ready a contributor's PR. Ship's other phases only ever touch a branch it created, so they need no further gate.
 
 Report the inferred state to the user before proceeding.
 

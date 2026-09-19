@@ -23,7 +23,9 @@ Merge request
 ├── Is the branch behind base?
 │   ├── Yes → offer to rebase first through the active user-decision mechanism
 │   │         Options: "Rebase and merge", "Merge anyway", "Cancel"
-│   │         If rebase: gh pr update-branch or suggest `git rebase origin/main && git push --force-with-lease`
+│   │         Ours: gh pr update-branch, or `git rebase origin/main && git push --force-with-lease`
+│   │         External: gh pr update-branch only, and only if maintainerCanModify
+│   │                   Never rebase or force-push a contributor's branch
 │   └── No → continue
 ├── Team repo?
 │   ├── Yes → team member approved? → merge or flag
@@ -34,14 +36,18 @@ Merge request
 ## Check command
 
 ```bash
-gh pr view <number> --json reviews,statusCheckRollup,reviewDecision,mergeable,mergeStateStatus
+gh pr view <number> --json reviews,statusCheckRollup,reviewDecision,mergeable,mergeStateStatus,isCrossRepository,maintainerCanModify
 ```
+
+`isCrossRepository: true` means the head branch is a fork. Merging it into a base repository we own is normal; writing to the head branch is not. See the PR provenance section of `../../references/dispatch-rules.md`.
 
 `mergeStateStatus` values: `CLEAN` (good to go), `BEHIND` (needs rebase), `DIRTY` (conflicts), `BLOCKED` (checks failing or review missing). If `BEHIND` or `DIRTY`, do not merge without asking.
 
 ## Merge strategy
 
-**Always use `--squash`** when merging: `gh pr merge <number> --squash --delete-branch`. Do not use `--merge` or `--rebase` unless the user explicitly asks for a different strategy.
+**Always use `--squash`** when merging: `gh pr merge <number> --squash --delete-branch`. Drop `--delete-branch` when `isCrossRepository` is true: the head branch lives in the contributor's fork and is not ours to delete. Do not use `--merge` or `--rebase` unless the user explicitly asks for a different strategy.
+
+Merging and branch deletion are externally visible writes. Confirm both in the turn they happen, per `../../references/dispatch-rules.md`.
 
 ## Post-merge cleanup
 

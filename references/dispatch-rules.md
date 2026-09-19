@@ -63,8 +63,43 @@ when exposed; otherwise ask one concise plain-text question and wait. Never
 pretend a clickable choice was shown.
 
 This applies to post/edit/don't-post, draft/ready, next-step suggestions, issue
-selection, and merge confirmation. External writes still require explicit user
-approval.
+selection, and merge confirmation.
+
+### Externally visible writes
+
+Any write others can see, and that is awkward to undo, needs explicit user
+approval in the turn it happens: posting a review or comment, closing a PR,
+merging, deleting a branch, and pushing to a branch we do not own. A verdict, a
+plan, or an earlier confirmation is not that approval. Skills name which of
+these they perform and point here rather than restating the rule.
+
+## PR provenance
+
+Establish who owns a pull request's head branch before dispatching anything that
+writes to it. One call:
+
+```bash
+gh pr view <number> --json isCrossRepository,maintainerCanModify,authorAssociation,headRepositoryOwner,headRefName
+```
+
+| Result | Classification | What is allowed |
+|-|-|-|
+| `isCrossRepository: false` | ours | Full workflow, unchanged |
+| `isCrossRepository: true` and `maintainerCanModify: true` | external, technically pushable | Review, comment, suggested changes. Record the flag and state it. |
+| `isCrossRepository: true` and `maintainerCanModify: false` | external, hands off | Review, comment, suggested changes |
+
+On any external PR the offered next steps are exactly two: review only and then
+stop, or GitHub suggested changes on the diff. Never offer address-feedback, a
+local rebase, or a force-push, and do not offer them behind a confirmation
+either. `maintainerCanModify: true` means we could push to the contributor's
+branch, not that we should. Push to a fork only when the user asks for it
+unprompted, and name whose branch is being written to before doing it.
+
+This gates writes to the head branch. Merging an approved fork PR into a base
+repository we own is normal and unaffected.
+
+Closing or pushing to someone else's PR falls under Externally visible writes
+above. Approve it every time.
 
 ## Skill loading
 

@@ -10,6 +10,18 @@ Coordinates multi-specialist PR review. Invoked by the router when a PR needs re
 Read `../../references/dispatch-rules.md` before dispatching or asking the user
 for a decision. The router owns the review fanout on every client.
 
+## Step 0: Establish provenance
+
+First, classify who owns the head branch. Test and table: PR provenance in
+`../../references/dispatch-rules.md`.
+
+```bash
+gh pr view <number> --json isCrossRepository,maintainerCanModify,authorAssociation,headRepositoryOwner,headRefName
+```
+
+This gates Step 1.5, Step 5, and Step 6. On a fork, record `maintainerCanModify`
+and state it: a branch we could push to is still not ours to push to.
+
 ## Step 1: Classify the PR
 
 Fetch the file list (NOT the diff, NOT the code):
@@ -39,7 +51,7 @@ When all three hold, dispatch code-reviewer + test-verifier only. Otherwise, cla
 
 ## Step 1.5: Check if the fix already landed on main
 
-Many external PRs are weeks old. Before dispatching review agents, check if the code the PR changes still looks the same on main. If the fix already landed (via a different PR or a core team commit), close the PR as superseded.
+Many external PRs are weeks old. Before dispatching review agents, check if the code the PR changes still looks the same on main. If the fix already landed (via a different PR or a core team commit), the PR is superseded.
 
 ```bash
 # for each file the PR touches, check if the relevant code was already changed on main
@@ -48,7 +60,7 @@ for file in $(gh pr view <number> --json files --jq '.files[].path'); do
 done
 ```
 
-If any recent commit on main addresses the same issue, close the PR with a comment crediting the author and pointing to the commit that fixed it.
+If any recent commit on main addresses the same issue, draft a comment crediting the author and pointing to the commit that fixed it. Closing someone else's PR is an externally visible write: present the draft and get approval first. Options: "Comment and close", "Comment only", "Neither".
 
 ## Step 1.7: Classify the changes
 
@@ -177,21 +189,58 @@ Rules:
 - `comments`: array of inline findings. Each needs `path`, `line` (line number in the NEW file from the diff hunk headers), and `body`. State the observed behaviour or risk, then offer a practical suggestion. Prefer "Could we ...?" where the implementation choice belongs to the author. Omit severity labels unless repository instructions require them. No nits unless user asked.
 - `commit_id`: the head SHA fetched above. Required.
 
+### Suggested changes
+
+Where a fix is small and mechanical, carry it in the comment body as a
+`suggestion` fenced block: the contributor commits it in one click. This is the
+main lever on a fork, where we do not push.
+
+````markdown
+A nil input can panic here. Could we guard it?
+
+```suggestion
+	if req == nil {
+		return errInvalidRequest
+	}
+```
+````
+
+A suggestion replaces exactly the lines it is anchored to, so it works only for a
+single line or a small contiguous run inside one hunk. Use `start_line` with
+`line` for a multi-line range, and match the file's indentation: the block is
+committed verbatim. Anything sprawling goes as prose.
+
 ## Step 5: Suggest next action
 
-After posting, if the verdict is CHANGES REQUESTED or BLOCKED, offer next steps through the active user-decision mechanism:
+Options depend on the Step 0 classification.
+
+**Ours**, verdict CHANGES REQUESTED or BLOCKED:
 
 - "Address the feedback" → dispatch the **address-feedback** agent (NOT the router -- the router never fixes code)
 - "Merge anyway" → invoke `clawdio:merge-gate`
 - "Done for now" → stop
 
-If the verdict is APPROVE, offer:
+**Fork**, verdict CHANGES REQUESTED or BLOCKED. Exactly two options:
+
+- "Done for now" → stop, the contributor pushes next
+- "Add suggested changes" → post `suggestion` blocks on the mechanical findings
+
+Never offer address-feedback on a fork, not even behind a confirmation or when
+`maintainerCanModify` is true. State the flag if set.
+
+If the verdict is APPROVE, offer for both:
 - "Merge" → invoke `clawdio:merge-gate`
 - "Done for now" → stop
+
+Merging a fork PR into a base repository we own is normal: provenance gates
+writes to the head branch, not the merge.
 
 The address-feedback agent reads the review comments, categorises them, fixes what it can, and reports what needs your input. The router NEVER addresses feedback itself.
 
 ## Step 6: After address-feedback completes
+
+Reachable only on a PR we own; address-feedback never runs on a fork. When a
+contributor pushes to a fork PR, rerun Step 1 with the round incremented.
 
 When the address-feedback agent finishes, offer next steps through the active user-decision mechanism:
 

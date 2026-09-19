@@ -32,7 +32,9 @@ graph TD
     Router -->|classify| Decision{request type}
     Decision -->|issue| Implement[implement agent]
     Decision -->|PR review| Review[review coordination]
-    Decision -->|PR feedback| AF[address-feedback agent]
+    Decision -->|PR feedback| Prov{head branch ours?}
+    Prov -->|ours| AF[address-feedback agent]
+    Prov -->|fork| Review
     Decision -->|vague issue| Refine[refine agent]
     Decision -->|triage| Triage[triage agent]
     Decision -->|what's on| WhatNext[clawdio:next]
@@ -87,11 +89,13 @@ Reviews use the fanout pattern: the router invokes the `review-coordination` ski
 
 Specialist findings are treated as claims, not facts. Before findings are presented or posted, the router invokes the `verify-findings` skill: one verifier agent per Critical/Important finding, in parallel, tasked with refuting it. Confirmed and plausible findings proceed; refuted findings remain visible to the user in the internal draft and are recorded in prior-review context so they do not resurrect on re-review rounds.
 
+Provenance is settled before the fanout, in one `gh pr view` call. A fork PR is reviewed identically, but every write to its head branch is off the table: address-feedback is not offered, local rebase and force-push are not suggested, and closing it as superseded needs explicit approval. The lever on a fork is a GitHub suggested-changes block, which the contributor commits themselves. `maintainerCanModify` is recorded and reported, never treated as permission. Merging a fork PR into a base repository we own is unaffected -- the rule gates the head branch, not the merge.
+
 The router owns all agent dispatch. This is a cross-client design invariant: specialists return results and never fan out further. The review-coordination and verify-findings skills provide classification, merge, and verification logic; the router executes the fanout using the active client adapter.
 
 ### SDLC loop
 
-The review flow feeds into address-feedback, which feeds back into review. The router manages this loop.
+The review flow feeds into address-feedback, which feeds back into review. The router manages this loop. On a fork PR the loop is open: review lands as suggested changes and inline comments, and the contributor closes it by pushing.
 
 ```mermaid
 graph LR
@@ -176,7 +180,7 @@ Interactive use starts in Claude Code or Codex. Scheduling, GitHub Actions, cust
 | auth-reviewer | Auth/policy specialist reviewer | Plugin |
 | triage | Assesses new issues, labels, prioritises, checks readiness | Plugin |
 | refine | Takes vague issues, asks clarifying questions, produces acceptance criteria | Plugin |
-| address-feedback | Takes review comments on a PR, fixes them | Plugin |
+| address-feedback | Takes review comments on a PR, fixes them. Refuses to run on a fork branch. | Plugin |
 | release-notes | Generates release notes between tags | Plugin |
 | test-writer | Writes tests, finds coverage gaps | Plugin |
 | test-verifier | Verifies PR test plans, runs tests, drives browser for UI checks | Plugin |
