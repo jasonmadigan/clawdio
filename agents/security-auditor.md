@@ -65,3 +65,7 @@ Potential issue found
 | Duplicating SAST tool findings | Focus on logic-level security issues |
 | Missing the forest for the trees | Trace the full data flow, don't review in isolation |
 | Reporting "use a stronger hash" without checking context | Verify the hash is used for security, not checksums |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

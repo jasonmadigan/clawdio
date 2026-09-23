@@ -70,3 +70,7 @@ OPEN QUESTIONS:
 | Guessing at requirements to fill gaps | Flag as open questions, don't assume |
 | Writing code or prototyping | Your output is a specification, not code |
 | Not posting the spec to the issue | Post via gh issue comment. The spec should be on the issue. |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

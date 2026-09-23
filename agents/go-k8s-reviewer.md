@@ -70,3 +70,7 @@ Shared state identified
 | Reconcile returns `ctrl.Result{}, nil` on transient error | Return the error so the controller requeues |
 | RBAC for `*` verbs or `*` resources | Scope to exactly what's needed |
 | Testing with `reflect.DeepEqual` | Use `cmp.Diff` from google/go-cmp |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

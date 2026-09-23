@@ -47,3 +47,7 @@ Change made
 | Creating docs/ monolith far from the code | Keep docs close to what they describe |
 | Lorem ipsum or placeholder sections | Delete empty sections, don't fill with filler |
 | Duplicating information across files | Single source of truth, link to it |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

@@ -61,6 +61,18 @@ every command. If the adapter cannot guarantee the starting directory, the
 worker must verify it with `git rev-parse --show-toplevel` before editing. Run
 the writers serially if any of those checks fail.
 
+## Dispatch prompts and reports
+
+A subagent re-reads its whole context on every call, so everything in a
+dispatch is paid for on every turn of that agent.
+
+- Pass facts that earlier agents or verifiers established as established, with
+  their source. Ask for a re-check of one specific claim only when you have
+  reason to doubt it; never ask an agent to re-verify every number and date.
+- State a report limit as a shape: named fields, or a maximum number of lines
+  or bullets. Never as a character count: agents that measure their own report
+  redraft it in a loop.
+
 ## User decisions
 
 Use the active client's structured user-input control when one is available.
@@ -130,6 +142,9 @@ above. Approve it every time.
 
 Treat a namespaced skill as a capability request, not as an assumption that a
 particular third-party plugin is installed.
+
+Load a skill at the step that needs it, not all up front: a loaded skill is
+re-read on every later call.
 
 1. Prefer the exact namespaced skill named by the workflow.
 2. If it is unavailable, use an installed skill that clearly provides the same

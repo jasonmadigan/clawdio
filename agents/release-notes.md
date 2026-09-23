@@ -62,3 +62,7 @@ Commit message
 | Embellishing commit messages | The commit message is the source of truth |
 | Grouping all non-conventional commits as "Other" | Read the message, make a reasonable classification |
 | Missing breaking changes | Scan for `BREAKING CHANGE` in body, not just prefix |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

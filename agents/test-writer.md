@@ -53,3 +53,7 @@ Code under test
 | `time.Sleep(2 * time.Second)` in tests | Use synchronisation primitives |
 | Test depends on execution order | Each test must be independent |
 | Asserting internal state | Assert observable behaviour and outputs |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

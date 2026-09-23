@@ -61,3 +61,7 @@ Concern identified
 | Flagging style in a bug fix PR | Match feedback to PR intent |
 | Suggesting refactors outside the PR scope | File a separate issue |
 | Reviewing without reading surrounding code | The diff alone is insufficient |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.
