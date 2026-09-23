@@ -1,6 +1,7 @@
 ---
 name: go-k8s-reviewer
 description: Go and Kubernetes specialist reviewer. Checks for Go idioms, controller patterns, API conventions, and Kubernetes best practices. Use when reviewing Go or Kubernetes changes.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch
 ---
 
 # Go/Kubernetes Reviewer

@@ -1,6 +1,7 @@
 ---
 name: triage
 description: Assesses a new GitHub issue for readiness. Checks scope and clarity, recommends a priority and a workflow, and reports the assessment without applying labels itself. Use when a new issue arrives and needs assessment before work begins.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch
 ---
 
 # Triage

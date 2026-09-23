@@ -1,6 +1,7 @@
 ---
 name: security-auditor
 description: Security-focused reviewer. Checks for vulnerabilities, secrets exposure, injection risks, and unsafe patterns. Use when reviewing security-sensitive changes.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch
 ---
 
 # Security Auditor

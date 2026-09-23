@@ -1,6 +1,7 @@
 ---
 name: address-feedback
 description: Reads review comments on a PR and fixes the issues raised. Commits and pushes the fixes. Use when a PR review has requested changes.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch, Edit, Write, NotebookEdit, ToolSearch, mcp__github
 ---
 
 # Address Feedback

@@ -1,6 +1,7 @@
 ---
 name: auth-reviewer
 description: Auth and policy specialist reviewer. Checks OAuth2, OIDC, token handling, policy attachment, and access control patterns. Use when reviewing auth or policy changes.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch
 ---
 
 # Auth/Policy Reviewer

@@ -26,6 +26,11 @@ Use the Agent tool with `subagent_type: "clawdio:<agent>"`. Never pass `name`:
 named Claude agents enter mailbox mode and can sit idle. Track the returned
 `agentId`.
 
+Each agent's `tools:` frontmatter is its allowlist. Without one, a subagent
+inherits every built-in and MCP tool schema in the session, which can exceed
+300,000 tokens and is re-read on every call. Only the router holds `Agent`, so
+specialists cannot fan out on their own.
+
 ### Codex
 
 Codex plugins discover skills and hooks, but not Claude's `agents/*.md` files as
@@ -40,7 +45,8 @@ canonical prompt resource:
    context unchanged.
 3. Use `worker` for implementation, feedback fixes, tests, docs, and isolated
    shipping work; `explorer` for read-only classification; and `default` for
-   review, verification, triage, refinement, and release notes.
+   review, verification, triage, refinement, and release notes. Codex ignores
+   the `tools:` frontmatter; this role choice is the equivalent restriction.
 4. Do not pin a model or reasoning effort unless the user explicitly asks.
 
 If the runtime cannot spawn subagents, run a single-agent version of the

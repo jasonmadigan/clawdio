@@ -83,6 +83,10 @@ graph LR
 
 Codex plugins do not expose Claude's Markdown agent files as custom agents. The router skill therefore gives a built-in Codex subagent the path to the relevant canonical prompt and requires it to read that file. Copying prompt bodies into `.toml` files would create two sources of truth and is prohibited.
 
+### Tool allowlists
+
+Every agent declares `tools:`. Without it a subagent inherits every built-in and MCP tool schema in the session, and re-reads them on every call. In one measured session that was 690 tools, about 300,000 tokens per call, for agents that made no MCP calls at all. Verifiers get Read and Bash, writers get edit tools, only the router gets `Agent`, and an MCP server is named only where a workflow uses it. `tests/test_agents.py` enforces this.
+
 ### Multi-pass review
 
 Reviews use the fanout pattern: the router invokes the `review-coordination` skill, which classifies the PR's file paths and determines which specialist reviewers to spawn. A read-only classifier agent buckets each changed file (behaviour, types-mechanical, mixed, tests-docs) before dispatch -- the router never reads the diff -- so specialists weight attention to behaviour and mixed files. The router then dispatches the specialists in parallel and collects results grouped by specialist. Verified findings are posted inline in terse, conversational language; severity and evidence remain in the internal draft, while the review body only acknowledges specific work and states the next step.

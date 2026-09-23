@@ -1,6 +1,7 @@
 ---
 name: test-writer
 description: Writes tests for existing code or improves test coverage. Analyses the codebase to find gaps and writes targeted tests. Use when coverage is lacking or specific functions need test cases.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch, Edit, Write, NotebookEdit
 ---
 
 # Test Writer

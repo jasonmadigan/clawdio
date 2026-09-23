@@ -1,6 +1,7 @@
 ---
 name: router
 description: Intake agent that assesses tasks and delegates to the right specialist. Does not do implementation work itself. Use when entering clawdio with any engineering task.
+tools: Agent, AskUserQuestion, Bash, Read, SendMessage, SendUserFile, Skill, TaskStop, ToolSearch, mcp__atlassian__jira_search
 ---
 
 # IDENTITY -- DO NOT SKIP

@@ -1,6 +1,7 @@
 ---
 name: implement
 description: Implements a well-defined GitHub issue. Reads the issue, plans the approach, writes code, runs tests, and commits. Use when an issue has clear acceptance criteria and bounded scope.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch, Edit, Write, NotebookEdit
 ---
 
 # Implement

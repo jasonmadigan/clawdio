@@ -1,6 +1,7 @@
 ---
 name: code-reviewer
 description: General code quality reviewer. Checks readability, architecture, error handling, and adherence to project conventions. Use when performing a multi-pass PR review.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch
 ---
 
 # Code Reviewer

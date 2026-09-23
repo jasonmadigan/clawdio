@@ -1,6 +1,7 @@
 ---
 name: verifier
 description: Adversarial verifier for exactly one review finding. Attempts to refute the claim by reading the actual code and diff, then returns a verdict with evidence. Use when verify-findings requests a verdict.
+tools: Read, Grep, Glob, Bash
 ---
 
 # Verifier

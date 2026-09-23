@@ -1,6 +1,7 @@
 ---
 name: test-verifier
 description: Verifies PR test plans by running the test suite, checking acceptance criteria against code, and driving the browser for UI verification. Dispatched by the review agent. Use when a PR has a test plan that needs verification.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch, ToolSearch, mcp__plugin_playwright_playwright, mcp__playwright, mcp__plugin_chrome-devtools-mcp_chrome-devtools, mcp__chrome-devtools
 ---
 
 # Test Verifier

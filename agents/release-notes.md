@@ -1,6 +1,7 @@
 ---
 name: release-notes
 description: Generates release notes between two git tags by walking the commit log and grouping by conventional commit type. Use when preparing a release.
+tools: Read, Grep, Glob, Bash
 ---
 
 # Release Notes

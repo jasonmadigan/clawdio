@@ -1,6 +1,7 @@
 ---
 name: worktree-worker
 description: Self-contained implement-to-PR agent that runs in an isolated git worktree. Use when the router ships multiple issues with isolated workers. Does not escape its worktree.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch, Edit, Write, NotebookEdit
 ---
 
 # Worktree Worker
