@@ -135,9 +135,8 @@ Provenance is established before the fanout. A PR from a fork gets the same revi
 ```mermaid
 graph TD
     A[User: review PR] --> A0[Router: check head-branch provenance]
-    A0 --> B[Router: classify files]
-    B --> BB[classifier agent: bucket changed files by behaviour vs mechanical]
-    BB --> C{File types?}
+    A0 --> B[Router: classify files from path and size metadata]
+    B --> C{File types?}
     C -->|always| D[code-reviewer]
     C -->|always| E[test-verifier]
     C -->|*.go| F[go-k8s-reviewer]

@@ -44,7 +44,7 @@ canonical prompt resource:
    selected agent file, before doing the task. Pass the user's full issue or PR
    context unchanged.
 3. Use `worker` for implementation, feedback fixes, tests, docs, and isolated
-   shipping work; `explorer` for read-only classification; and `default` for
+   shipping work; `explorer` for read-only investigation; and `default` for
    review, verification, triage, refinement, and release notes. Codex ignores
    the `tools:` frontmatter; this role choice is the equivalent restriction.
 4. Do not pin a model or reasoning effort unless the user explicitly asks.

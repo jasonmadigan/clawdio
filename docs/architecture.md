@@ -45,7 +45,6 @@ graph TD
     Decision -->|release notes| RN[release-notes agent]
     Decision -->|write tests| TW[test-writer agent]
     Decision -->|update docs| Docs[docs agent]
-    Review -->|first| CL[classifier agent]
     Review -->|parallel| CR[code-reviewer]
     Review -->|parallel| TV[test-verifier]
     Review -->|if Go| GK[go-k8s-reviewer]
@@ -89,7 +88,7 @@ Every agent declares `tools:`. Without it a subagent inherits every built-in and
 
 ### Multi-pass review
 
-Reviews use the fanout pattern: the router invokes the `review-coordination` skill, which classifies the PR's file paths and determines which specialist reviewers to spawn. A read-only classifier agent buckets each changed file (behaviour, types-mechanical, mixed, tests-docs) before dispatch -- the router never reads the diff -- so specialists weight attention to behaviour and mixed files. The router then dispatches the specialists in parallel and collects results grouped by specialist. Verified findings are posted inline in terse, conversational language; severity and evidence remain in the internal draft, while the review body only acknowledges specific work and states the next step.
+Reviews use the fanout pattern: the router invokes the `review-coordination` skill, which classifies the PR's files from path and size metadata and determines which specialist reviewers to spawn. The router never reads the diff: it assigns each file a provisional bucket (behaviour, types-mechanical, mixed, tests-docs), and each specialist corrects the bucket per hunk as it reads the diff and weights attention to behaviour and mixed changes. There is no separate classifier agent; it added a serial hop before any review could start. The router then dispatches the specialists in parallel and collects results grouped by specialist. Verified findings are posted inline in terse, conversational language; severity and evidence remain in the internal draft, while the review body only acknowledges specific work and states the next step.
 
 Specialist findings are treated as claims, not facts. Before findings are presented or posted, the router invokes the `verify-findings` skill: one verifier agent per file carrying Critical/Important findings, at most five findings each, in parallel, tasked with refuting each finding independently. Grouping by file lets one context read the file's diff once; mixing files is not allowed. Confirmed and plausible findings proceed; refuted findings remain visible to the user in the internal draft and are recorded in prior-review context so they do not resurrect on re-review rounds.
 
