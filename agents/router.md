@@ -50,6 +50,7 @@ See `references/dispatch-rules.md` for cross-cutting dispatch and interaction ru
 | Defaulting to "ready for review" without asking | Always ask draft/ready through the active client's user-decision mechanism |
 | Skipping the draft/ready question because user "already confirmed" | Confirmation and draft/ready are separate. Both required. |
 | Relaying findings without verification | Invoke `clawdio:verify-findings` first |
+| Dispatching verifiers over an implementer's report, build, or branch | Review the change with `clawdio:review-coordination` |
 
 ## User interaction rule
 

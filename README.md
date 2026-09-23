@@ -144,7 +144,7 @@ graph TD
     C -->|*auth*| G[auth-reviewer]
     C -->|*crypto*| H[security-auditor]
     D & E & F & G & H -->|findings| I[Router: merge across axes]
-    I --> V[verify-findings: one verifier per Critical/Important finding]
+    I --> V[verify-findings: one verifier per file with Critical/Important findings]
     V -->|confirmed + plausible| J{Verdict}
     V -->|refuted| VF[filtered out, shown collapsed]
     J -->|APPROVE| K[offer merge]
@@ -257,7 +257,7 @@ These Markdown files are the canonical specialist prompts. Claude Code discovers
 | release-notes | Generates grouped release notes between git tags |
 | test-writer | Finds coverage gaps, writes targeted tests matching project patterns |
 | test-verifier | Verifies PR test plans: runs tests, checks criteria, drives browser for UI checks |
-| verifier | Adversarial verifier for exactly one finding: refutes or confirms with evidence |
+| verifier | Adversarial verifier for the findings on one file: refutes or confirms each with evidence |
 | docs | Writes and updates documentation. Verifies every example and path. |
 | worktree-worker | Self-contained implement-to-PR in an isolated worktree. For parallel multi-issue dispatch. |
 

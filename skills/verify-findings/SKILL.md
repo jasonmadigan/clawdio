@@ -5,7 +5,7 @@ description: Adversarially verifies specialist findings before they are presente
 
 # Verify Findings
 
-Specialist findings are claims, not facts. Before any Critical or Important finding is presented to the user or posted, dispatch one adversarial verifier per finding, tasked with refuting it. Nits pass through unverified -- not worth the tokens.
+Specialist findings are claims, not facts. Before any Critical or Important finding is presented to the user or posted, dispatch adversarial verifiers, one per file, tasked with refuting each finding. Nits pass through unverified: not worth the tokens.
 
 Read `../../references/dispatch-rules.md` before dispatching.
 
@@ -16,15 +16,15 @@ Two hard rules up front:
 
 ## Step 1: Fan out verifiers
 
-One verifier agent per Critical/Important finding, all in parallel. Fresh context per finding -- no batching, no anchoring.
+One verifier agent per file that carries Critical/Important findings, all in parallel. Split a file with more than five such findings into groups of at most five. Findings on one file share its diff and surrounding code, so one fresh context reads them once. Never mix files in one verifier.
 
 Each verifier prompt includes:
 
-- The finding verbatim: severity, file:line, the claim, the suggested fix
+- Each finding verbatim with a short ID: severity, file:line, the claim, the suggested fix
 - The repo and PR number (or the diff context if there is no PR)
-- The instruction to REFUTE the finding, not to confirm it
+- The instruction to REFUTE each finding independently, not to confirm it
 
-For address-feedback claims, the finding to refute is "this fix addresses comment X" -- the verifier checks the diff actually resolves what the comment asked. For triage claims, the finding is the triage assessment (scope, reproducibility, labels).
+For address-feedback claims, each finding to refute is "this fix addresses comment X", grouped by the file the fix touches; the verifier checks the diff actually resolves what each comment asked. For triage claims, one verifier takes the whole triage assessment (scope, reproducibility, labels).
 
 ## Step 2: Collect verdicts
 
@@ -58,9 +58,10 @@ Record refuted findings in the prior-review context that review-coordination Ste
 | Problem | Fix |
 |-|-|
 | Verifying Nits | Critical/Important only. Nits pass through. |
-| One verifier for several findings | One verifier per finding. Fresh context avoids anchoring. |
+| Mixing files in one verifier, or more than five findings | One file per verifier, at most five findings, each judged on its own evidence. |
 | Silently dropping refuted findings | Show them collapsed with refutations. Always auditable. |
 | Skipping verification because findings "look obviously right" | Obvious findings slip through. Always verify Critical/Important. |
 | Running the fanout inside a subagent | Router main loop only. |
+| Using verifiers to audit an implementer's report, re-run its build, or check a whole branch | Verifiers refute specific findings. Review a change through `clawdio:review-coordination`. |
 | Posting a finding with an unverified line number | Downgrade to file + snippet reference. |
 | Bypassing the active client adapter | Follow `references/dispatch-rules.md`. |

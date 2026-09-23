@@ -51,7 +51,7 @@ graph TD
     Review -->|if Go| GK[go-k8s-reviewer]
     Review -->|if auth| AR[auth-reviewer]
     Review -->|if security| SA[security-auditor]
-    CR & TV & GK & AR & SA -->|findings| VF[verify-findings: verifier per finding]
+    CR & TV & GK & AR & SA -->|findings| VF[verify-findings: verifier per file]
     VF -->|verdicts| Router
     Parallel -->|worktree| WW1[worktree-worker 1]
     Parallel -->|worktree| WW2[worktree-worker 2]
@@ -91,7 +91,7 @@ Every agent declares `tools:`. Without it a subagent inherits every built-in and
 
 Reviews use the fanout pattern: the router invokes the `review-coordination` skill, which classifies the PR's file paths and determines which specialist reviewers to spawn. A read-only classifier agent buckets each changed file (behaviour, types-mechanical, mixed, tests-docs) before dispatch -- the router never reads the diff -- so specialists weight attention to behaviour and mixed files. The router then dispatches the specialists in parallel and collects results grouped by specialist. Verified findings are posted inline in terse, conversational language; severity and evidence remain in the internal draft, while the review body only acknowledges specific work and states the next step.
 
-Specialist findings are treated as claims, not facts. Before findings are presented or posted, the router invokes the `verify-findings` skill: one verifier agent per Critical/Important finding, in parallel, tasked with refuting it. Confirmed and plausible findings proceed; refuted findings remain visible to the user in the internal draft and are recorded in prior-review context so they do not resurrect on re-review rounds.
+Specialist findings are treated as claims, not facts. Before findings are presented or posted, the router invokes the `verify-findings` skill: one verifier agent per file carrying Critical/Important findings, at most five findings each, in parallel, tasked with refuting each finding independently. Grouping by file lets one context read the file's diff once; mixing files is not allowed. Confirmed and plausible findings proceed; refuted findings remain visible to the user in the internal draft and are recorded in prior-review context so they do not resurrect on re-review rounds.
 
 Provenance is settled before the fanout, in one `gh pr view` call. A fork PR is reviewed identically, but every write to its head branch is off the table: address-feedback is not offered, local rebase and force-push are not suggested, and closing it as superseded needs explicit approval. The lever on a fork is a GitHub suggested-changes block, which the contributor commits themselves. `maintainerCanModify` is recorded and reported, never treated as permission. Merging a fork PR into a base repository we own is unaffected -- the rule gates the head branch, not the merge.
 
@@ -188,7 +188,7 @@ Interactive use starts in Claude Code or Codex. Scheduling, GitHub Actions, cust
 | release-notes | Generates release notes between tags | Plugin |
 | test-writer | Writes tests, finds coverage gaps | Plugin |
 | test-verifier | Verifies PR test plans, runs tests, drives browser for UI checks | Plugin |
-| verifier | Adversarial verifier for exactly one finding; refutes or confirms with evidence | Plugin |
+| verifier | Adversarial verifier for the findings on one file; refutes or confirms each with evidence | Plugin |
 | docs | Documentation writing and updating | Plugin |
 | worktree-worker | Self-contained implement-to-PR in an isolated worktree, for parallel dispatch | Plugin |
 
