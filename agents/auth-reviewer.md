@@ -1,6 +1,7 @@
 ---
 name: auth-reviewer
 description: Auth and policy specialist reviewer. Checks OAuth2, OIDC, token handling, policy attachment, and access control patterns. Use when reviewing auth or policy changes.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch
 ---
 
 # Auth/Policy Reviewer
@@ -74,3 +75,7 @@ Token in the diff
 | Checking `sub` but not `aud` | Audience prevents token confusion attacks |
 | Policy merge with no conflict test | Add test: two conflicting policies, verify winner |
 | "Admin" role with wildcard permissions | Enumerate permissions explicitly |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

@@ -22,10 +22,10 @@ and state it: a branch we could push to is still not ours to push to.
 
 ## Step 1: Classify the PR
 
-Fetch the file list (NOT the diff, NOT the code):
+Fetch the file list with change metadata (NOT the diff, NOT the code):
 
 ```bash
-gh pr view <number> --json files --jq '[.files[].path]'
+gh pr view <number> --json files --jq '.files[] | "\(.changeType)\t+\(.additions)/-\(.deletions)\t\(.path)"'
 ```
 
 Determine which specialists are needed:
@@ -62,22 +62,16 @@ If any recent commit on main addresses the same issue, draft a comment crediting
 
 ## Step 1.7: Classify the changes
 
-Before dispatching specialists, dispatch ONE read-only classifier through the active client adapter to fetch and classify the diff. You never read the diff yourself.
+Do not dispatch a classifier agent, and do not read the diff yourself. Bucket each file from the Step 1 metadata alone:
 
-The classifier's prompt:
-- Fetch the diff via `gh pr diff <number>` or `gh api repos/{owner}/{repo}/pulls/{number}/files`
-- Classify each changed file into exactly one bucket, with a one-line reason per file:
+| Bucket | Contains | Provisional rule |
+|-|-|-|
+| behaviour | logic, control flow, state, error handling, API behaviour | default for source files |
+| types-mechanical | type annotations, signatures, renames, imports, formatting, generated code | generated, vendored, or lock files |
+| mixed | both; note which hunks are behaviour | set only by a specialist |
+| tests-docs | test and documentation changes | test paths, `docs/`, `*.md` |
 
-| Bucket | Contains |
-|-|-|
-| behaviour | logic, control flow, state, error handling, API behaviour |
-| types-mechanical | type annotations, signatures, renames, imports, formatting, generated code |
-| mixed | both; note which hunks are behaviour |
-| tests-docs | test and documentation changes |
-
-Wait for the classifier to return before dispatching specialists -- this step is sequential, then Step 2 runs in parallel. The classification feeds two places:
-- Each specialist dispatch prompt (Step 2)
-- The internal review summary used to weight and verify findings (Step 3)
+The table is provisional. Specialists read the diff anyway, so each one corrects the bucket per hunk in Step 2 and reports corrections with its findings. The corrected classification feeds the internal review summary used to weight and verify findings (Step 3).
 
 ## Step 1.9: Gather prior review context (round 2+ only)
 
@@ -105,7 +99,7 @@ Spawn all needed specialists simultaneously through the active client adapter.
 Pass each agent:
 - The PR number
 - The full file list
-- The change classification from Step 1.7, with the instruction to weight attention to behaviour and mixed files
+- The provisional classification from Step 1.7, with the instruction to correct it per hunk while reading the diff, report the corrections, and weight attention to behaviour and mixed changes
 - Instructions to read the diff via `gh pr diff <number>` and the PR description via `gh pr view <number>`
 
 **On round 2+, also pass each agent:**

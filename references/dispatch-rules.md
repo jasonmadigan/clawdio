@@ -26,6 +26,11 @@ Use the Agent tool with `subagent_type: "clawdio:<agent>"`. Never pass `name`:
 named Claude agents enter mailbox mode and can sit idle. Track the returned
 `agentId`.
 
+Each agent's `tools:` frontmatter is its allowlist. Without one, a subagent
+inherits every built-in and MCP tool schema in the session, which can exceed
+300,000 tokens and is re-read on every call. Only the router holds `Agent`, so
+specialists cannot fan out on their own.
+
 ### Codex
 
 Codex plugins discover skills and hooks, but not Claude's `agents/*.md` files as
@@ -39,8 +44,9 @@ canonical prompt resource:
    selected agent file, before doing the task. Pass the user's full issue or PR
    context unchanged.
 3. Use `worker` for implementation, feedback fixes, tests, docs, and isolated
-   shipping work; `explorer` for read-only classification; and `default` for
-   review, verification, triage, refinement, and release notes.
+   shipping work; `explorer` for read-only investigation; and `default` for
+   review, verification, triage, refinement, and release notes. Codex ignores
+   the `tools:` frontmatter; this role choice is the equivalent restriction.
 4. Do not pin a model or reasoning effort unless the user explicitly asks.
 
 If the runtime cannot spawn subagents, run a single-agent version of the
@@ -54,6 +60,18 @@ absolute path to its worker and require that path as the working directory for
 every command. If the adapter cannot guarantee the starting directory, the
 worker must verify it with `git rev-parse --show-toplevel` before editing. Run
 the writers serially if any of those checks fail.
+
+## Dispatch prompts and reports
+
+A subagent re-reads its whole context on every call, so everything in a
+dispatch is paid for on every turn of that agent.
+
+- Pass facts that earlier agents or verifiers established as established, with
+  their source. Ask for a re-check of one specific claim only when you have
+  reason to doubt it; never ask an agent to re-verify every number and date.
+- State a report limit as a shape: named fields, or a maximum number of lines
+  or bullets. Never as a character count: agents that measure their own report
+  redraft it in a loop.
 
 ## User decisions
 
@@ -124,6 +142,9 @@ above. Approve it every time.
 
 Treat a namespaced skill as a capability request, not as an assumption that a
 particular third-party plugin is installed.
+
+Load a skill at the step that needs it, not all up front: a loaded skill is
+re-read on every later call.
 
 1. Prefer the exact namespaced skill named by the workflow.
 2. If it is unavailable, use an installed skill that clearly provides the same

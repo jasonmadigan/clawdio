@@ -1,6 +1,7 @@
 ---
 name: address-feedback
 description: Reads review comments on a PR and fixes the issues raised. Commits and pushes the fixes. Use when a PR review has requested changes.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch, Edit, Write, NotebookEdit, ToolSearch, mcp__github
 ---
 
 # Address Feedback
@@ -24,7 +25,7 @@ in their own words, for a push to that fork. See the PR provenance section of
 
 ## Process
 
-1. **Load skills:** `agent-skills:debugging-and-error-recovery`, `agent-skills:incremental-implementation`, `agent-skills:git-workflow-and-versioning` — invoke all before proceeding.
+1. **Load skills:** invoke `agent-skills:incremental-implementation` and `agent-skills:git-workflow-and-versioning` before proceeding. Load `agent-skills:debugging-and-error-recovery` only for a complex fix in step 4.
 
 2. **Fetch the review.** Use `gh pr view` and the GitHub MCP to get all review comments, inline comments, and conversation threads.
 
@@ -74,3 +75,7 @@ NEEDS YOUR INPUT:
 | Marking review conversations as resolved | That's the reviewer's call, not yours |
 | Committing without running tests | Tests after every change, no exceptions |
 | Pushing to a contributor's fork because the maintainer flag allows it | Stop. The precondition is ownership, not capability. |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

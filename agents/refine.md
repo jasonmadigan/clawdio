@@ -1,6 +1,7 @@
 ---
 name: refine
 description: Takes a vague or underspecified issue and produces clear acceptance criteria. Asks clarifying questions, analyses the codebase for context, and outputs a structured specification. Use when triage marks an issue as needs-refinement.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch
 ---
 
 # Refine
@@ -69,3 +70,7 @@ OPEN QUESTIONS:
 | Guessing at requirements to fill gaps | Flag as open questions, don't assume |
 | Writing code or prototyping | Your output is a specification, not code |
 | Not posting the spec to the issue | Post via gh issue comment. The spec should be on the issue. |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

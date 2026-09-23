@@ -60,6 +60,8 @@ If no issues found, report: "All docs are in sync."
 
 If issues found: fix them. Edit the documentation files to match the source of truth. The source of truth is always the code and file system, never the docs. Run `git diff` after fixing to confirm changes are correct.
 
+The router has no edit tools. When it runs this skill, it dispatches the `docs` agent with the findings table to apply the fixes, rather than editing through the shell.
+
 ## Rules
 
 - **Accuracy, not completeness.** Verify what IS documented is correct. Don't flag undocumented features.

@@ -15,6 +15,7 @@ claude plugin validate --strict .
 python3 /path/to/plugin-creator/scripts/validate_plugin.py .
 python3 -m py_compile hooks/file_hook.py
 python3 -m unittest hooks/test_file_hook.py
+python3 -m unittest tests/test_agents.py
 uvx skillsaw lint
 
 # Claude Code smoke test
@@ -50,6 +51,7 @@ Agents are canonical Markdown prompts in `agents/`, one file per agent. Claude C
 ---
 name: agent-name
 description: One sentence. What it does and when to use it.
+tools: Read, Grep, Glob, Bash
 ---
 
 # Agent Name
@@ -68,6 +70,8 @@ Table of common mistakes and their fixes.
 
 Hard constraints the agent must follow.
 ```
+
+Always declare `tools:`. Without it the agent inherits every built-in and MCP tool schema in the session on every call. List only what the agent uses: edit tools for writers, `Skill` where it loads skills, named MCP servers (`mcp__<server>`) where a workflow needs them. Only the router gets `Agent`. `tests/test_agents.py` checks these rules.
 
 ### Patterns to use
 

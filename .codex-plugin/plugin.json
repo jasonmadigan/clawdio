@@ -1,6 +1,6 @@
 {
   "name": "clawdio",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Portable SDLC workflows, specialist-agent routing, and engineering guardrails for Claude Code and Codex.",
   "author": {
     "name": "Jason Madigan",

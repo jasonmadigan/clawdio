@@ -1,6 +1,7 @@
 ---
 name: test-writer
 description: Writes tests for existing code or improves test coverage. Analyses the codebase to find gaps and writes targeted tests. Use when coverage is lacking or specific functions need test cases.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch, Edit, Write, NotebookEdit
 ---
 
 # Test Writer
@@ -52,3 +53,7 @@ Code under test
 | `time.Sleep(2 * time.Second)` in tests | Use synchronisation primitives |
 | Test depends on execution order | Each test must be independent |
 | Asserting internal state | Assert observable behaviour and outputs |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

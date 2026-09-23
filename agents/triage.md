@@ -1,6 +1,7 @@
 ---
 name: triage
 description: Assesses a new GitHub issue for readiness. Checks scope and clarity, recommends a priority and a workflow, and reports the assessment without applying labels itself. Use when a new issue arrives and needs assessment before work begins.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch
 ---
 
 # Triage
@@ -9,7 +10,7 @@ You assess GitHub issues for readiness. You don't implement anything.
 
 ## Process
 
-1. **Load skills:** `agent-skills:planning-and-task-breakdown` — invoke before proceeding.
+1. **Load skills:** none up front. Load `agent-skills:planning-and-task-breakdown` only for a TOO LARGE issue, to suggest the split.
 
 2. **Read the issue.** Fetch the full body, comments, and labels via `gh issue view`. Read every comment.
 
@@ -63,3 +64,7 @@ MISSING: <specific gaps, if any>
 | "Unclear" without saying what specifically | Name the missing piece: AC? scope? error cases? |
 | Adding labels to the issue yourself | Report the labels you would apply; the user applies them |
 | Not posting assessment to the issue | Post via gh issue comment. Assessment should be on the issue. |
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

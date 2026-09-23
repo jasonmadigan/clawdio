@@ -37,6 +37,7 @@ python3 /path/to/plugin-creator/scripts/validate_plugin.py .
 uvx skillsaw lint
 python3 -m py_compile hooks/file_hook.py
 python3 -m unittest hooks/test_file_hook.py
+python3 -m unittest tests/test_agents.py
 ```
 
 Resolve the plugin-creator path from the installed Codex skill; do not commit a

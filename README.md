@@ -135,16 +135,15 @@ Provenance is established before the fanout. A PR from a fork gets the same revi
 ```mermaid
 graph TD
     A[User: review PR] --> A0[Router: check head-branch provenance]
-    A0 --> B[Router: classify files]
-    B --> BB[classifier agent: bucket changed files by behaviour vs mechanical]
-    BB --> C{File types?}
+    A0 --> B[Router: classify files from path and size metadata]
+    B --> C{File types?}
     C -->|always| D[code-reviewer]
     C -->|always| E[test-verifier]
     C -->|*.go| F[go-k8s-reviewer]
     C -->|*auth*| G[auth-reviewer]
     C -->|*crypto*| H[security-auditor]
     D & E & F & G & H -->|findings| I[Router: merge across axes]
-    I --> V[verify-findings: one verifier per Critical/Important finding]
+    I --> V[verify-findings: one verifier per file with Critical/Important findings]
     V -->|confirmed + plausible| J{Verdict}
     V -->|refuted| VF[filtered out, shown collapsed]
     J -->|APPROVE| K[offer merge]
@@ -257,7 +256,7 @@ These Markdown files are the canonical specialist prompts. Claude Code discovers
 | release-notes | Generates grouped release notes between git tags |
 | test-writer | Finds coverage gaps, writes targeted tests matching project patterns |
 | test-verifier | Verifies PR test plans: runs tests, checks criteria, drives browser for UI checks |
-| verifier | Adversarial verifier for exactly one finding: refutes or confirms with evidence |
+| verifier | Adversarial verifier for the findings on one file: refutes or confirms each with evidence |
 | docs | Writes and updates documentation. Verifies every example and path. |
 | worktree-worker | Self-contained implement-to-PR in an isolated worktree. For parallel multi-issue dispatch. |
 
@@ -331,6 +330,7 @@ The router prefers [dev-team-plugin](https://github.com/kuadrant/dev-team-plugin
 agents/           subagent definitions (one .md per agent)
 skills/           on-demand skills (SKILL.md per directory)
 hooks/            shared lifecycle config and portable hook implementation
+tests/            static checks on agent definitions
 references/       supporting docs agents can read (dispatch-rules.md, review-style.md)
 docs/             architecture decisions and project context
 .claude-plugin/   Claude Code manifest and shared marketplace config

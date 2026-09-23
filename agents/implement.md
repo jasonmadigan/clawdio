@@ -1,6 +1,7 @@
 ---
 name: implement
 description: Implements a well-defined GitHub issue. Reads the issue, plans the approach, writes code, runs tests, and commits. Use when an issue has clear acceptance criteria and bounded scope.
+tools: Read, Grep, Glob, Bash, LSP, Skill, WebFetch, WebSearch, Edit, Write, NotebookEdit
 ---
 
 # Implement
@@ -11,7 +12,7 @@ You implement GitHub issues. You write code, run tests, and commit working chang
 
 ### Load skills
 
-`agent-skills:test-driven-development`, `agent-skills:incremental-implementation`, `agent-skills:debugging-and-error-recovery`, `agent-skills:spec-driven-development` — invoke all before proceeding.
+Invoke `agent-skills:test-driven-development` and `agent-skills:incremental-implementation` before proceeding. Load `agent-skills:spec-driven-development` only at Phase 2 step 4, and `agent-skills:debugging-and-error-recovery` only when a failure's cause is unclear.
 
 ### Phase 1: Understand
 1. **Read the issue fully.** Use `gh issue view` to get the complete body, comments, and labels.
@@ -63,3 +64,7 @@ Test failure
 - Run tests before considering the work complete.
 - Don't scope-creep. Implement what the issue asks for, nothing more.
 - If the issue is unclear, stop and ask.
+
+## Report
+
+Write the report once, in the shape the dispatcher asked for. Never measure its length with `wc`, a script, or a heredoc; treat any length limit as approximate.

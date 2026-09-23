@@ -21,6 +21,7 @@ you -> router -> specialist subagent(s) -> result
 agents/          subagent definitions (.md)
 skills/          on-demand skills (skills/*/SKILL.md)
 hooks/           lifecycle hooks (shared config and Python implementation)
+tests/           static checks on agent definitions
 references/      supporting docs agents can read
 docs/            docs/architecture.md, docs/contributing.md, docs/references.md
 .claude-plugin/  Claude manifest and shared marketplace
@@ -49,6 +50,7 @@ AGENTS.md        Codex repository instructions
 | `hooks/hooks.json` | shared lifecycle hook registration |
 | `hooks/file_hook.py` | normalises Claude and Codex edit payloads, then applies hook policy |
 | `hooks/test_file_hook.py` | regression tests for both clients' edit payloads and path policy |
+| `tests/test_agents.py` | every agent declares a known `tools:` allowlist; only the router can dispatch agents |
 | `references/dispatch-rules.md` | cross-client agent dispatch, user interaction, write gating (externally visible writes, issue writes, PR provenance), skill roster, external capability resolution |
 | `references/review-style.md` | how reviewers return findings and word them for the author |
 | `.claude-plugin/plugin.json` | Claude Code plugin manifest |
@@ -61,6 +63,7 @@ After changing files in `agents/`, `skills/`, `hooks/`, the portability rules, o
 ## Conventions
 
 - Agents in `agents/*.md`: as short as possible. Decision trees, anti-pattern tables, verification checklists where they earn their place.
+- Every agent declares a `tools:` allowlist. Omitting it inherits every tool schema in the session on every call. Only the router gets `Agent`.
 - Skills in `skills/*/SKILL.md`: progressive disclosure. Lead with the rule, details below.
 - Hook policy in `hooks/file_hook.py`: deterministic, fast, and silent when optional tools are missing. Keep `hooks/hooks.json` declarative.
 - Keep client mechanics in `references/dispatch-rules.md`; never duplicate an agent prompt for Codex.
